@@ -17,7 +17,7 @@ listenOnSomePort = (app, startPort) ->
 
 phanta = []
 startPhantomProcess = (port) ->
-  ps = child.spawn 'phantomjs', ['shim.js', port]
+  ps = child.spawn 'phantomjs', [__dirname+'/shim.js', port]
 
   ps.stdout.on 'data', (data) -> console.log "phantom stdout: #{data}"
   ps.stderr.on 'data', (data) -> 
