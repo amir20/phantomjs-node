@@ -1,0 +1,23 @@
+{
+  "author": "Sam Gentle <sam@samgentle.com>",
+  "name": "phantom",
+  "description": "PhantomJS wrapper for Node",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sgentle/phantomjs-node.git"
+  },
+  "main": "phantom.js",
+  "engines": {
+    "node": "~v0.4.9"
+  },
+  "dependencies": {
+    "dnode-protocol": "*",
+    "browserify": "*",
+    "dnode": "*",
+    "express": "*"
+  },
+  "devDependencies": {
+    "traverse": "*"
+  }
+}
