@@ -14,7 +14,7 @@ Install it like this:
 
     npm install phantom
 
-Use it like this:
+Use it like this in Coffeescript:
 
 ```coffeescript
 phantom = require 'phantom'
@@ -26,6 +26,8 @@ phantom.create (p) ->
       console.log 'Page title is ' + result
       p.exit()
 ```
+
+In Javascript, do the same but add parentheses and curly braces everywhere.
 
 You can use all the methods listed on the [PhantomJS API page](http://code.google.com/p/phantomjs/wiki/Interface)
 
