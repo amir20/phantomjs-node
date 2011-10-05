@@ -37,7 +37,7 @@ Due to the async nature of the bridge, some things have changed, though:
 * Return values (ie, of ```page.evaluate```) are returned in a callback instead
 * Properties can't be get/set directly, instead use ```p.get('version', callback)``` or ```p.page.set('viewportSize', {width:640,height:480})```, etc
 
-```ph.createPage()`` makes new PhantomJS WebPage objects, so use that if you want to open lots of webpages. You can also make multiple phantomjs processes by calling ```phantom.create()``` multiple times, so if you need that for some crazy reason, knock yourself out!
+```ph.createPage()``` makes new PhantomJS WebPage objects, so use that if you want to open lots of webpages. You can also make multiple phantomjs processes by calling ```phantom.create()``` multiple times, so if you need that for some crazy reason, knock yourself out!
 
 ## How does it work?
 
