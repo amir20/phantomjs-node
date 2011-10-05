@@ -8,7 +8,7 @@ First, make sure PhantomJS is installed. This module expects the ```phantomjs```
 
     $ phantomjs
 
-If that works, so will phantomjs-node.
+If that works, so will phantomjs-node. It's only been tested with PhantomJS 1.3, and almost certainly doesn't work with anything older.
 
 Install it like this:
 
@@ -19,12 +19,13 @@ Use it like this in Coffeescript:
 ```coffeescript
 phantom = require 'phantom'
 
-phantom.create (p) ->
-  p.page.open "http://www.google.com", (status) ->
-    console.log "opened google? ", status
-    p.page.evaluate (-> document.title), (result) ->
-      console.log 'Page title is ' + result
-      p.exit()
+phantom.create (ph) ->
+  ph.createPage (page) ->
+    page.open "http://www.google.com", (status) ->
+      console.log "opened google? ", status
+      page.evaluate (-> document.title), (result) ->
+        console.log 'Page title is ' + result
+        ph.exit()
 ```
 
 In Javascript, do the same but add parentheses and curly braces everywhere.
@@ -36,11 +37,11 @@ Due to the async nature of the bridge, some things have changed, though:
 * Return values (ie, of ```page.evaluate```) are returned in a callback instead
 * Properties can't be get/set directly, instead use ```p.get('version', callback)``` or ```p.page.set('viewportSize', {width:640,height:480})```, etc
 
-Only one page object per phantom is currently supported. Each ```phantom.create()``` makes a new phantom process, so that kinda sucks. Patches welcome!
+```ph.createPage()`` makes new PhantomJS WebPage objects, so use that if you want to open lots of webpages. You can also make multiple phantomjs processes by calling ```phantom.create()``` multiple times, so if you need that for some crazy reason, knock yourself out!
 
 ## How does it work?
 
-Don't ask.
+Don't ask. The things these eyes have seen.
 
 ## No really, how does it work?
 
@@ -48,5 +49,4 @@ I will answer that question with a question. How do you communicate with a proce
 
 Well, there's one thing PhantomJS does support, and that's opening webpages. In fact, it's really good at opening web pages. So we communicate with PhantomJS by spinning up an instance of ExpressJS, opening Phantom in a subprocess, and pointing it at a special webpage that turns socket.io messages into ```alert()``` calls. Those ```alert()``` calls are picked up by Phantom and there you go!
 
-The communication itself happens via James Halliday's fantastic [dnode](https://github.com/substack/dnode) library, which fortunately works well enough when combined with [browserify](https://github.com/substack/node-browserify) to run straight out of PhantomJS.
-
+The communication itself happens via James Halliday's fantastic [dnode](https://github.com/substack/dnode) library, which fortunately works well enough when combined with [browserify](https://github.com/substack/node-browserify) to run straight out of PhantomJS's pidgin Javascript environment.

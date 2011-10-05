@@ -1,5 +1,5 @@
 (function() {
-  var PORT, child, dnode, express, listenOnSomePort, phanta, startPhantomProcess, wrapEval;
+  var PORT, child, dnode, express, listenOnSomePort, phanta, startPhantomProcess, wrap;
   dnode = require('dnode');
   express = require('express');
   child = require('child_process');
@@ -45,10 +45,16 @@
     }
     return _results;
   });
-  wrapEval = function(page) {
-    page._evaluate = page.evaluate;
-    return page.evaluate = function(fn, cb) {
-      return page._evaluate(fn.toString(), cb);
+  wrap = function(ph) {
+    ph._createPage = ph.createPage;
+    return ph.createPage = function(cb) {
+      return ph._createPage(function(page) {
+        page._evaluate = page.evaluate;
+        page.evaluate = function(fn, cb) {
+          return page._evaluate(fn.toString(), cb);
+        };
+        return cb(page);
+      });
     };
   };
   module.exports = {
@@ -81,7 +87,7 @@
         }
       }, function(obj, conn) {
         phantom = conn.remote;
-        wrapEval(phantom.page);
+        wrap(phantom);
         phanta.push(phantom);
         return typeof cb === "function" ? cb(phantom) : void 0;
       });

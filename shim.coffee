@@ -10,6 +10,8 @@ proto = require 'dnode-protocol'
 
 controlPage = webpage.create()
 
+fnwrap = (target) -> -> target.apply this, arguments
+
 mkwrap = (src, pass=[], special={}) ->
   obj =
     set: (key, val, cb=->) -> cb src[key] = val   
@@ -17,7 +19,13 @@ mkwrap = (src, pass=[], special={}) ->
 
   for k in pass
     do (k) ->
-      obj[k] = (args...) -> src[k] args...
+      obj[k] = (args...) ->
+
+        # This idempotent tomfoolery is required to stop PhantomJS from segfaulting
+        args[i] = fnwrap arg for arg, i in args when typeof arg is 'function'
+          
+        src[k] args...
+
   for own k of special
     obj[k] = special[k]
   obj
@@ -28,7 +36,7 @@ pageWrap = (page) -> mkwrap page,
 
 _phantom = mkwrap phantom,
   ['exit', 'injectJS'],
-  page: pageWrap webpage.create()
+  createPage: (cb) -> cb pageWrap webpage.create()
 
 
 server = proto _phantom

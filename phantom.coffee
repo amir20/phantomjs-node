@@ -30,9 +30,13 @@ process.on 'exit', ->
 
 
 # We need this because dnode does magic clever stuff with functions, but we want the function to make it intact to phantom
-wrapEval = (page) ->
-  page._evaluate = page.evaluate
-  page.evaluate = (fn, cb) -> page._evaluate fn.toString(), cb
+wrap = (ph) ->
+  ph._createPage = ph.createPage
+  ph.createPage = (cb) ->
+    ph._createPage (page) ->
+      page._evaluate = page.evaluate
+      page.evaluate = (fn, cb) -> page._evaluate fn.toString(), cb
+      cb page
 
 
 
@@ -56,7 +60,7 @@ module.exports =
 
     server.listen app, {io: log: null}, (obj, conn) ->
       phantom = conn.remote
-      wrapEval phantom.page
+      wrap phantom
       phanta.push phantom
       cb? phantom
 

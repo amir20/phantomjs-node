@@ -328,7 +328,7 @@ require.modules["/node_modules/dnode-protocol/package.json"] = function () {
     __require.modules["/node_modules/dnode-protocol/package.json"]._cached = module.exports;
     
     (function () {
-        module.exports = {"name":"dnode-protocol","description":"Implements the dnode protocol abstractly","version":"0.0.12","repository":"https://github.com/substack/dnode-protocol.git","author":{"name":"James Halliday","email":"mail@substack.net","url":"http://substack.net"},"main":"./index.js","dependencies":{"traverse":">=0.3.1"},"scripts":{"test":"expresso"},"engines":{"node":">=0.2.0"}};
+        module.exports = {"name":"dnode-protocol","description":"Implements the dnode protocol abstractly","version":"0.1.0","repository":"https://github.com/substack/dnode-protocol.git","author":{"name":"James Halliday","email":"mail@substack.net","url":"http://substack.net"},"main":"./index.js","dependencies":{"traverse":"0.5.x"},"scripts":{"test":"expresso"},"engines":{"node":">=0.2.0"}};
     }).call(module.exports);
     
     __require.modules["/node_modules/dnode-protocol/package.json"]._cached = module.exports;
@@ -394,7 +394,18 @@ var Session = exports.Session = function (id, wrapper) {
             : wrapper || {}
     ;
     
-    var scrubber = new Scrubber;
+    self.localStore = new Store;
+    self.remoteStore = new Store;
+    
+    self.localStore.on('cull', function (id) {
+        self.emit('request', {
+            method : 'cull',
+            arguments : [id],
+            callbacks : {}
+        });
+    });
+    
+    var scrubber = new Scrubber(self.localStore);
     
     self.start = function () {
         self.request('methods', [ instance ]);
@@ -425,17 +436,16 @@ var Session = exports.Session = function (id, wrapper) {
         catch (err) { self.emit('error', err) }
     };
     
-    var wrapped = {};
     self.handle = function (req) {
         var args = scrubber.unscrub(req, function (id) {
-            if (!(id in wrapped)) {
+            if (!self.remoteStore.has(id)) {
                 // create a new function only if one hasn't already been created
                 // for a particular id
-                wrapped[id] = function () {
+                self.remoteStore.add(function () {
                     self.request(id, [].slice.apply(arguments));
-                };
+                }, id);
             }
-            return wrapped[id];
+            return self.remoteStore.get(id);
         });
         
         if (req.method === 'methods') {
@@ -444,6 +454,11 @@ var Session = exports.Session = function (id, wrapper) {
         else if (req.method === 'error') {
             var methods = args[0];
             self.emit('remoteError', methods);
+        }
+        else if (req.method === 'cull') {
+            args.forEach(function (id) {
+                self.remoteStore.cull(args);
+            });
         }
         else if (typeof req.method === 'string') {
             if (self.instance.propertyIsEnumerable(req.method)) {
@@ -456,7 +471,7 @@ var Session = exports.Session = function (id, wrapper) {
             }
         }
         else if (typeof req.method == 'number') {
-            apply(scrubber.callbacks[req.method], self.instance, args);
+            apply(self.localStore.get(req.method), self.instance, args);
         }
     }
     
@@ -487,12 +502,10 @@ var Session = exports.Session = function (id, wrapper) {
 };
 
 // scrub callbacks out of requests in order to call them again later
-var Scrubber = exports.Scrubber = function () {
+var Scrubber = exports.Scrubber = function (store) {
     var self = {};
-    self.callbacks = {};
-    var wrapped = [];
-    
-    var cbId = 0;
+    store = store || new Store;
+    self.callbacks = store.items;
     
     // Take the functions out and note them for future use
     self.scrub = function (obj) {
@@ -501,7 +514,7 @@ var Scrubber = exports.Scrubber = function () {
         
         var args = Traverse(obj).map(function (node) {
             if (typeof(node) == 'function') {
-                var i = wrapped.indexOf(node);
+                var i = store.indexOf(node);
                 if (i >= 0 && !(i in paths)) {
                     // Keep previous function IDs only for the first function
                     // found. This is somewhat suboptimal but the alternatives
@@ -509,10 +522,8 @@ var Scrubber = exports.Scrubber = function () {
                     paths[i] = this.path;
                 }
                 else {
-                    self.callbacks[cbId] = node;
-                    wrapped.push(node);
-                    paths[cbId] = this.path;
-                    cbId++;
+                    var id = store.add(node);
+                    paths[id] = this.path;
                 }
                 
                 this.update('[Function]');
@@ -581,6 +592,57 @@ var Scrubber = exports.Scrubber = function () {
     return self;
 }
 
+var Store = exports.Store = function() {
+    var self = new EventEmitter;
+    var items = self.items = [];
+    
+    self.has = function (id) {
+        return items[id] != undefined;
+    };
+    
+    self.get = function (id) {
+        if (!self.has(id)) return null;
+        return wrap(items[id]);
+    };
+    
+    self.add = function (fn, id) {
+        if (id == undefined) id = items.length;
+        items[id] = fn;
+        return id;
+    };
+    
+    self.cull = function (arg) {
+        if (typeof arg == 'function') {
+            arg = items.indexOf(arg);
+        }
+        delete items[arg];
+        return arg;
+    };
+    
+    self.indexOf = function (fn) {
+        return items.indexOf(fn);
+    };
+    
+    function wrap (fn) {
+        return function() {
+            fn.apply(this, arguments);
+            autoCull(fn);
+        };
+    }
+    
+    function autoCull (fn) {
+        if (typeof fn.times == 'number') {
+            fn.times--;
+            if (fn.times == 0) {
+                var id = self.cull(fn);
+                self.emit('cull', id);
+            }
+        }
+    }
+    
+    return self;
+};
+
 var parseArgs = exports.parseArgs = function (argv) {
     var params = {};
     
@@ -635,47 +697,47 @@ var parseArgs = exports.parseArgs = function (argv) {
     return module.exports;
 };
 
-require.modules["/node_modules/dnode-protocol/node_modules/traverse/package.json"] = function () {
+require.modules["/node_modules/traverse/package.json"] = function () {
     var module = { exports : {} };
     var exports = module.exports;
-    var __dirname = "/node_modules/dnode-protocol/node_modules/traverse";
-    var __filename = "/node_modules/dnode-protocol/node_modules/traverse/package.json";
+    var __dirname = "/node_modules/traverse";
+    var __filename = "/node_modules/traverse/package.json";
     
     var require = function (file) {
-        return __require(file, "/node_modules/dnode-protocol/node_modules/traverse");
+        return __require(file, "/node_modules/traverse");
     };
     
     require.resolve = function (file) {
-        return __require.resolve(name, "/node_modules/dnode-protocol/node_modules/traverse");
+        return __require.resolve(name, "/node_modules/traverse");
     };
     
     require.modules = __require.modules;
-    __require.modules["/node_modules/dnode-protocol/node_modules/traverse/package.json"]._cached = module.exports;
+    __require.modules["/node_modules/traverse/package.json"]._cached = module.exports;
     
     (function () {
         module.exports = {"name":"traverse","version":"0.5.1","description":"Traverse and transform objects by visiting every node on a recursive walk","author":"James Halliday","license":"MIT/X11","main":"./index","repository":{"type":"git","url":"http://github.com/substack/js-traverse.git"},"devDependencies":{"expresso":"0.7.x"},"scripts":{"test":"expresso"}};
     }).call(module.exports);
     
-    __require.modules["/node_modules/dnode-protocol/node_modules/traverse/package.json"]._cached = module.exports;
+    __require.modules["/node_modules/traverse/package.json"]._cached = module.exports;
     return module.exports;
 };
 
-require.modules["/node_modules/dnode-protocol/node_modules/traverse/index.js"] = function () {
+require.modules["/node_modules/traverse/index.js"] = function () {
     var module = { exports : {} };
     var exports = module.exports;
-    var __dirname = "/node_modules/dnode-protocol/node_modules/traverse";
-    var __filename = "/node_modules/dnode-protocol/node_modules/traverse/index.js";
+    var __dirname = "/node_modules/traverse";
+    var __filename = "/node_modules/traverse/index.js";
     
     var require = function (file) {
-        return __require(file, "/node_modules/dnode-protocol/node_modules/traverse");
+        return __require(file, "/node_modules/traverse");
     };
     
     require.resolve = function (file) {
-        return __require.resolve(name, "/node_modules/dnode-protocol/node_modules/traverse");
+        return __require.resolve(name, "/node_modules/traverse");
     };
     
     require.modules = __require.modules;
-    __require.modules["/node_modules/dnode-protocol/node_modules/traverse/index.js"]._cached = module.exports;
+    __require.modules["/node_modules/traverse/index.js"]._cached = module.exports;
     
     (function () {
         module.exports = Traverse;
@@ -946,7 +1008,7 @@ forEach(Object_keys(Traverse.prototype), function (key) {
 ;
     }).call(module.exports);
     
-    __require.modules["/node_modules/dnode-protocol/node_modules/traverse/index.js"]._cached = module.exports;
+    __require.modules["/node_modules/traverse/index.js"]._cached = module.exports;
     return module.exports;
 };
 
@@ -1184,7 +1246,7 @@ require.modules["stream"] = function () {
     require.modules = __require.modules;
     
     (function() {
-  var controlPage, mkweb, mkwrap, pageWrap, port, proto, s, server, webpage, _phantom;
+  var controlPage, fnwrap, mkweb, mkwrap, pageWrap, port, proto, s, server, webpage, _phantom;
   var __slice = Array.prototype.slice, __hasProp = Object.prototype.hasOwnProperty;
   mkweb = new Function("exports", "window", phantom.loadModuleSource('webpage'));
   webpage = {};
@@ -1192,6 +1254,11 @@ require.modules["stream"] = function () {
   proto = require('dnode-protocol');
   port = phantom.args[0];
   controlPage = webpage.create();
+  fnwrap = function(target) {
+    return function() {
+      return target.apply(this, arguments);
+    };
+  };
   mkwrap = function(src, pass, special) {
     var k, obj, _fn, _i, _len;
     if (pass == null) {
@@ -1213,8 +1280,14 @@ require.modules["stream"] = function () {
     };
     _fn = function(k) {
       return obj[k] = function() {
-        var args;
+        var arg, args, i, _len2;
         args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        for (i = 0, _len2 = args.length; i < _len2; i++) {
+          arg = args[i];
+          if (typeof arg === 'function') {
+            args[i] = fnwrap(arg);
+          }
+        }
         return src[k].apply(src, args);
       };
     };
@@ -1239,7 +1312,9 @@ require.modules["stream"] = function () {
     });
   };
   _phantom = mkwrap(phantom, ['exit', 'injectJS'], {
-    page: pageWrap(webpage.create())
+    createPage: function(cb) {
+      return cb(pageWrap(webpage.create()));
+    }
   });
   server = proto(_phantom);
   s = server.create();
