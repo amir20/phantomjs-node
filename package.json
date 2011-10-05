@@ -2,7 +2,7 @@
   "author": "Sam Gentle <sam@samgentle.com>",
   "name": "phantom",
   "description": "PhantomJS wrapper for Node",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
     "url": "git://github.com/sgentle/phantomjs-node.git"
