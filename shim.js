@@ -1320,7 +1320,7 @@ require.modules["stream"] = function () {
   s = server.create();
   s.on('request', function(req) {
     var evil;
-    evil = "function(){socket.send('" + (JSON.stringify(req)) + "'+'\\n');}";
+    evil = "function(){socket.send(" + (JSON.stringify(JSON.stringify(req))) + " + '\\n');}";
     return controlPage.evaluate(evil);
   });
   controlPage.onAlert = function(msg) {
