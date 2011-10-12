@@ -19,6 +19,11 @@
   },
   "devDependencies": {
     "browserify": "*",
-    "traverse": "*"
+    "traverse": "*",
+    "coffee-script": "*",
+    "vows": "*"
+  },
+  "scripts": {
+    "test": "cake test"
   }
 }
