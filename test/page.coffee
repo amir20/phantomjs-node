@@ -60,10 +60,10 @@ describe "Pages"
           topic: t (page) ->
             page.evaluate (-> document.title), (title) => @callback null, title
           
-          "which matches": (title) ->
+          "which is correct": (title) ->
             assert.equal title, "Test page title"
 
-        "can access DOM nodes":
+        "can evaluate DOM nodes":
           topic: t (page) ->
             page.evaluate (-> document.getElementById('somediv')), (node) => @callback null, node
 
@@ -76,7 +76,7 @@ describe "Pages"
             page.evaluate (-> $('#somediv').html()), (html) => @callback null, html              
           
           "which return the correct result": (html) ->
-            html = html.replace(/\n\t/g, "")
+            html = html.replace(/\s\s+/g, "")
             assert.equal html, '<div class="anotherdiv">Some page content</div>'
         
     
