@@ -14,11 +14,11 @@
   },
   "dependencies": {
     "dnode-protocol": "*",
-    "browserify": "*",
     "dnode": "*",
     "express": "*"
   },
   "devDependencies": {
+    "browserify": "*",
     "traverse": "*"
   }
 }
