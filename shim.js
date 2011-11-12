@@ -7,25 +7,24 @@ var require = function (file, cwd) {
     var res = mod._cached ? mod._cached : mod();
     return res;
 }
-var __require = require;
 
 require.paths = [];
 require.modules = {};
 require.extensions = [".js",".coffee"];
 
+require._core = {
+    'assert': true,
+    'events': true,
+    'fs': true,
+    'path': true,
+    'vm': true
+};
+
 require.resolve = (function () {
-    var core = {
-        'assert': true,
-        'events': true,
-        'fs': true,
-        'path': true,
-        'vm': true
-    };
-    
     return function (x, cwd) {
         if (!cwd) cwd = '/';
         
-        if (core[x]) return x;
+        if (require._core[x]) return x;
         var path = require.modules.path();
         var y = cwd || '.';
         
@@ -130,6 +129,37 @@ require.alias = function (from, to) {
     }
 };
 
+require.define = function (filename, fn) {
+    var dirname = require._core[filename]
+        ? ''
+        : require.modules.path().dirname(filename)
+    ;
+    
+    var require_ = function (file) {
+        return require(file, dirname)
+    };
+    require_.resolve = function (name) {
+        return require.resolve(name, dirname);
+    };
+    require_.modules = require.modules;
+    require_.define = require.define;
+    var module_ = { exports : {} };
+    
+    require.modules[filename] = function () {
+        require.modules[filename]._cached = module_.exports;
+        fn.call(
+            module_.exports,
+            require_,
+            module_,
+            module_.exports,
+            dirname,
+            filename
+        );
+        require.modules[filename]._cached = module_.exports;
+        return module_.exports;
+    };
+};
+
 var Object_keys = Object.keys || function (obj) {
     var res = [];
     for (var key in obj) res.push(key)
@@ -151,25 +181,8 @@ if (!process.binding) process.binding = function (name) {
 
 if (!process.cwd) process.cwd = function () { return '.' };
 
-require.modules["path"] = function () {
-    var module = { exports : {} };
-    var exports = module.exports;
-    var __dirname = ".";
-    var __filename = "path";
-    
-    var require = function (file) {
-        return __require(file, ".");
-    };
-    
-    require.resolve = function (file) {
-        return __require.resolve(name, ".");
-    };
-    
-    require.modules = __require.modules;
-    __require.modules["path"]._cached = module.exports;
-    
-    (function () {
-        function filter (xs, fn) {
+require.define("path", function (require, module, exports, __dirname, __filename) {
+    function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -303,59 +316,18 @@ exports.basename = function(path, ext) {
 exports.extname = function(path) {
   return splitPathRe.exec(path)[3] || '';
 };
-;
-    }).call(module.exports);
-    
-    __require.modules["path"]._cached = module.exports;
-    return module.exports;
-};
 
-require.modules["/node_modules/dnode-protocol/package.json"] = function () {
-    var module = { exports : {} };
-    var exports = module.exports;
-    var __dirname = "/node_modules/dnode-protocol";
-    var __filename = "/node_modules/dnode-protocol/package.json";
-    
-    var require = function (file) {
-        return __require(file, "/node_modules/dnode-protocol");
-    };
-    
-    require.resolve = function (file) {
-        return __require.resolve(name, "/node_modules/dnode-protocol");
-    };
-    
-    require.modules = __require.modules;
-    __require.modules["/node_modules/dnode-protocol/package.json"]._cached = module.exports;
-    
-    (function () {
-        module.exports = {"name":"dnode-protocol","description":"Implements the dnode protocol abstractly","version":"0.1.0","repository":"https://github.com/substack/dnode-protocol.git","author":{"name":"James Halliday","email":"mail@substack.net","url":"http://substack.net"},"main":"./index.js","dependencies":{"traverse":"0.5.x"},"scripts":{"test":"expresso"},"engines":{"node":">=0.2.0"}};
-    }).call(module.exports);
-    
-    __require.modules["/node_modules/dnode-protocol/package.json"]._cached = module.exports;
-    return module.exports;
-};
+});
 
-require.modules["/node_modules/dnode-protocol/index.js"] = function () {
-    var module = { exports : {} };
-    var exports = module.exports;
-    var __dirname = "/node_modules/dnode-protocol";
-    var __filename = "/node_modules/dnode-protocol/index.js";
-    
-    var require = function (file) {
-        return __require(file, "/node_modules/dnode-protocol");
-    };
-    
-    require.resolve = function (file) {
-        return __require.resolve(name, "/node_modules/dnode-protocol");
-    };
-    
-    require.modules = __require.modules;
-    __require.modules["/node_modules/dnode-protocol/index.js"]._cached = module.exports;
-    
-    (function () {
-        var Traverse = require('traverse');
+require.define("/node_modules/dnode-protocol/package.json", function (require, module, exports, __dirname, __filename) {
+    module.exports = {"main":"./index.js"}
+});
+
+require.define("/node_modules/dnode-protocol/index.js", function (require, module, exports, __dirname, __filename) {
+    var Traverse = require('traverse');
 var EventEmitter = require('events').EventEmitter;
 var stream = process.title === 'browser' ? {} : require('stream');
+var json = typeof JSON === 'object' ? JSON : require('jsonify');
 
 var exports = module.exports = function (wrapper) {
     var self = {};
@@ -424,10 +396,10 @@ var Session = exports.Session = function (id, wrapper) {
     
     self.parse = function (line) {
         var msg = null;
-        try { msg = JSON.parse(line) }
+        try { msg = json.parse(line) }
         catch (err) {
             self.emit('error', new SyntaxError(
-                'Error parsing JSON message: ' + JSON.stringify(line))
+                'Error parsing JSON message: ' + json.stringify(line))
             );
             return;
         }
@@ -690,57 +662,15 @@ var parseArgs = exports.parseArgs = function (argv) {
     
     return params;
 };
-;
-    }).call(module.exports);
-    
-    __require.modules["/node_modules/dnode-protocol/index.js"]._cached = module.exports;
-    return module.exports;
-};
 
-require.modules["/node_modules/traverse/package.json"] = function () {
-    var module = { exports : {} };
-    var exports = module.exports;
-    var __dirname = "/node_modules/traverse";
-    var __filename = "/node_modules/traverse/package.json";
-    
-    var require = function (file) {
-        return __require(file, "/node_modules/traverse");
-    };
-    
-    require.resolve = function (file) {
-        return __require.resolve(name, "/node_modules/traverse");
-    };
-    
-    require.modules = __require.modules;
-    __require.modules["/node_modules/traverse/package.json"]._cached = module.exports;
-    
-    (function () {
-        module.exports = {"name":"traverse","version":"0.5.1","description":"Traverse and transform objects by visiting every node on a recursive walk","author":"James Halliday","license":"MIT/X11","main":"./index","repository":{"type":"git","url":"http://github.com/substack/js-traverse.git"},"devDependencies":{"expresso":"0.7.x"},"scripts":{"test":"expresso"}};
-    }).call(module.exports);
-    
-    __require.modules["/node_modules/traverse/package.json"]._cached = module.exports;
-    return module.exports;
-};
+});
 
-require.modules["/node_modules/traverse/index.js"] = function () {
-    var module = { exports : {} };
-    var exports = module.exports;
-    var __dirname = "/node_modules/traverse";
-    var __filename = "/node_modules/traverse/index.js";
-    
-    var require = function (file) {
-        return __require(file, "/node_modules/traverse");
-    };
-    
-    require.resolve = function (file) {
-        return __require.resolve(name, "/node_modules/traverse");
-    };
-    
-    require.modules = __require.modules;
-    __require.modules["/node_modules/traverse/index.js"]._cached = module.exports;
-    
-    (function () {
-        module.exports = Traverse;
+require.define("/node_modules/traverse/package.json", function (require, module, exports, __dirname, __filename) {
+    module.exports = {"main":"./index"}
+});
+
+require.define("/node_modules/traverse/index.js", function (require, module, exports, __dirname, __filename) {
+    module.exports = Traverse;
 function Traverse (obj) {
     if (!(this instanceof Traverse)) return new Traverse(obj);
     this.value = obj;
@@ -864,16 +794,18 @@ function walk (root, cb, immutable) {
                 state.node = x;
                 if (stopHere) keepGoing = false;
             },
-            'delete' : function () {
+            'delete' : function (stopHere) {
                 delete state.parent.node[state.key];
+                if (stopHere) keepGoing = false;
             },
-            remove : function () {
+            remove : function (stopHere) {
                 if (Array_isArray(state.parent.node)) {
                     state.parent.node.splice(state.key, 1);
                 }
                 else {
                     delete state.parent.node[state.key];
                 }
+                if (stopHere) keepGoing = false;
             },
             keys : null,
             before : function (f) { modifiers.before = f },
@@ -1005,32 +937,11 @@ forEach(Object_keys(Traverse.prototype), function (key) {
         return t[key].apply(t, args);
     };
 });
-;
-    }).call(module.exports);
-    
-    __require.modules["/node_modules/traverse/index.js"]._cached = module.exports;
-    return module.exports;
-};
 
-require.modules["events"] = function () {
-    var module = { exports : {} };
-    var exports = module.exports;
-    var __dirname = ".";
-    var __filename = "events";
-    
-    var require = function (file) {
-        return __require(file, ".");
-    };
-    
-    require.resolve = function (file) {
-        return __require.resolve(name, ".");
-    };
-    
-    require.modules = __require.modules;
-    __require.modules["events"]._cached = module.exports;
-    
-    (function () {
-        if (!process.EventEmitter) process.EventEmitter = function () {};
+});
+
+require.define("events", function (require, module, exports, __dirname, __filename) {
+    if (!process.EventEmitter) process.EventEmitter = function () {};
 
 var EventEmitter = exports.EventEmitter = process.EventEmitter;
 var isArray = typeof Array.isArray === 'function'
@@ -1201,77 +1112,489 @@ EventEmitter.prototype.listeners = function(type) {
   }
   return this._events[type];
 };
-;
-    }).call(module.exports);
+
+});
+
+require.define("stream", function (require, module, exports, __dirname, __filename) {
+    // todo
+
+});
+
+require.define("/node_modules/dnode-protocol/node_modules/jsonify/package.json", function (require, module, exports, __dirname, __filename) {
+    module.exports = {"main":"index.js"}
+});
+
+require.define("/node_modules/dnode-protocol/node_modules/jsonify/index.js", function (require, module, exports, __dirname, __filename) {
+    exports.parse = require('./lib/parse');
+exports.stringify = require('./lib/stringify');
+
+});
+
+require.define("/node_modules/dnode-protocol/node_modules/jsonify/lib/parse.js", function (require, module, exports, __dirname, __filename) {
+    var at, // The index of the current character
+    ch, // The current character
+    escapee = {
+        '"':  '"',
+        '\\': '\\',
+        '/':  '/',
+        b:    '\b',
+        f:    '\f',
+        n:    '\n',
+        r:    '\r',
+        t:    '\t'
+    },
+    text,
+
+    error = function (m) {
+        // Call error when something is wrong.
+        throw {
+            name:    'SyntaxError',
+            message: m,
+            at:      at,
+            text:    text
+        };
+    },
     
-    __require.modules["events"]._cached = module.exports;
-    return module.exports;
+    next = function (c) {
+        // If a c parameter is provided, verify that it matches the current character.
+        if (c && c !== ch) {
+            error("Expected '" + c + "' instead of '" + ch + "'");
+        }
+        
+        // Get the next character. When there are no more characters,
+        // return the empty string.
+        
+        ch = text.charAt(at);
+        at += 1;
+        return ch;
+    },
+    
+    number = function () {
+        // Parse a number value.
+        var number,
+            string = '';
+        
+        if (ch === '-') {
+            string = '-';
+            next('-');
+        }
+        while (ch >= '0' && ch <= '9') {
+            string += ch;
+            next();
+        }
+        if (ch === '.') {
+            string += '.';
+            while (next() && ch >= '0' && ch <= '9') {
+                string += ch;
+            }
+        }
+        if (ch === 'e' || ch === 'E') {
+            string += ch;
+            next();
+            if (ch === '-' || ch === '+') {
+                string += ch;
+                next();
+            }
+            while (ch >= '0' && ch <= '9') {
+                string += ch;
+                next();
+            }
+        }
+        number = +string;
+        if (!isFinite(number)) {
+            error("Bad number");
+        } else {
+            return number;
+        }
+    },
+    
+    string = function () {
+        // Parse a string value.
+        var hex,
+            i,
+            string = '',
+            uffff;
+        
+        // When parsing for string values, we must look for " and \ characters.
+        if (ch === '"') {
+            while (next()) {
+                if (ch === '"') {
+                    next();
+                    return string;
+                } else if (ch === '\\') {
+                    next();
+                    if (ch === 'u') {
+                        uffff = 0;
+                        for (i = 0; i < 4; i += 1) {
+                            hex = parseInt(next(), 16);
+                            if (!isFinite(hex)) {
+                                break;
+                            }
+                            uffff = uffff * 16 + hex;
+                        }
+                        string += String.fromCharCode(uffff);
+                    } else if (typeof escapee[ch] === 'string') {
+                        string += escapee[ch];
+                    } else {
+                        break;
+                    }
+                } else {
+                    string += ch;
+                }
+            }
+        }
+        error("Bad string");
+    },
+
+    white = function () {
+
+// Skip whitespace.
+
+        while (ch && ch <= ' ') {
+            next();
+        }
+    },
+
+    word = function () {
+
+// true, false, or null.
+
+        switch (ch) {
+        case 't':
+            next('t');
+            next('r');
+            next('u');
+            next('e');
+            return true;
+        case 'f':
+            next('f');
+            next('a');
+            next('l');
+            next('s');
+            next('e');
+            return false;
+        case 'n':
+            next('n');
+            next('u');
+            next('l');
+            next('l');
+            return null;
+        }
+        error("Unexpected '" + ch + "'");
+    },
+
+    value,  // Place holder for the value function.
+
+    array = function () {
+
+// Parse an array value.
+
+        var array = [];
+
+        if (ch === '[') {
+            next('[');
+            white();
+            if (ch === ']') {
+                next(']');
+                return array;   // empty array
+            }
+            while (ch) {
+                array.push(value());
+                white();
+                if (ch === ']') {
+                    next(']');
+                    return array;
+                }
+                next(',');
+                white();
+            }
+        }
+        error("Bad array");
+    },
+
+    object = function () {
+
+// Parse an object value.
+
+        var key,
+            object = {};
+
+        if (ch === '{') {
+            next('{');
+            white();
+            if (ch === '}') {
+                next('}');
+                return object;   // empty object
+            }
+            while (ch) {
+                key = string();
+                white();
+                next(':');
+                if (Object.hasOwnProperty.call(object, key)) {
+                    error('Duplicate key "' + key + '"');
+                }
+                object[key] = value();
+                white();
+                if (ch === '}') {
+                    next('}');
+                    return object;
+                }
+                next(',');
+                white();
+            }
+        }
+        error("Bad object");
+    };
+
+value = function () {
+
+// Parse a JSON value. It could be an object, an array, a string, a number,
+// or a word.
+
+    white();
+    switch (ch) {
+    case '{':
+        return object();
+    case '[':
+        return array();
+    case '"':
+        return string();
+    case '-':
+        return number();
+    default:
+        return ch >= '0' && ch <= '9' ? number() : word();
+    }
 };
 
-require.modules["stream"] = function () {
-    var module = { exports : {} };
-    var exports = module.exports;
-    var __dirname = ".";
-    var __filename = "stream";
+// Return the json_parse function. It will have access to all of the above
+// functions and variables.
+
+module.exports = function (source, reviver) {
+    var result;
     
-    var require = function (file) {
-        return __require(file, ".");
-    };
-    
-    require.resolve = function (file) {
-        return __require.resolve(name, ".");
-    };
-    
-    require.modules = __require.modules;
-    __require.modules["stream"]._cached = module.exports;
-    
-    (function () {
-        // todo
-;
-    }).call(module.exports);
-    
-    __require.modules["stream"]._cached = module.exports;
-    return module.exports;
+    text = source;
+    at = 0;
+    ch = ' ';
+    result = value();
+    white();
+    if (ch) {
+        error("Syntax error");
+    }
+
+    // If there is a reviver function, we recursively walk the new structure,
+    // passing each name/value pair to the reviver function for possible
+    // transformation, starting with a temporary root object that holds the result
+    // in an empty key. If there is not a reviver function, we simply return the
+    // result.
+
+    return typeof reviver === 'function' ? (function walk(holder, key) {
+        var k, v, value = holder[key];
+        if (value && typeof value === 'object') {
+            for (k in value) {
+                if (Object.prototype.hasOwnProperty.call(value, k)) {
+                    v = walk(value, k);
+                    if (v !== undefined) {
+                        value[k] = v;
+                    } else {
+                        delete value[k];
+                    }
+                }
+            }
+        }
+        return reviver.call(holder, key, value);
+    }({'': result}, '')) : result;
 };
 
-(function () {
-    var module = { exports : {} };
-    var exports = module.exports;
-    var __dirname = "/";
-    var __filename = "//Users/samg/Code/phantom";
+});
+
+require.define("/node_modules/dnode-protocol/node_modules/jsonify/lib/stringify.js", function (require, module, exports, __dirname, __filename) {
+    var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
+    escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,
+    gap,
+    indent,
+    meta = {    // table of character substitutions
+        '\b': '\\b',
+        '\t': '\\t',
+        '\n': '\\n',
+        '\f': '\\f',
+        '\r': '\\r',
+        '"' : '\\"',
+        '\\': '\\\\'
+    },
+    rep;
+
+function quote(string) {
+    // If the string contains no control characters, no quote characters, and no
+    // backslash characters, then we can safely slap some quotes around it.
+    // Otherwise we must also replace the offending characters with safe escape
+    // sequences.
     
-    var require = function (file) {
-        return __require(file, "/");
-    };
-    require.modules = __require.modules;
+    escapable.lastIndex = 0;
+    return escapable.test(string) ? '"' + string.replace(escapable, function (a) {
+        var c = meta[a];
+        return typeof c === 'string' ? c :
+            '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+    }) + '"' : '"' + string + '"';
+}
+
+function str(key, holder) {
+    // Produce a string from holder[key].
+    var i,          // The loop counter.
+        k,          // The member key.
+        v,          // The member value.
+        length,
+        mind = gap,
+        partial,
+        value = holder[key];
     
+    // If the value has a toJSON method, call it to obtain a replacement value.
+    if (value && typeof value === 'object' &&
+            typeof value.toJSON === 'function') {
+        value = value.toJSON(key);
+    }
+    
+    // If we were called with a replacer function, then call the replacer to
+    // obtain a replacement value.
+    if (typeof rep === 'function') {
+        value = rep.call(holder, key, value);
+    }
+    
+    // What happens next depends on the value's type.
+    switch (typeof value) {
+        case 'string':
+            return quote(value);
+        
+        case 'number':
+            // JSON numbers must be finite. Encode non-finite numbers as null.
+            return isFinite(value) ? String(value) : 'null';
+        
+        case 'boolean':
+        case 'null':
+            // If the value is a boolean or null, convert it to a string. Note:
+            // typeof null does not produce 'null'. The case is included here in
+            // the remote chance that this gets fixed someday.
+            return String(value);
+            
+        case 'object':
+            if (!value) return 'null';
+            gap += indent;
+            partial = [];
+            
+            // Array.isArray
+            if (Object.prototype.toString.apply(value) === '[object Array]') {
+                length = value.length;
+                for (i = 0; i < length; i += 1) {
+                    partial[i] = str(i, value) || 'null';
+                }
+                
+                // Join all of the elements together, separated with commas, and
+                // wrap them in brackets.
+                v = partial.length === 0 ? '[]' : gap ?
+                    '[\n' + gap + partial.join(',\n' + gap) + '\n' + mind + ']' :
+                    '[' + partial.join(',') + ']';
+                gap = mind;
+                return v;
+            }
+            
+            // If the replacer is an array, use it to select the members to be
+            // stringified.
+            if (rep && typeof rep === 'object') {
+                length = rep.length;
+                for (i = 0; i < length; i += 1) {
+                    k = rep[i];
+                    if (typeof k === 'string') {
+                        v = str(k, value);
+                        if (v) {
+                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
+                        }
+                    }
+                }
+            }
+            else {
+                // Otherwise, iterate through all of the keys in the object.
+                for (k in value) {
+                    if (Object.prototype.hasOwnProperty.call(value, k)) {
+                        v = str(k, value);
+                        if (v) {
+                            partial.push(quote(k) + (gap ? ': ' : ':') + v);
+                        }
+                    }
+                }
+            }
+            
+        // Join all of the member texts together, separated with commas,
+        // and wrap them in braces.
+
+        v = partial.length === 0 ? '{}' : gap ?
+            '{\n' + gap + partial.join(',\n' + gap) + '\n' + mind + '}' :
+            '{' + partial.join(',') + '}';
+        gap = mind;
+        return v;
+    }
+}
+
+module.exports = function (value, replacer, space) {
+    var i;
+    gap = '';
+    indent = '';
+    
+    // If the space parameter is a number, make an indent string containing that
+    // many spaces.
+    if (typeof space === 'number') {
+        for (i = 0; i < space; i += 1) {
+            indent += ' ';
+        }
+    }
+    // If the space parameter is a string, it will be used as the indent string.
+    else if (typeof space === 'string') {
+        indent = space;
+    }
+
+    // If there is a replacer, it must be a function or an array.
+    // Otherwise, throw an error.
+    rep = replacer;
+    if (replacer && typeof replacer !== 'function'
+    && (typeof replacer !== 'object' || typeof replacer.length !== 'number')) {
+        throw new Error('JSON.stringify');
+    }
+    
+    // Make a fake root object containing our value under the key of ''.
+    // Return the result of stringifying the value.
+    return str('', {'': value});
+};
+
+});
+
+require.define("/shim.coffee", function (require, module, exports, __dirname, __filename) {
     (function() {
   var controlPage, fnwrap, mkweb, mkwrap, pageWrap, port, proto, s, server, webpage, _phantom;
   var __slice = Array.prototype.slice, __hasProp = Object.prototype.hasOwnProperty;
+
   mkweb = new Function("exports", "window", phantom.loadModuleSource('webpage'));
+
   webpage = {};
+
   mkweb.call({}, webpage, {});
+
   proto = require('dnode-protocol');
+
   port = phantom.args[0];
+
   controlPage = webpage.create();
+
   fnwrap = function(target) {
     return function() {
       return target.apply(this, arguments);
     };
   };
+
   mkwrap = function(src, pass, special) {
     var k, obj, _fn, _i, _len;
-    if (pass == null) {
-      pass = [];
-    }
-    if (special == null) {
-      special = {};
-    }
+    if (pass == null) pass = [];
+    if (special == null) special = {};
     obj = {
       set: function(key, val, cb) {
-        if (cb == null) {
-          cb = function() {};
-        }
+        if (cb == null) cb = function() {};
         return cb(src[key] = val);
       },
       get: function(key, cb) {
@@ -1284,9 +1607,7 @@ require.modules["stream"] = function () {
         args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
         for (i = 0, _len2 = args.length; i < _len2; i++) {
           arg = args[i];
-          if (typeof arg === 'function') {
-            args[i] = fnwrap(arg);
-          }
+          if (typeof arg === 'function') args[i] = fnwrap(arg);
         }
         return src[k].apply(src, args);
       };
@@ -1301,42 +1622,48 @@ require.modules["stream"] = function () {
     }
     return obj;
   };
+
   pageWrap = function(page) {
     return mkwrap(page, ['open', 'includeJs', 'injectJs', 'render', 'sendEvent'], {
       evaluate: function(fn, cb) {
-        if (cb == null) {
-          cb = function() {};
-        }
+        if (cb == null) cb = function() {};
         return cb(page.evaluate(fn));
       }
     });
   };
+
   _phantom = mkwrap(phantom, ['exit', 'injectJS'], {
     createPage: function(cb) {
       return cb(pageWrap(webpage.create()));
     }
   });
+
   server = proto(_phantom);
+
   s = server.create();
+
   s.on('request', function(req) {
     var evil;
-    evil = "function(){socket.send(" + (JSON.stringify(JSON.stringify(req))) + " + '\\n');}";
+    evil = "function(){socket.emit('message', " + (JSON.stringify(JSON.stringify(req))) + " + '\\n');}";
     return controlPage.evaluate(evil);
   });
+
   controlPage.onAlert = function(msg) {
-    if (msg.slice(0, 6) !== "PCTRL ") {
-      return;
-    }
+    if (msg.slice(0, 6) !== "PCTRL ") return;
     return s.parse(msg.slice(6));
   };
+
   controlPage.onConsoleMessage = function() {
     var msg;
     msg = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
     return console.log.apply(console, msg);
   };
+
   controlPage.open("http://127.0.0.1:" + port + "/", function(status) {
     return s.start();
   });
+
 }).call(this);
-;
-})();
+
+});
+require("/shim.coffee");

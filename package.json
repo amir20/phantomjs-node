@@ -10,7 +10,7 @@
   },
   "main": "phantom.js",
   "engines": {
-    "node": "~v0.4.9"
+    "node": ">=v0.4.9"
   },
   "dependencies": {
     "dnode-protocol": "*",
