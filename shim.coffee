@@ -45,7 +45,8 @@ s = server.create()
 
 s.on 'request', (req) ->
   #console.log "phantom sending request #{JSON.stringify req}"
-  evil = "function(){socket.send(#{JSON.stringify JSON.stringify req} + '\\n');}"
+  #evil = "function(){socket.send(#{JSON.stringify JSON.stringify req} + '\\n');}"
+  evil = "function(){socket.emit('message', #{JSON.stringify JSON.stringify req} + '\\n');}"
   controlPage.evaluate evil
 
 controlPage.onAlert = (msg) ->
