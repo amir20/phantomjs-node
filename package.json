@@ -3,7 +3,7 @@
   "name": "phantom",
   "description": "PhantomJS wrapper for Node",
   "homepage": "https://github.com/sgentle/phantomjs-node",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/sgentle/phantomjs-node.git"
@@ -22,6 +22,10 @@
     "traverse": "*",
     "coffee-script": "*",
     "vows": "*"
+  },
+  "licenses": {
+    "type": "MIT",
+    "url": "http://www.opensource.org/licenses/MIT"
   },
   "scripts": {
     "test": "cake test"
