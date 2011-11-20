@@ -1595,6 +1595,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     obj = {
       set: function(key, val, cb) {
         if (cb == null) cb = function() {};
+        if (typeof val === "function") val = fnwrap(val);
         return cb(src[key] = val);
       },
       get: function(key, cb) {

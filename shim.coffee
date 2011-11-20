@@ -14,7 +14,12 @@ fnwrap = (target) -> -> target.apply this, arguments
 
 mkwrap = (src, pass=[], special={}) ->
   obj =
-    set: (key, val, cb=->) -> cb src[key] = val   
+    set: (key, val, cb=->) ->
+      
+      #Fnwrap so PhantomJS doesn't segfault when it tries to call the callback
+      val = fnwrap val if typeof val is "function"
+      cb src[key] = val
+
     get: (key, cb) -> cb src[key]
 
   for k in pass
