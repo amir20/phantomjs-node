@@ -4,11 +4,14 @@ bin = "./node_modules/.bin"
 
 run = (cmds...) ->
   exec cmds.join(' && '), (err, stdout, stderr) ->
+    stderr = stderr.trim()
+    stdout = stdout.trim()
+    console.log stderr if stderr
+    console.log stdout if stdout
     if err
-      console.log stderr.trim()
+      console.log "Failed."
     else
-      console.log stdout.trim()
-      console.log "done"
+      console.log "Great success!"
 
 task "build", "coffee-compile and browserify phantom", ->
   run(
