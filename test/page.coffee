@@ -87,6 +87,16 @@ describe "Pages"
 
           "and have those clicks register": (clicked) ->
             assert.ok clicked
+
+        "can register an onConsoleMessage handler":
+          topic: t (page) ->
+            test = this
+            page.set 'onConsoleMessage', (msg) -> test.callback null, msg
+            page.evaluate (-> console.log "Hello, world!")
+
+          "which works correctly": (msg) ->
+            assert.equal msg, "Hello, world!"
+
     
     teardown: (page, ph) ->
       ph.exit()
