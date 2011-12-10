@@ -1629,7 +1629,12 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
       evaluate: function(fn, cb) {
         if (cb == null) cb = function() {};
         return cb(page.evaluate(fn));
-      }
+      },
+      render: function(file, cb) {
+          if (cb == null) cb = function() {};
+      	page.render(file);
+      	cb();
+      }      
     });
   };
 
