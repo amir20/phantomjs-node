@@ -3,7 +3,7 @@
   "name": "phantom",
   "description": "PhantomJS wrapper for Node",
   "homepage": "https://github.com/sgentle/phantomjs-node",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "repository": {
     "type": "git",
     "url": "git://github.com/sgentle/phantomjs-node.git"
