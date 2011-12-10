@@ -21,6 +21,7 @@
     "browserify": "*",
     "traverse": "*",
     "coffee-script": "*",
+    "temp": "*",
     "vows": "*"
   },
   "licenses": {

@@ -2,6 +2,9 @@ vows    = require 'vows'
 assert  = require 'assert'
 phantom = require '../phantom'
 express = require 'express'
+temp    = require 'temp'
+path    = require 'path'
+fs      = require 'fs'
 
 
 describe = (name, bat) -> vows.describe(name).addBatch(bat).export(module)
@@ -97,6 +100,17 @@ describe "Pages"
           "which works correctly": (msg) ->
             assert.equal msg, "Hello, world!"
 
+        "can render the page to a file":
+          topic: t (page) ->
+            test     = this
+            fileName = temp.path suffix: '.png'
+            page.render fileName, -> test.callback null, fileName
+
+          "which is created": (fileName) ->
+            assert.ok path.existsSync(fileName), "rendered image should exist"
+          
+          teardown: (fileName) ->
+            fs.unlink fileName
     
     teardown: (page, ph) ->
       ph.exit()
