@@ -1631,10 +1631,10 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
         return cb(page.evaluate(fn));
       },
       render: function(file, cb) {
-          if (cb == null) cb = function() {};
-      	page.render(file);
-      	cb();
-      }      
+        if (cb == null) cb = function() {};
+        page.render(file);
+        return cb();
+      }
     });
   };
 
