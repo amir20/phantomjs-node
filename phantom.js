@@ -9,7 +9,7 @@
 
   listenOnSomePort = function(app) {
     try {
-      // Use a random port. Node 0.6.* no longer throws on port is use within `listen`.
+      // Use a random port. Node 0.6.* no longer throws exceptions within 'listen'.
       app.listen();
       return app.address().port;
     } catch (err) {
