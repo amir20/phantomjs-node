@@ -7,24 +7,18 @@
 
   child = require('child_process');
 
-  PORT = 6123;
-
-  listenOnSomePort = function(app, startPort) {
-    var _results;
-    _results = [];
-    while (true) {
-      try {
-        app.listen(startPort);
-        return startPort;
-      } catch (err) {
-        if (err.code === "EADDRINUSE") {
-          _results.push(startPort++);
-        } else {
-          throw err;
-        }
+  listenOnSomePort = function(app) {
+    try {
+      // Use a random port. Node 0.6.* no longer throws on port is use within `listen`.
+      app.listen();
+      return app.address().port;
+    } catch (err) {
+      if (err.code === "EADDRINUSE") {
+        _results.push(startPort++);
+      } else {
+        throw err;
       }
     }
-    return _results;
   };
 
   phanta = [];
@@ -70,7 +64,7 @@
       var app, phantom, port, ps, server;
       app = express.createServer();
       app.use(express.static(__dirname));
-      port = listenOnSomePort(app, PORT);
+      port = listenOnSomePort(app);
       server = dnode();
       phantom = null;
       ps = startPhantomProcess(port);
