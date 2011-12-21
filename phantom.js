@@ -89,7 +89,8 @@
       });
       return server.listen(app, {
         io: {
-          log: null
+            log: null
+          , 'client store expiration': 0
         }
       }, function(obj, conn) {
         phantom = conn.remote;
