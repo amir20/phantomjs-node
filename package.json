@@ -15,7 +15,7 @@
   "dependencies": {
     "dnode-protocol": "*",
     "dnode": "*",
-    "express": "2.5.0"
+    "express": "*"
   },
   "devDependencies": {
     "browserify": "*",

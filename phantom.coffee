@@ -57,8 +57,11 @@ module.exports =
       app.close()
       phanta = (p for p in phanta when p isnt phantom)
 
+    io =
+      log: null,
+      'client store expiration': 0
 
-    server.listen app, {io: log: null}, (obj, conn) ->
+    server.listen app, {io}, (obj, conn) ->
       phantom = conn.remote
       wrap phantom
       phanta.push phantom

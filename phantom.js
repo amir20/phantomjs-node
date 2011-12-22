@@ -10,21 +10,18 @@
   PORT = 6123;
 
   listenOnSomePort = function(app, startPort) {
-    var _results;
-    _results = [];
     while (true) {
       try {
         app.listen(startPort);
         return startPort;
       } catch (err) {
         if (err.code === "EADDRINUSE") {
-          _results.push(startPort++);
+          startPort++;
         } else {
           throw err;
         }
       }
     }
-    return _results;
   };
 
   phanta = [];
@@ -67,7 +64,7 @@
 
   module.exports = {
     create: function(cb) {
-      var app, phantom, port, ps, server;
+      var app, io, phantom, port, ps, server;
       app = express.createServer();
       app.use(express.static(__dirname));
       port = listenOnSomePort(app, PORT);
@@ -87,11 +84,12 @@
           return _results;
         })();
       });
+      io = {
+        log: null,
+        'client store expiration': 0
+      };
       return server.listen(app, {
-        io: {
-            log: null
-          , 'client store expiration': 0
-        }
+        io: io
       }, function(obj, conn) {
         phantom = conn.remote;
         wrap(phantom);
