@@ -22,6 +22,7 @@
     "traverse": "*",
     "coffee-script": "*",
     "temp": "*",
+    "ps-tree": "*",
     "vows": "*"
   },
   "licenses": {

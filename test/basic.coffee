@@ -1,5 +1,7 @@
 vows    = require 'vows'
 assert  = require 'assert'
+psTree  = require 'ps-tree'
+child   = require 'child_process'
 phantom = require '../phantom'
 
 
@@ -35,11 +37,14 @@ describe "The phantom module"
 
     "which, when you call exit()":
       topic: t (p) ->
+        test = this
         p.exit()
         setTimeout =>
-          @callback null, p
+          psTree process.pid, test.callback
         , 500
       
-      "actually exits": ""
+      "exits after 500ms": (children) ->
+        # 1 instead of 0 because pstree spawns a subprocess
+        assert.equal children.length, 1, "process still has #{children.length} child(ren): #{JSON.stringify children}"
         
 
