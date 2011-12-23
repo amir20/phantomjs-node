@@ -2,19 +2,6 @@ dnode   = require 'dnode'
 express = require 'express'
 child   = require 'child_process'
 
-PORT = 6123
-
-listenOnSomePort = (app, startPort) ->
-  loop
-    try
-      app.listen startPort
-      return startPort
-    catch err
-      if err.code is "EADDRINUSE"
-        startPort++
-      else
-        throw err
-
 phanta = []
 startPhantomProcess = (port) ->
   ps = child.spawn 'phantomjs', [__dirname+'/shim.js', port]
@@ -45,13 +32,13 @@ module.exports =
     app = express.createServer()
     app.use express.static __dirname
     
-    port = listenOnSomePort app, PORT
+    app.listen()
 
     server = dnode()
 
     phantom = null
 
-    ps = startPhantomProcess port
+    ps = startPhantomProcess app.address().port
 
     ps.on 'exit', (code) ->
       app.close()

@@ -1,28 +1,11 @@
 (function() {
-  var PORT, child, dnode, express, listenOnSomePort, phanta, startPhantomProcess, wrap;
+  var child, dnode, express, phanta, startPhantomProcess, wrap;
 
   dnode = require('dnode');
 
   express = require('express');
 
   child = require('child_process');
-
-  PORT = 6123;
-
-  listenOnSomePort = function(app, startPort) {
-    while (true) {
-      try {
-        app.listen(startPort);
-        return startPort;
-      } catch (err) {
-        if (err.code === "EADDRINUSE") {
-          startPort++;
-        } else {
-          throw err;
-        }
-      }
-    }
-  };
 
   phanta = [];
 
@@ -64,13 +47,13 @@
 
   module.exports = {
     create: function(cb) {
-      var app, io, phantom, port, ps, server;
+      var app, io, phantom, ps, server;
       app = express.createServer();
       app.use(express.static(__dirname));
-      port = listenOnSomePort(app, PORT);
+      app.listen();
       server = dnode();
       phantom = null;
-      ps = startPhantomProcess(port);
+      ps = startPhantomProcess(app.address().port);
       ps.on('exit', function(code) {
         var p;
         app.close();
