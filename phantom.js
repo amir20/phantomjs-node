@@ -1,5 +1,6 @@
 (function() {
-  var child, dnode, express, phanta, startPhantomProcess, wrap;
+  var child, dnode, express, phanta, startPhantomProcess, wrap,
+    __slice = Array.prototype.slice;
 
   dnode = require('dnode');
 
@@ -9,9 +10,9 @@
 
   phanta = [];
 
-  startPhantomProcess = function(port) {
+  startPhantomProcess = function(port, args) {
     var ps;
-    ps = child.spawn('phantomjs', [__dirname + '/shim.js', port]);
+    ps = child.spawn('phantomjs', args.concat([__dirname + '/shim.js', port]));
     ps.stdout.on('data', function(data) {
       return console.log("phantom stdout: " + data);
     });
@@ -46,22 +47,23 @@
   };
 
   module.exports = {
-    create: function(cb) {
-      var app, io, phantom, ps, server;
+    create: function() {
+      var app, args, cb, io, phantom, ps, server, _i;
+      args = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];
       app = express.createServer();
       app.use(express.static(__dirname));
       app.listen();
       server = dnode();
       phantom = null;
-      ps = startPhantomProcess(app.address().port);
+      ps = startPhantomProcess(app.address().port, args);
       ps.on('exit', function(code) {
         var p;
         app.close();
         return phanta = (function() {
-          var _i, _len, _results;
+          var _j, _len, _results;
           _results = [];
-          for (_i = 0, _len = phanta.length; _i < _len; _i++) {
-            p = phanta[_i];
+          for (_j = 0, _len = phanta.length; _j < _len; _j++) {
+            p = phanta[_j];
             if (p !== phantom) _results.push(p);
           }
           return _results;

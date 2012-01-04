@@ -3,8 +3,8 @@ express = require 'express'
 child   = require 'child_process'
 
 phanta = []
-startPhantomProcess = (port) ->
-  ps = child.spawn 'phantomjs', [__dirname+'/shim.js', port]
+startPhantomProcess = (port, args) ->
+  ps = child.spawn 'phantomjs', args.concat [__dirname+'/shim.js', port]
 
   ps.stdout.on 'data', (data) -> console.log "phantom stdout: #{data}"
   ps.stderr.on 'data', (data) -> 
@@ -28,7 +28,7 @@ wrap = (ph) ->
 
 
 module.exports = 
-  create: (cb) ->
+  create: (args..., cb) ->
     app = express.createServer()
     app.use express.static __dirname
     
@@ -38,7 +38,7 @@ module.exports =
 
     phantom = null
 
-    ps = startPhantomProcess app.address().port
+    ps = startPhantomProcess app.address().port, args
 
     ps.on 'exit', (code) ->
       app.close()

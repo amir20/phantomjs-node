@@ -19,4 +19,4 @@ task "build", "coffee-compile and browserify phantom", ->
     "rm shim.js"
     "#{bin}/browserify shim.coffee -o shim.js"
   )
-task "test", "run phantom's unit tests", -> run "#{bin}/vows --spec test/*"
+task "test", "run phantom's unit tests", -> run "#{bin}/vows --spec test/*.coffee"
