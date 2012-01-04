@@ -34,8 +34,7 @@ app.get '/', (req, res) ->
     </html>
   """
 
-app.listen 23765
-
+app.listen()
 
 describe "Pages"
   "A Phantom page":
@@ -47,7 +46,7 @@ describe "Pages"
 
     "can open a URL on localhost":
       topic: t (page) ->
-        page.open "http://127.0.0.1:23765/", (status) =>
+        page.open "http://127.0.0.1:#{app.address().port}/", (status) =>
           @callback null, page, status
 
       "and succeed": (err, page, status) ->
@@ -113,4 +112,5 @@ describe "Pages"
             fs.unlink fileName
     
     teardown: (page, ph) ->
+      app.close()
       ph.exit()
