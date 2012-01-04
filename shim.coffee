@@ -12,15 +12,26 @@ controlPage = webpage.create()
 
 fnwrap = (target) -> -> target.apply this, arguments
 
+# Descend into objects with dotted keys
+descend = (op, obj, key, val) ->
+  cur = obj
+  keys = key.split '.'
+  cur = cur[keys.shift()] while keys.length > 1
+
+  cur[keys[0]] = val if op is 'set'
+    
+  cur[keys[0]]
+
+
 mkwrap = (src, pass=[], special={}) ->
   obj =
     set: (key, val, cb=->) ->
       
       #Fnwrap so PhantomJS doesn't segfault when it tries to call the callback
       val = fnwrap val if typeof val is "function"
-      cb src[key] = val
+      cb descend 'set', src, key, val
 
-    get: (key, cb) -> cb src[key]
+    get: (key, cb) -> cb descend 'get', src, key
 
   for k in pass
     do (k) ->

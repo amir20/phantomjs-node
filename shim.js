@@ -1567,7 +1567,7 @@ module.exports = function (value, replacer, space) {
 
 require.define("/shim.coffee", function (require, module, exports, __dirname, __filename) {
     (function() {
-  var controlPage, fnwrap, mkweb, mkwrap, pageWrap, port, proto, s, server, webpage, _phantom;
+  var controlPage, descend, fnwrap, mkweb, mkwrap, pageWrap, port, proto, s, server, webpage, _phantom;
   var __slice = Array.prototype.slice, __hasProp = Object.prototype.hasOwnProperty;
 
   mkweb = new Function("exports", "window", phantom.loadModuleSource('webpage'));
@@ -1588,6 +1588,17 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     };
   };
 
+  descend = function(op, obj, key, val) {
+    var cur, keys;
+    cur = obj;
+    keys = key.split('.');
+    while (keys.length > 1) {
+      cur = cur[keys.shift()];
+    }
+    if (op === 'set') cur[keys[0]] = val;
+    return cur[keys[0]];
+  };
+
   mkwrap = function(src, pass, special) {
     var k, obj, _fn, _i, _len;
     if (pass == null) pass = [];
@@ -1596,10 +1607,10 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
       set: function(key, val, cb) {
         if (cb == null) cb = function() {};
         if (typeof val === "function") val = fnwrap(val);
-        return cb(src[key] = val);
+        return cb(descend('set', src, key, val));
       },
       get: function(key, cb) {
-        return cb(src[key]);
+        return cb(descend('get', src, key));
       }
     };
     _fn = function(k) {

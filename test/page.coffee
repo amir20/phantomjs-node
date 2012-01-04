@@ -81,6 +81,16 @@ describe "Pages"
             html = html.replace(/\s\s+/g, "")
             assert.equal html, '<div class="anotherdiv">Some page content</div>'
         
+        "can set a nested property":
+          topic: t (page) ->
+            page.set 'settings.loadPlugins', true, (oldVal) => @callback null, page, oldVal
+
+          "and get it again":
+            topic: t (page, oldVal) ->
+              page.get 'settings.loadPlugins', (val) => @callback null, oldVal, val
+            
+            "and they match": (_, oldVal, val) ->
+              assert.equal oldVal, val
     
         "can simulate clicks on page locations":
           topic: t (page) ->
