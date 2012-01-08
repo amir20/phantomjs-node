@@ -1636,7 +1636,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
   };
 
   pageWrap = function(page) {
-    return mkwrap(page, ['open', 'includeJs', 'injectJs', 'render', 'sendEvent'], {
+    return mkwrap(page, ['open', 'includeJs', 'injectJs', 'render', 'sendEvent', 'release', 'uploadFile'], {
       evaluate: function(fn, cb) {
         if (cb == null) cb = function() {};
         return cb(page.evaluate(fn));
