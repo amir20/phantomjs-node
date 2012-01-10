@@ -38,11 +38,14 @@ describe "The phantom module"
     "which, when you call exit()":
       topic: t (p) ->
         test = this
-        p.exit()
-        setTimeout =>
-          psTree process.pid, test.callback
+        
+        # Make sure other tests get a chance to run first. There's probably a better way to do this.
+        setTimeout ->
+          p.exit()
+          setTimeout ->
+            psTree process.pid, test.callback
+          , 500
         , 500
-      
       "exits after 500ms": (children) ->
         # 1 instead of 0 because pstree spawns a subprocess
         assert.equal children.length, 1, "process still has #{children.length} child(ren): #{JSON.stringify children}"
