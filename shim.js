@@ -1649,7 +1649,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     });
   };
 
-  _phantom = mkwrap(phantom, ['exit', 'injectJS'], {
+  _phantom = mkwrap(phantom, ['exit', 'injectJs'], {
     createPage: function(cb) {
       return cb(pageWrap(webpage.create()));
     }
