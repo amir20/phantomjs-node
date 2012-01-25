@@ -52,7 +52,7 @@ pageWrap = (page) -> mkwrap page,
   render: (file, cb=->) -> page.render file; cb()
 
 _phantom = mkwrap phantom,
-  ['exit', 'injectJS'],
+  ['exit', 'injectJs'],
   createPage: (cb) -> cb pageWrap webpage.create()
 
 
