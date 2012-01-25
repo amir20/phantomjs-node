@@ -1636,7 +1636,11 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
   };
 
   pageWrap = function(page) {
-    return mkwrap(page, ['open', 'includeJs', 'injectJs', 'sendEvent', 'release', 'uploadFile'], {
+    return mkwrap(page, ['open', 'includeJs', 'sendEvent', 'release', 'uploadFile'], {
+      injectJs: function(js, cb) {
+        if (cb == null) cb = function() {};
+        return cb(page.injectJs(js));
+      },
       evaluate: function(fn, cb) {
         if (cb == null) cb = function() {};
         return cb(page.evaluate(fn));
@@ -1649,7 +1653,11 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     });
   };
 
-  _phantom = mkwrap(phantom, ['exit', 'injectJs'], {
+  _phantom = mkwrap(phantom, ['exit'], {
+    injectJs: function(js, cb) {
+      if (cb == null) cb = function() {};
+      return cb(phantom.injectJs(js));
+    },
     createPage: function(cb) {
       return cb(pageWrap(webpage.create()));
     }

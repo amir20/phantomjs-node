@@ -64,6 +64,15 @@ describe "Pages"
           
           "which is correct": (title) ->
             assert.equal title, "Test page title"
+        
+        "can inject Javascript from a file":
+          topic: t (page) ->
+            page.injectJs 'test/inject.js', (success) =>
+              @callback null, (success)
+          
+          "and succeed": (success) ->
+            assert.ok success, "Injection should return true"
+
 
         "can evaluate DOM nodes":
           topic: t (page) ->

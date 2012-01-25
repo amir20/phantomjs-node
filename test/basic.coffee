@@ -30,6 +30,14 @@ describe "The phantom module"
         assert.ok ver.minor >= 3, "minor version too low"
 
 
+    "which can inject Javascript from a file":
+      topic: t (p) ->
+        p.injectJs 'test/inject.js', (success) =>
+          @callback null, (success)
+      
+      "and succeed": (success) ->
+        assert.ok success, "Injection should return true"
+
     "which can create a page":
       topic: t (p) -> p.createPage (page) => @callback null, page
 

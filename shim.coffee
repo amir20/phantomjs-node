@@ -47,12 +47,14 @@ mkwrap = (src, pass=[], special={}) ->
   obj
 
 pageWrap = (page) -> mkwrap page,
-  ['open','includeJs','injectJs','sendEvent','release','uploadFile']
+  ['open','includeJs','sendEvent','release','uploadFile']
+  injectJs: (js, cb=->) -> cb page.injectJs js
   evaluate: (fn, cb=->) -> cb page.evaluate fn
   render: (file, cb=->) -> page.render file; cb()
 
 _phantom = mkwrap phantom,
-  ['exit', 'injectJs'],
+  ['exit'],
+  injectJs: (js, cb=->) -> cb phantom.injectJs js
   createPage: (cb) -> cb pageWrap webpage.create()
 
 
