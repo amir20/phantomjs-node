@@ -48,17 +48,17 @@
 
   module.exports = {
     create: function() {
-      var app, args, cb, io, phantom, ps, server, _i;
+      var app, appServer, args, cb, io, phantom, ps, server, _i;
       args = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];
       app = express.createServer();
       app.use(express.static(__dirname));
-      app.listen();
+      appServer = app.listen();
       server = dnode();
       phantom = null;
-      ps = startPhantomProcess(app.address().port, args);
+      ps = startPhantomProcess(appServer.address().port, args);
       ps.on('exit', function(code) {
         var p;
-        app.close();
+        appServer.close();
         return phanta = (function() {
           var _j, _len, _results;
           _results = [];
@@ -73,7 +73,7 @@
         log: null,
         'client store expiration': 0
       };
-      return server.listen(app, {
+      return server.listen(appServer, {
         io: io
       }, function(obj, conn) {
         phantom = conn.remote;
