@@ -29,7 +29,7 @@ app.get '/', (req, res) ->
     </html>
   """
 
-app.listen()
+appServer = app.listen()
 
 describe "The phantom module"
   "Can create an instance with --load-images=no":
@@ -41,7 +41,7 @@ describe "The phantom module"
       topic: t (p) ->
         test = this
         p.createPage (page) ->
-          page.open "http://127.0.0.1:#{app.address().port}/", (status) =>
+          page.open "http://127.0.0.1:#{appServer.address().port}/", (status) =>
             setTimeout =>
               test.callback null, page, status
             , 1500
@@ -67,7 +67,7 @@ describe "The phantom module"
 
     
     teardown: (p) ->
-      app.close()
+      appServer.close()
       p.exit()
         
 

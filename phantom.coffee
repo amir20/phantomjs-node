@@ -32,23 +32,23 @@ module.exports =
     app = express.createServer()
     app.use express.static __dirname
     
-    app.listen()
+    appServer = app.listen()
 
     server = dnode()
 
     phantom = null
 
-    ps = startPhantomProcess app.address().port, args
+    ps = startPhantomProcess appServer.address().port, args
 
     ps.on 'exit', (code) ->
-      app.close()
+      appServer.close()
       phanta = (p for p in phanta when p isnt phantom)
 
     io =
       log: null,
       'client store expiration': 0
 
-    server.listen app, {io}, (obj, conn) ->
+    server.listen appServer, {io}, (obj, conn) ->
       phantom = conn.remote
       wrap phantom
       phanta.push phantom
