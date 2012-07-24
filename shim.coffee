@@ -1,8 +1,6 @@
 
 # Require gets overwritten by browserify, so we have to reimplement it from scratch - boo :(
-mkweb = new Function "exports", "window", phantom.loadModuleSource('webpage')
-webpage = {}
-mkweb.call {}, webpage, {} 
+webpage = core_require('webpage');
 
 proto = require 'dnode-protocol'
 
