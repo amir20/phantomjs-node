@@ -50,7 +50,7 @@
     create: function() {
       var app, appServer, args, cb, io, phantom, ps, server, _i;
       args = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];
-      app = express.createServer();
+      app = express();
       app.use(express.static(__dirname));
       appServer = app.listen();
       server = dnode();

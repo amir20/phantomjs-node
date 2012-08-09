@@ -16,7 +16,7 @@ t = (fn) ->
     fn.apply this, args
     return
 
-app = express.createServer()
+app = express()
 
 app.get '/', (req, res) ->
   res.send """
@@ -61,15 +61,15 @@ describe "Pages"
         "has a title":
           topic: t (page) ->
             page.evaluate (-> document.title), (title) => @callback null, title
-          
+
           "which is correct": (title) ->
             assert.equal title, "Test page title"
-        
+
         "can inject Javascript from a file":
           topic: t (page) ->
             page.injectJs 'test/inject.js', (success) =>
               @callback null, (success)
-          
+
           "and succeed": (success) ->
             assert.ok success, "Injection should return true"
 
@@ -84,12 +84,12 @@ describe "Pages"
 
         "can evaluate scripts defined in the header":
           topic: t (page) ->
-            page.evaluate (-> $('#somediv').html()), (html) => @callback null, html              
-          
+            page.evaluate (-> $('#somediv').html()), (html) => @callback null, html
+
           "which return the correct result": (html) ->
             html = html.replace(/\s\s+/g, "")
             assert.equal html, '<div class="anotherdiv">Some page content</div>'
-        
+
         "can set a nested property":
           topic: t (page) ->
             page.set 'settings.loadPlugins', true, (oldVal) => @callback null, page, oldVal
@@ -97,10 +97,10 @@ describe "Pages"
           "and get it again":
             topic: t (page, oldVal) ->
               page.get 'settings.loadPlugins', (val) => @callback null, oldVal, val
-            
+
             "and they match": (_, oldVal, val) ->
               assert.equal oldVal, val
-    
+
         "can simulate clicks on page locations":
           topic: t (page) ->
             page.sendEvent 'click', 133, 133
@@ -125,11 +125,11 @@ describe "Pages"
             page.render fileName, -> test.callback null, fileName
 
           "which is created": (fileName) ->
-            assert.ok path.existsSync(fileName), "rendered image should exist"
-          
+            assert.ok fs.existsSync(fileName), "rendered image should exist"
+
           teardown: (fileName) ->
             fs.unlink fileName
-    
+
     teardown: (page, ph) ->
       appServer.close()
       ph.exit()
