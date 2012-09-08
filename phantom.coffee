@@ -22,7 +22,7 @@ wrap = (ph) ->
   ph.createPage = (cb) ->
     ph._createPage (page) ->
       page._evaluate = page.evaluate
-      page.evaluate = (fn, cb, args...) -> page._evaluate fn.toString(), cb, args
+      page.evaluate = (fn, cb, args...) -> page._evaluate(fn.toString(), cb, args)
       cb page
 
 
