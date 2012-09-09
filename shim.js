@@ -1645,7 +1645,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
                     var args, cb, fn;
                     fn = arguments[0], cb = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
                     if (cb == null) cb = function() {};
-                    return cb(page.evaluate(fn, args));
+                    return cb(page.evaluate.apply(page, [fn].concat(args)));
                 },
                 render: function(file, cb) {
                     if (cb == null) cb = function() {};

@@ -44,7 +44,7 @@
         page.evaluate = function() {
           var args, cb, fn;
           fn = arguments[0], cb = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
-          return page._evaluate(fn.toString(), cb, args);
+          return page._evaluate.apply(page, [fn.toString(), cb].concat(args));
         };
         return cb(page);
       });
