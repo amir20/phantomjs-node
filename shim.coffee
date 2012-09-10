@@ -63,20 +63,20 @@ s = server.create()
 
 
 s.on 'request', (req) ->
-  #console.log "phantom sending request #{JSON.stringify req}"
+  console.log "phantom sending request #{JSON.stringify req}"
   #evil = "function(){socket.send(#{JSON.stringify JSON.stringify req} + '\\n');}"
   evil = "function(){socket.emit('message', #{JSON.stringify JSON.stringify req} + '\\n');}"
   controlPage.evaluate evil
 
 controlPage.onAlert = (msg) ->
   return unless msg[0..5] is "PCTRL "
-  #console.log "phantom got request " + msg[6..]
+  console.log "phantom got request " + msg[6..]
   s.parse msg[6..]
 
 
 controlPage.onConsoleMessage = (msg...) -> console.log msg...
 
 controlPage.open "http://127.0.0.1:#{port}/", (status) ->
-  #console.log 'Control page title is ' + controlPage.evaluate -> document.title
+  console.log 'Control page title is ' + controlPage.evaluate -> document.title
   s.start()
 
