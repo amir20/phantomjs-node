@@ -30,8 +30,7 @@ require.resolve = (function () {
         var y = cwd || '/';
 
         if (x.match(/^(?:\.\.?\/|\/)/)) {
-            var m = loadAsFileSync(path.resolve(y, x))
-                || loadAsDirectorySync(path.resolve(y, x));
+            var m = loadAsFileSync(path.resolve(y, x)) || loadAsDirectorySync(path.resolve(y, x));
             if (m) return m;
         }
 
