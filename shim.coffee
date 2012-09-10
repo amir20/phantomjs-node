@@ -2,7 +2,7 @@
 # Require gets overwritten by browserify, so we have to reimplement it from scratch - boo :(
 mkweb = new Function "exports", "window", phantom.loadModuleSource('webpage')
 webpage = {}
-mkweb.call {}, webpage, {} 
+mkweb.call {}, webpage, {}
 
 proto = require 'dnode-protocol'
 
@@ -19,14 +19,14 @@ descend = (op, obj, key, val) ->
   cur = cur[keys.shift()] while keys.length > 1
 
   cur[keys[0]] = val if op is 'set'
-    
+
   cur[keys[0]]
 
 
 mkwrap = (src, pass=[], special={}) ->
   obj =
     set: (key, val, cb=->) ->
-      
+
       #Fnwrap so PhantomJS doesn't segfault when it tries to call the callback
       val = fnwrap val if typeof val is "function"
       cb descend 'set', src, key, val
@@ -39,7 +39,7 @@ mkwrap = (src, pass=[], special={}) ->
 
         # This idempotent tomfoolery is required to stop PhantomJS from segfaulting
         args[i] = fnwrap arg for arg, i in args when typeof arg is 'function'
-          
+
         src[k] args...
 
   for own k of special
@@ -63,20 +63,20 @@ s = server.create()
 
 
 s.on 'request', (req) ->
-  console.log "phantom sending request #{JSON.stringify req}"
+  #console.log "phantom sending request #{JSON.stringify req}"
   #evil = "function(){socket.send(#{JSON.stringify JSON.stringify req} + '\\n');}"
   evil = "function(){socket.emit('message', #{JSON.stringify JSON.stringify req} + '\\n');}"
   controlPage.evaluate evil
 
 controlPage.onAlert = (msg) ->
   return unless msg[0..5] is "PCTRL "
-  console.log "phantom got request " + msg[6..]
+  #console.log "phantom got request " + msg[6..]
   s.parse msg[6..]
 
 
 controlPage.onConsoleMessage = (msg...) -> console.log msg...
 
 controlPage.open "http://127.0.0.1:#{port}/", (status) ->
-  console.log 'Control page title is ' + controlPage.evaluate -> document.title
+  #console.log 'Control page title is ' + controlPage.evaluate -> document.title
   s.start()
 

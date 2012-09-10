@@ -2126,14 +2126,14 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
 
   s.on('request', function(req) {
     var evil;
-    console.log("phantom sending request " + (JSON.stringify(req)));
+    //console.log("phantom sending request " + (JSON.stringify(req)));
     evil = "function(){socket.emit('message', " + (JSON.stringify(JSON.stringify(req))) + " + '\\n');}";
     return controlPage.evaluate(evil);
   });
 
   controlPage.onAlert = function(msg) {
     if (msg.slice(0, 6) !== "PCTRL ") return;
-    console.log("phantom got request " + msg.slice(6));
+    //console.log("phantom got request " + msg.slice(6));
     return s.parse(msg.slice(6));
   };
 
@@ -2144,9 +2144,9 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
   };
 
   controlPage.open("http://127.0.0.1:" + port + "/", function(status) {
-    console.log('Control page title is ' + controlPage.evaluate(function() {
+    /*console.log('Control page title is ' + controlPage.evaluate(function() {
       return document.title;
-    }));
+    }));*/
     return s.start();
   });
 
