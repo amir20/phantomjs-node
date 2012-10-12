@@ -53,6 +53,7 @@ pageWrap = (page) -> mkwrap page,
 _phantom = mkwrap phantom,
   ['exit'],
   injectJs: (js, cb=->) -> cb phantom.injectJs js
+  clearCookies: (cb=->) -> cb phantom.clearCookies()
   createPage: (cb) -> cb pageWrap webpage.create()
 
 
