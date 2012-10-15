@@ -41,8 +41,10 @@
     return ph.createPage = function(cb) {
       return ph._createPage(function(page) {
         page._evaluate = page.evaluate;
-        page.evaluate = function(fn, cb) {
-          return page._evaluate(fn.toString(), cb);
+        page.evaluate = function() {
+          var args, cb, fn;
+          fn = arguments[0], cb = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
+          return page._evaluate.apply(page, [fn.toString(), cb].concat(args));
         };
         return cb(page);
       });
