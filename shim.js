@@ -1638,7 +1638,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
   };
 
   pageWrap = function(page) {
-    return mkwrap(page, ['open', 'includeJs', 'sendEvent', 'release', 'uploadFile'], {
+    return mkwrap(page, ['open', 'includeJs', 'sendEvent', 'release', 'uploadFile', 'customHeaders'], {
       injectJs: function(js, cb) {
         if (cb == null) cb = function() {};
         return cb(page.injectJs(js));
@@ -1657,6 +1657,11 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
       cookies: function(cb) {
         if (cb == null) cb = function () {};
         cb(page.cookies);
+      }
+      setHeaders: function(headers, cb) {
+        if (cb == null) cb = function () {};
+        page.customHeaders = headers;
+        cb();
       }
     });
   };
