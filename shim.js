@@ -1638,7 +1638,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
   };
 
   pageWrap = function(page) {
-    return mkwrap(page, ['open', 'includeJs', 'sendEvent', 'release', 'uploadFile', 'customHeaders'], {
+    return mkwrap(page, ['open', 'includeJs', 'sendEvent', 'release', 'uploadFile'], {
       injectJs: function(js, cb) {
         if (cb == null) cb = function() {};
         return cb(page.injectJs(js));
@@ -1654,10 +1654,6 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
         page.render(file);
         return cb();
       },
-      cookies: function(cb) {
-        if (cb == null) cb = function () {};
-        cb(page.cookies);
-      }
       setHeaders: function(headers, cb) {
         if (cb == null) cb = function () {};
         page.customHeaders = headers;
@@ -1670,6 +1666,15 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     injectJs: function(js, cb) {
       if (cb == null) cb = function() {};
       return cb(phantom.injectJs(js));
+    },
+    getCookies: function(cb) {
+      if (cb == null) cb = function () {};
+      cb(phantom.cookies);
+    },
+    addCookie: function(name, value, domain, cb) {
+      if (cb == null) cb = function () {};
+      cookie = {name:name, value:value, domain:domain};
+      cb(phantom.addCookie(cookie));
     },
     clearCookies: function(cb) {
       if (cb == null) cb = function() {};
