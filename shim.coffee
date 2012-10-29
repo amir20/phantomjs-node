@@ -50,6 +50,8 @@ pageWrap = (page) -> mkwrap page,
   evaluate: (fn, cb=(->), args...) -> cb page.evaluate.apply(page, [fn].concat(args))
   render: (file, cb=->) -> page.render file; cb()
   setHeaders: (headers, cb=->) -> page.customHeaders = headers; cb()
+  setViewportSize: (width, height, cb=->) ->
+    page.viewportSize = {width:width, height:height}; cb()
 
 _phantom = mkwrap phantom,
   ['exit'],

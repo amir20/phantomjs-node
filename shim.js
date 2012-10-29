@@ -1658,6 +1658,11 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
         if (cb == null) cb = function () {};
         page.customHeaders = headers;
         cb();
+      },
+      setViewportSize: function(width, height, cb) {
+        if (cb == null) cb = function () {};
+        page.viewportSize = {width:width, height:height};
+        cb();
       }
     });
   };
