@@ -1643,9 +1643,11 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
         if (cb == null) cb = function() {};
         return cb(page.injectJs(js));
       },
-      evaluate: function(fn, cb) {
+      evaluate: function() {
+        var args, cb, fn;
+        fn = arguments[0], cb = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
         if (cb == null) cb = function() {};
-        return cb(page.evaluate(fn));
+        return cb(page.evaluate.apply(page, [fn].concat(args)));
       },
       render: function(file, cb) {
         if (cb == null) cb = function() {};
@@ -1663,6 +1665,10 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     injectJs: function(js, cb) {
       if (cb == null) cb = function() {};
       return cb(phantom.injectJs(js));
+    },
+    clearCookies: function(cb) {
+      if (cb == null) cb = function() {};
+      return cb(phantom.clearCookies());
     },
     createPage: function(cb) {
       return cb(pageWrap(webpage.create()));
