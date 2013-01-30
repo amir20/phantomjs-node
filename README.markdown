@@ -1,4 +1,4 @@
-# PhantomJS bridge for NodeJS
+# PhantomJS bridge for NodeJS [![Build Status](https://secure.travis-ci.org/endel/phantomjs-node.png)](http://travis-ci.org/endel/phantomjs-node)
 
 "It sure would be neat if [PhantomJS](http://www.phantomjs.org/) was a NodeJS module", I hear you say. Well, wait no longer! This node module implements a nauseously clever bridge between Phantom and Node, so that you can use all your favourite PhantomJS functions without leaving NPM behind and living in a cave.
 

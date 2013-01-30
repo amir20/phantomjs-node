@@ -14,7 +14,7 @@ t = (fn) ->
     return
 
 
-app = express.createServer()
+app = express()
 app.use express.static __dirname
 
 app.get '/', (req, res) ->
@@ -33,10 +33,10 @@ appServer = app.listen()
 
 describe "The phantom module"
   "Can create an instance with --load-images=no":
-    topic: t -> phantom.create '--load-images=no', (p) => 
+    topic: t -> phantom.create '--load-images=no', (p) =>
 
       @callback null, p
-    
+
     "which, when you open a page":
       topic: t (p) ->
         test = this
@@ -49,25 +49,25 @@ describe "The phantom module"
       "and check the settings object":
         topic: t (page) ->
           page.get 'settings', (s) => @callback null, s
-        
+
         "loadImages isn't set": (s) ->
           assert.strictEqual s.loadImages, false
-          
-           
+
+
       "succeeds": (_1, _2, status) ->
         assert.equal status, 'success'
-      
+
       "and check a test image":
         topic: t (page) ->
           page.evaluate (-> document.getElementsByTagName('img')[0]), (img) => @callback null, img
-        
+
         "it doesn't load": (img) ->
           assert.strictEqual img.width, 0, "width should be 0"
           assert.strictEqual img.height, 0, "height should be 0"
 
-    
+
     teardown: (p) ->
       appServer.close()
       p.exit()
-        
+
 
