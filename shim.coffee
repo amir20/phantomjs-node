@@ -1,8 +1,6 @@
 
 # Require gets overwritten by browserify, so we have to reimplement it from scratch - boo :(
-mkweb = new Function "exports", "window", phantom.loadModuleSource('webpage')
-webpage = {}
-mkweb.call {}, webpage, {} 
+webpage = core_require('webpage');
 
 proto = require 'dnode-protocol'
 
@@ -49,12 +47,13 @@ mkwrap = (src, pass=[], special={}) ->
 pageWrap = (page) -> mkwrap page,
   ['open','includeJs','sendEvent','release','uploadFile']
   injectJs: (js, cb=->) -> cb page.injectJs js
-  evaluate: (fn, cb=->) -> cb page.evaluate fn
+  evaluate: (fn, cb=(->), args...) -> cb page.evaluate.apply(page, [fn].concat(args))
   render: (file, cb=->) -> page.render file; cb()
 
 _phantom = mkwrap phantom,
   ['exit'],
   injectJs: (js, cb=->) -> cb phantom.injectJs js
+  clearCookies: (cb=->) -> cb phantom.clearCookies()
   createPage: (cb) -> cb pageWrap webpage.create()
 
 

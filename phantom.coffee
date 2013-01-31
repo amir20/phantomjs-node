@@ -7,7 +7,7 @@ startPhantomProcess = (port, args) ->
   ps = child.spawn 'phantomjs', args.concat [__dirname+'/shim.js', port]
 
   ps.stdout.on 'data', (data) -> console.log "phantom stdout: #{data}"
-  ps.stderr.on 'data', (data) -> 
+  ps.stderr.on 'data', (data) ->
     return if data.toString('utf8').match /No such method.*socketSentData/ #Stupid, stupid QTWebKit
     console.warn "phantom stderr: #{data}"
   ps
@@ -22,16 +22,16 @@ wrap = (ph) ->
   ph.createPage = (cb) ->
     ph._createPage (page) ->
       page._evaluate = page.evaluate
-      page.evaluate = (fn, cb) -> page._evaluate fn.toString(), cb
+      page.evaluate = (fn, cb, args...) -> page._evaluate.apply(page, [fn.toString(), cb].concat(args))
       cb page
 
 
 
-module.exports = 
+module.exports =
   create: (args..., cb) ->
-    app = express.createServer()
+    app = express()
     app.use express.static __dirname
-    
+
     appServer = app.listen()
 
     server = dnode()
