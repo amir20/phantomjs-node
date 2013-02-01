@@ -1654,9 +1654,15 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
         page.render(file);
         return cb();
       },
-      cookies: function(cb) {
+      setHeaders: function(headers, cb) {
         if (cb == null) cb = function () {};
-        cb(page.cookies);
+        page.customHeaders = headers;
+        cb();
+      },
+      setViewportSize: function(width, height, cb) {
+        if (cb == null) cb = function () {};
+        page.viewportSize = {width:width, height:height};
+        cb();
       }
     });
   };
@@ -1665,6 +1671,15 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     injectJs: function(js, cb) {
       if (cb == null) cb = function() {};
       return cb(phantom.injectJs(js));
+    },
+    getCookies: function(cb) {
+      if (cb == null) cb = function () {};
+      cb(phantom.cookies);
+    },
+    addCookie: function(name, value, domain, cb) {
+      if (cb == null) cb = function () {};
+      cookie = {name:name, value:value, domain:domain};
+      cb(phantom.addCookie(cookie));
     },
     clearCookies: function(cb) {
       if (cb == null) cb = function() {};
