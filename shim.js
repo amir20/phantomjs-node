@@ -1638,7 +1638,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
   };
 
   pageWrap = function(page) {
-    return mkwrap(page, ['open', 'includeJs', 'sendEvent', 'release', 'uploadFile'], {
+    return mkwrap(page, ['open', 'includeJs', 'sendEvent', 'release', 'uploadFile', 'close'], {
       injectJs: function(js, cb) {
         if (cb == null) cb = function() {};
         return cb(page.injectJs(js));
@@ -1653,6 +1653,10 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
         if (cb == null) cb = function() {};
         page.render(file);
         return cb();
+      },
+      renderBase64: function(type, cb) {
+        if (cb == null) cb = function () {};
+        cb(page.renderBase64(type));
       },
       setHeaders: function(headers, cb) {
         if (cb == null) cb = function () {};
