@@ -63,6 +63,7 @@
       ps = startPhantomProcess(appServer.address().port, args);
       ps.on('exit', function(code) {
         var p;
+        phantom.onExit && phantom.onExit();
         appServer.close();
         return phanta = (function() {
           var _j, _len, _results;
