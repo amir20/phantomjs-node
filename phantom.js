@@ -56,13 +56,14 @@
       var app, appServer, args, cb, io, phantom, ps, server, _i;
       args = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];
       app = express();
-      app.use(express.static(__dirname));
+      app.use(express["static"](__dirname));
       appServer = app.listen();
       server = dnode();
       phantom = null;
       ps = startPhantomProcess(appServer.address().port, args);
       ps.on('exit', function(code) {
         var p;
+        phantom.onExit && phantom.onExit();
         appServer.close();
         return phanta = (function() {
           var _j, _len, _results;

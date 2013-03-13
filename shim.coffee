@@ -16,14 +16,14 @@ descend = (op, obj, key, val) ->
   cur = cur[keys.shift()] while keys.length > 1
 
   cur[keys[0]] = val if op is 'set'
-    
+
   cur[keys[0]]
 
 
 mkwrap = (src, pass=[], special={}) ->
   obj =
     set: (key, val, cb=->) ->
-      
+
       #Fnwrap so PhantomJS doesn't segfault when it tries to call the callback
       val = fnwrap val if typeof val is "function"
       cb descend 'set', src, key, val
@@ -36,7 +36,7 @@ mkwrap = (src, pass=[], special={}) ->
 
         # This idempotent tomfoolery is required to stop PhantomJS from segfaulting
         args[i] = fnwrap arg for arg, i in args when typeof arg is 'function'
-          
+
         src[k] args...
 
   for own k of special
