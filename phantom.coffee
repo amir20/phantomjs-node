@@ -45,25 +45,28 @@ module.exports =
 
     phantom = null
 
-    ps = startPhantomProcess appServer.address().port, args
+    io = null
 
-    # @Description: when the background phantomjs child process exits or crashes
-    #   removes the current dNode phantomjs RPC wrapper from the list of phantomjs RPC wrapper
-    ps.on 'exit', (code) ->
-      phantom.onExit && phantom.onExit() # calls the onExit method if it exist
-      appServer.close()
-      phanta = (p for p in phanta when p isnt phantom)
+    appServer.on 'listening', () ->
+      ps = startPhantomProcess appServer.address().port, args
 
-    io =
-      log: null,
-      'client store expiration': 0
+      # @Description: when the background phantomjs child process exits or crashes
+      #   removes the current dNode phantomjs RPC wrapper from the list of phantomjs RPC wrapper
+      ps.on 'exit', (code) ->
+        phantom.onExit && phantom.onExit() # calls the onExit method if it exist
+        appServer.close()
+        phanta = (p for p in phanta when p isnt phantom)
 
-    # Creates a dNode server that listens to 
-    server.listen appServer, {io}, (obj, conn) ->
-      phantom = conn.remote # remote phantomjs RPC wrapper
-      wrap phantom
-      phanta.push phantom
-      cb? phantom
+      io =
+        log: null,
+        'client store expiration': 0
+
+      # Creates a dNode server that listens to 
+      server.listen appServer, {io}, (obj, conn) ->
+        phantom = conn.remote # remote phantomjs RPC wrapper
+        wrap phantom
+        phanta.push phantom
+        cb? phantom
 
 
 
