@@ -9,8 +9,8 @@ phanta = []
 # @param: port:int
 # @args: args:object
 # @return: ps:object
-startPhantomProcess = (port, args) ->
-  ps = child.spawn 'phantomjs', args.concat [__dirname+'/shim.js', port]
+startPhantomProcess = (binary, port, args) ->
+  ps = child.spawn binary, args.concat [__dirname+'/shim.js', port]
 
   ps.stdout.on 'data', (data) -> console.log "phantom stdout: #{data}"
   ps.stderr.on 'data', (data) ->
@@ -35,11 +35,11 @@ wrap = (ph) ->
 
 
 module.exports =
-  create: (args..., cb) ->
+  create: (args..., cb, binary = 'phantom', port = 12300) ->
     app = express()
     app.use express.static __dirname
 
-    appServer = app.listen()
+    appServer = app.listen(port)
 
     server = dnode()
 
@@ -48,7 +48,7 @@ module.exports =
     io = null
 
     appServer.on 'listening', () ->
-      ps = startPhantomProcess appServer.address().port, args
+      ps = startPhantomProcess binary, port, args
 
       # @Description: when the background phantomjs child process exits or crashes
       #   removes the current dNode phantomjs RPC wrapper from the list of phantomjs RPC wrapper
