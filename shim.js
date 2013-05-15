@@ -348,67 +348,6 @@ exports.extname = function(path) {
 
 });
 
-require.define("/node_modules/domready/package.json", function (require, module, exports, __dirname, __filename) {
-module.exports = {"main":"./ready.js"}
-});
-
-require.define("/node_modules/domready/ready.js", function (require, module, exports, __dirname, __filename) {
-/*!
-  * domready (c) Dustin Diaz 2012 - License MIT
-  */
-!function (name, definition) {
-  if (typeof module != 'undefined') module.exports = definition()
-  else if (typeof define == 'function' && typeof define.amd == 'object') define(definition)
-  else this[name] = definition()
-}('domready', function (ready) {
-
-  var fns = [], fn, f = false
-    , doc = document
-    , testEl = doc.documentElement
-    , hack = testEl.doScroll
-    , domContentLoaded = 'DOMContentLoaded'
-    , addEventListener = 'addEventListener'
-    , onreadystatechange = 'onreadystatechange'
-    , readyState = 'readyState'
-    , loaded = /^loade|c/.test(doc[readyState])
-
-  function flush(f) {
-    loaded = 1
-    while (f = fns.shift()) f()
-  }
-
-  doc[addEventListener] && doc[addEventListener](domContentLoaded, fn = function () {
-    doc.removeEventListener(domContentLoaded, fn, f)
-    flush()
-  }, f)
-
-
-  hack && doc.attachEvent(onreadystatechange, fn = function () {
-    if (/^c/.test(doc[readyState])) {
-      doc.detachEvent(onreadystatechange, fn)
-      flush()
-    }
-  })
-
-  return (ready = hack ?
-    function (fn) {
-      self != top ?
-        loaded ? fn() : fns.push(fn) :
-        function () {
-          try {
-            testEl.doScroll('left')
-          } catch (e) {
-            return setTimeout(function() { ready(fn) }, 50)
-          }
-          fn()
-        }()
-    } :
-    function (fn) {
-      loaded ? fn() : fns.push(fn)
-    })
-})
-});
-
 require.define("/node_modules/shoe/package.json", function (require, module, exports, __dirname, __filename) {
 module.exports = {"main":"index.js","browserify":"browser.js"}
 });
@@ -4610,12 +4549,10 @@ module.exports = function (value, replacer, space) {
 
 require.define("/shim.coffee", function (require, module, exports, __dirname, __filename) {
     (function() {
-  var descend, dnode, domready, fnwrap, mkwrap, pageWrap, port, shoe, webpage, _phantom;
+  var d, descend, dnode, fnwrap, mkwrap, pageWrap, port, shoe, stream, webpage, _phantom;
   var __slice = Array.prototype.slice, __hasProp = Object.prototype.hasOwnProperty;
 
   webpage = core_require('webpage');
-
-  domready = require('domready');
 
   shoe = require('shoe');
 
@@ -4741,17 +4678,13 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     }
   });
 
-  domready(function() {
-    var d, result, stream;
-    result = document.getElementById('result');
-    stream = shoe('http://localhost:' + port + '/dnode');
-    d = dnode(_phantom);
-    d.on('remote', function(remote) {
-      return console.log('got remote', remote);
-    });
-    d.pipe(stream);
-    return stream.pipe(d);
-  });
+  stream = shoe('http://localhost:' + port + '/dnode');
+
+  d = dnode(_phantom);
+
+  d.pipe(stream);
+
+  stream.pipe(d);
 
 }).call(this);
 
