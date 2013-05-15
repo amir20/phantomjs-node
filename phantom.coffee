@@ -1,6 +1,7 @@
-dnode   = require 'dnode'
-express = require 'express'
-child   = require 'child_process'
+dnode    = require 'dnode'
+http     = require 'http'
+shoe     = require 'shoe'
+child    = require 'child_process'
 
 # the list of phantomjs RPC wrapper
 phanta = []
@@ -36,37 +37,34 @@ wrap = (ph) ->
 
 module.exports =
   create: (args..., cb, binary = 'phantom', port = 12300) ->
-    app = express()
-    app.use express.static __dirname
-
-    appServer = app.listen(port)
-
-    server = dnode()
 
     phantom = null
 
-    io = null
+    httpServer = http.createServer()
+    httpServer.listen port
 
-    appServer.on 'listening', () ->
+    httpServer.on 'listening', () ->
+
       ps = startPhantomProcess binary, port, args
 
       # @Description: when the background phantomjs child process exits or crashes
       #   removes the current dNode phantomjs RPC wrapper from the list of phantomjs RPC wrapper
       ps.on 'exit', (code) ->
-        phantom.onExit && phantom.onExit() # calls the onExit method if it exist
-        appServer.close()
-        phanta = (p for p in phanta when p isnt phantom)
+        httpServer.close()
+        if phantom
+          phantom && phantom.onExit && phantom.onExit() # calls the onExit method if it exist
+          phanta = (p for p in phanta when p isnt phantom)
 
-      io =
-        log: null,
-        'client store expiration': 0
+    sock = shoe (stream) ->
 
-      # Creates a dNode server that listens to 
-      server.listen appServer, {io}, (obj, conn) ->
-        phantom = conn.remote # remote phantomjs RPC wrapper
+      d = dnode()
+
+      d.on 'remote', (phantom) ->
         wrap phantom
         phanta.push phantom
         cb? phantom
 
+      d.pipe stream
+      stream.pipe d
 
-
+    sock.install httpServer, '/dnode'
