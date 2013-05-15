@@ -45,12 +45,17 @@ mkwrap = (src, pass=[], special={}) ->
   obj
 
 pageWrap = (page) -> mkwrap page,
-  ['open','close','setContent','includeJs','sendEvent','release','uploadFile','close']
+  ['open','close','includeJs','sendEvent','release','uploadFile','close']
   injectJs: (js, cb=->) -> cb page.injectJs js
   evaluate: (fn, cb=(->), args...) -> cb page.evaluate.apply(page, [fn].concat(args))
   render: (file, cb=->) -> page.render file; cb()
   renderBase64: (type, cb=->) -> cb page.renderBase64 type
   setHeaders: (headers, cb=->) -> page.customHeaders = headers; cb()
+  setContent: (html, url, cb=->) ->
+    page.onLoadFinished = (status) ->
+      page.onLoadFinished = null
+      cb status
+    page.setContent html, url
   setViewportSize: (width, height, cb=->) ->
     page.viewportSize = {width:width, height:height}; cb()
 
