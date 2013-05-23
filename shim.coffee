@@ -1,11 +1,12 @@
 # Require gets overwritten by browserify, so we have to reimplement it from scratch - boo :(
 webpage = core_require('webpage');
 
-proto = require 'dnode-protocol'
+shoe     = require('shoe');
+dnode    = require('dnode');
 
 [port] = phantom.args
 
-controlPage = webpage.create()
+# controlPage = webpage.create()
 
 fnwrap = (target) -> -> target.apply this, arguments
 
@@ -44,12 +45,17 @@ mkwrap = (src, pass=[], special={}) ->
   obj
 
 pageWrap = (page) -> mkwrap page,
-  ['open','setContent','includeJs','sendEvent','release','uploadFile','close']
+  ['open','close','includeJs','sendEvent','release','uploadFile','close']
   injectJs: (js, cb=->) -> cb page.injectJs js
   evaluate: (fn, cb=(->), args...) -> cb page.evaluate.apply(page, [fn].concat(args))
   render: (file, cb=->) -> page.render file; cb()
   renderBase64: (type, cb=->) -> cb page.renderBase64 type
   setHeaders: (headers, cb=->) -> page.customHeaders = headers; cb()
+  setContent: (html, url, cb=->) ->
+    page.onLoadFinished = (status) ->
+      page.onLoadFinished = null
+      cb status
+    page.setContent html, url
   setViewportSize: (width, height, cb=->) ->
     page.viewportSize = {width:width, height:height}; cb()
 
@@ -63,26 +69,10 @@ _phantom = mkwrap phantom,
   clearCookies: (cb=->) -> cb phantom.clearCookies()
   createPage: (cb) -> cb pageWrap webpage.create()
 
+    
+stream = shoe('http://localhost:' + port + '/dnode')
 
-server = proto _phantom
-s = server.create()
+d = dnode _phantom
 
-
-s.on 'request', (req) ->
-  #console.log "phantom sending request #{JSON.stringify req}"
-  #evil = "function(){socket.send(#{JSON.stringify JSON.stringify req} + '\\n');}"
-  evil = "function(){socket.emit('message', #{JSON.stringify JSON.stringify req} + '\\n');}"
-  controlPage.evaluate evil
-
-controlPage.onAlert = (msg) ->
-  return unless msg[0..5] is "PCTRL "
-  #console.log "phantom got request " + msg[6..]
-  s.parse msg[6..]
-
-
-controlPage.onConsoleMessage = (msg...) -> console.log msg...
-
-controlPage.open "http://127.0.0.1:#{port}/", (status) ->
-  #console.log 'Control page title is ' + controlPage.evaluate -> document.title
-  s.start()
-
+d.pipe stream
+stream.pipe d

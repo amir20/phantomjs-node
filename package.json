@@ -19,9 +19,8 @@
         "node": ">=v0.4.9"
     },
     "dependencies": {
-        "dnode-protocol": "~0.2.2",
-        "dnode": "~0.9.12",
-        "express": "~3.0.0"
+        "dnode": "~1.0.5",
+        "shoe": "~0.0.10"
     },
     "devDependencies": {
         "browserify": "1.10.9",
