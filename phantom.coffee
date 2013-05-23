@@ -36,7 +36,7 @@ wrap = (ph) ->
 
 
 module.exports =
-  create: (args..., cb, binary = 'phantom', port = 12300) ->
+  create: (args..., cb, binary = 'phantomjs', port = 12300) ->
 
     phantom = null
 
