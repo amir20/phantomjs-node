@@ -58,7 +58,7 @@
       var args, binary, cb, httpServer, phantom, port, sock, _i;
       args = 4 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 3) : (_i = 0, []), cb = arguments[_i++], binary = arguments[_i++], port = arguments[_i++];
       if (binary == null) {
-        binary = 'phantom';
+        binary = 'phantomjs';
       }
       if (port == null) {
         port = 12300;
