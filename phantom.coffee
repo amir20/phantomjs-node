@@ -36,16 +36,25 @@ wrap = (ph) ->
 
 
 module.exports =
-  create: (args..., cb, binary = 'phantomjs', port = 12300) ->
+  create: ->
+    args = []
+    options = {}
+    for arg in arguments
+      switch typeof arg
+        when 'function' then cb = arg
+        when 'string' then args.push arg
+        when 'object' then options = v
+    options.binary ?= 'phantomjs'
+    options.port ?= 12300
 
     phantom = null
 
     httpServer = http.createServer()
-    httpServer.listen port
+    httpServer.listen options.port
 
     httpServer.on 'listening', () ->
 
-      ps = startPhantomProcess binary, port, args
+      ps = startPhantomProcess options.binary, options.port, args
 
       # @Description: when the background phantomjs child process exits or crashes
       #   removes the current dNode phantomjs RPC wrapper from the list of phantomjs RPC wrapper
