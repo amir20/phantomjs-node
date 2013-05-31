@@ -3,7 +3,6 @@ assert  = require 'assert'
 express = require 'express'
 phantom = require '../phantom'
 
-
 describe = (name, bat) -> vows.describe(name).addBatch(bat).export(module)
 
 # Make coffeescript not return anything
@@ -12,7 +11,6 @@ t = (fn) ->
   (args...) ->
     fn.apply this, args
     return
-
 
 app = express()
 app.use express.static __dirname
@@ -31,43 +29,52 @@ app.get '/', (req, res) ->
 
 appServer = app.listen()
 
-describe "The phantom module"
+describe "The phantom module (adv)"
   "Can create an instance with --load-images=no":
-    topic: t -> phantom.create '--load-images=no', (p) =>
-
-      @callback null, p
+    topic: t ->
+      phantom.create '--load-images=no', (ph) =>
+        @callback null, ph
 
     "which, when you open a page":
-      topic: t (p) ->
-        test = this
-        p.createPage (page) ->
+      topic: t (ph) ->
+        ph.createPage (page) =>
           page.open "http://127.0.0.1:#{appServer.address().port}/", (status) =>
             setTimeout =>
-              test.callback null, page, status
+              @callback null, page, status
             , 1500
 
       "and check the settings object":
-        topic: t (page) ->
-          page.get 'settings', (s) => @callback null, s
+        topic: t (page, status) ->
+          page.get 'settings', (s) =>
+            @callback null, s
 
         "loadImages isn't set": (s) ->
           assert.strictEqual s.loadImages, false
 
-
-      "succeeds": (_1, _2, status) ->
+      "succeeds": (err, page, status) ->
         assert.equal status, 'success'
 
       "and check a test image":
         topic: t (page) ->
-          page.evaluate (-> document.getElementsByTagName('img')[0]), (img) => @callback null, img
+          page.evaluate (-> document.getElementsByTagName('img')[0]), (img) =>
+            @callback null, img
 
         "it doesn't load": (img) ->
           assert.strictEqual img.width, 0, "width should be 0"
           assert.strictEqual img.height, 0, "height should be 0"
 
-
-    teardown: (p) ->
+    teardown: (ph) ->
       appServer.close()
-      p.exit()
+      ph.exit()
 
+  "Can create an instance with a custom port and --load-images=yes":
+    topic: t ->
+      phantom.create '--load-images=yes', {port: 12301}, (ph) =>
+        ph.get 'args', (args) =>
+          # TODO: not sure why args doesn't contain load-images
+          [port] = args
+          @callback null, port
+
+    "which loads on the correct port": (port) ->
+      assert.equal port, 12301
 

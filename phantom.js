@@ -68,7 +68,7 @@
             args.push(arg);
             break;
           case 'object':
-            options = v;
+            options = arg;
         }
       }
       if ((_ref = options.binary) == null) {

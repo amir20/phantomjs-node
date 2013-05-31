@@ -30,7 +30,7 @@ phantom.create (ph) ->
 
 In Javascript, do the same but add parentheses and curly braces everywhere.
 
-You can use all the methods listed on the [PhantomJS API page](http://code.google.com/p/phantomjs/wiki/Interface)
+You can use all the methods listed on the [PhantomJS API page](https://github.com/ariya/phantomjs/wiki/API-Reference)
 
 
 Due to the async nature of the bridge, some things have changed, though:

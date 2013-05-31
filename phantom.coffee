@@ -43,7 +43,7 @@ module.exports =
       switch typeof arg
         when 'function' then cb = arg
         when 'string' then args.push arg
-        when 'object' then options = v
+        when 'object' then options = arg
     options.binary ?= 'phantomjs'
     options.port ?= 12300
 
