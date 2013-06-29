@@ -14,9 +14,15 @@ startPhantomProcess = (binary, port, args) ->
   ps = child.spawn binary, args.concat [__dirname+'/shim.js', port]
 
   ps.stdout.on 'data', (data) -> console.log "phantom stdout: #{data}"
+  
   ps.stderr.on 'data', (data) ->
     return if data.toString('utf8').match /No such method.*socketSentData/ #Stupid, stupid QTWebKit
     console.warn "phantom stderr: #{data}"
+  
+  ps.on 'exit', (code, signal) ->
+    console.assert not signal?, "signal killed phantomjs: #{signal}"
+    console.assert code is 0, "abnormal phantomjs exit code: #{code}"
+  
   ps
 
 # @Description: kills off all phantom processes within spawned by this parent process when it is exits
