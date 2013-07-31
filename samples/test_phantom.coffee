@@ -1,8 +1,8 @@
 # This script demonstrates how phantomjs is used within Nodejs in replacement of JSDOM
-phantom =  require 'node-phantom'
-phantom.create (err, ph)->
-  ph.createPage (err, page)->
-    page.open 'http://www.mdscollections.com/cat_mds_accessories.cfm', (err, status)->
+phantom =  require 'phantom'
+phantom.create (ph)->
+  ph.createPage (page)->
+    page.open 'http://www.mdscollections.com/cat_mds_accessories.cfm', (status)->
       console.log 'Opened site? %s', status
       another_funny page, ph
             
@@ -25,7 +25,6 @@ another_funny = (page, ph)->
       h2: h2Arr
     }
   
-  , (err, result)->
-    console.log err
+  , (result)->
     console.log result
     ph.exit()
