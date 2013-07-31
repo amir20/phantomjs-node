@@ -29,6 +29,6 @@ phantom.create (ph) ->
     
       finishedFunc = (result)->
         console.log result
-        ph.exit();
+        ph.exit()
     
       page.evaluate someFunc, finishedFunc, 'div', {wahtt: 111}

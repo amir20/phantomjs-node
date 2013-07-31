@@ -20,5 +20,6 @@ phantom.create (ph) ->
       
       finishedFunc = (result)->
         console.log result
+        ph.exit()
       
       page.evaluate someFunc, finishedFunc, 'img'
