@@ -45,7 +45,7 @@ mkwrap = (src, pass=[], special={}) ->
   obj
 
 pageWrap = (page) -> mkwrap page,
-  ['open','close','includeJs','sendEvent','release','uploadFile','close']
+  ['open','close','includeJs','sendEvent','release','uploadFile','close','goBack','goForward']
   injectJs: (js, cb=->) -> cb page.injectJs js
   evaluate: (fn, cb=(->), args...) -> cb page.evaluate.apply(page, [fn].concat(args))
   render: (file, cb=->) -> page.render file; cb()
