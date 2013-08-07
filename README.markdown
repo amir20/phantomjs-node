@@ -47,6 +47,9 @@ You can also pass command line switches to the phantomjs process by specifying a
 phantom.create '--load-images=no', '--local-to-remote-url-access=yes', (page) ->
 ```
 
+##Note for Mac users
+
+Phantom requires you to have the XCode Command Line Tools installed on your box, or else you will get some nasty errors (`xcode` not found or `make` not found).  If you haven't already, simply install XCode through the App Store, then [install the command line tools](http://stackoverflow.com/questions/6767481/where-can-i-find-make-program-for-mac-os-x-lion).  
 
 ## How does it work?
 
