@@ -38,6 +38,7 @@ Due to the async nature of the bridge, some things have changed, though:
 * Return values (ie, of ```page.evaluate```) are returned in a callback instead
 * ```page.render()``` takes a callback so you can tell when it's done writing the file
 * Properties can't be get/set directly, instead use ```p.get('version', callback)``` or ```p.page.set('viewportSize', {width:640,height:480})```, etc. Nested objects can be accessed by including dots in keys, such as ```p.page.set('settings.loadImages', false)```
+* Callbacks can't be set directly, instead use ```page.set('callbackName', callback)```, e.g. ```page.set('onLoadFinished', function(success) {})```
 
 ```ph.createPage()``` makes new PhantomJS WebPage objects, so use that if you want to open lots of webpages. You can also make multiple phantomjs processes by calling ```phantom.create()``` multiple times, so if you need that for some crazy reason, knock yourself out!
 
