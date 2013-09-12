@@ -2,7 +2,7 @@
 
 "It sure would be neat if [PhantomJS](http://www.phantomjs.org/) was a NodeJS module", I hear you say. Well, wait no longer! This node module implements a nauseously clever bridge between Phantom and Node, so that you can use all your favourite PhantomJS functions without leaving NPM behind and living in a cave.
 
-## How do I use it?
+## Intallation
 
 First, make sure PhantomJS is installed. This module expects the ```phantomjs``` binary to be in PATH somewhere. In other words, type this:
 
@@ -13,6 +13,12 @@ If that works, so will phantomjs-node. It's only been tested with PhantomJS 1.3,
 Install it like this:
 
     npm install phantom
+    
+    
+For a brief introduction continue reading, otherwise **go to the [Wiki page](https://github.com/sgentle/phantomjs-node/wiki) for more information!**
+
+
+## How do I use it?
 
 Use it like this in Coffeescript:
 
