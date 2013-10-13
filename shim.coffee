@@ -49,6 +49,7 @@ pageWrap = (page) -> mkwrap page,
   injectJs: (js, cb=->) -> cb page.injectJs js
   evaluate: (fn, cb=(->), args...) -> cb page.evaluate.apply(page, [fn].concat(args))
   render: (file, cb=->) -> page.render file; cb()
+  getContent: (cb=->) -> cb page.content
   renderBase64: (type, cb=->) -> cb page.renderBase64 type
   setHeaders: (headers, cb=->) -> page.customHeaders = headers; cb()
   setContent: (html, url, cb=->) ->
@@ -58,6 +59,8 @@ pageWrap = (page) -> mkwrap page,
     page.setContent html, url
   setViewportSize: (width, height, cb=->) ->
     page.viewportSize = {width:width, height:height}; cb()
+  setPaperSize: (options, cb=->) -> page.paperSize = options; cb()
+  setZoomFactor: (zoomFactor, cb=->) -> page.zoomFactor = zoomFactor; cb()
 
 _phantom = mkwrap phantom,
   ['exit'],
@@ -69,7 +72,7 @@ _phantom = mkwrap phantom,
   clearCookies: (cb=->) -> cb phantom.clearCookies()
   createPage: (cb) -> cb pageWrap webpage.create()
 
-    
+
 stream = shoe('http://localhost:' + port + '/dnode')
 
 d = dnode _phantom
