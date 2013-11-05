@@ -19,6 +19,12 @@ startPhantomProcess = (binary, port, args) ->
     return if data.toString('utf8').match /No such method.*socketSentData/ #Stupid, stupid QTWebKit
     console.warn "phantom stderr: #{data}"
   
+  ps.on 'error', (err) ->
+    if err?.code is 'ENOENT'
+      console.error "phantomjs-node: You don't have 'phantomjs' installed"
+    else
+      throw err
+      
   ps
 
 # @Description: kills off all phantom processes within spawned by this parent process when it is exits
