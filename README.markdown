@@ -70,4 +70,4 @@ Well, there's one thing PhantomJS does support, and that's opening webpages. In 
 
 The communication itself happens via James Halliday's fantastic [dnode](https://github.com/substack/dnode) library, which fortunately works well enough when combined with [browserify](https://github.com/substack/node-browserify) to run straight out of PhantomJS's pidgin Javascript environment.
 
-If you'd like to hack on phantom, please do! You can run the tests with ```cake test``` or ```npm test```, and rebuild the coffeescript/browserified code with ```cake build```. You might need to ```npm install -g coffeescript``` for cake to work.
+If you'd like to hack on phantom, please do! You can run the tests with ```cake test``` or ```npm test```, and rebuild the coffeescript/browserified code with ```cake build```. You might need to ```npm install -g coffee-script``` for cake to work.
