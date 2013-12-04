@@ -46,7 +46,7 @@ Due to the async nature of the bridge, some things have changed, though:
 * Properties can't be get/set directly, instead use ```p.get('version', callback)``` or ```p.page.set('viewportSize', {width:640,height:480})```, etc. Nested objects can be accessed by including dots in keys, such as ```p.page.set('settings.loadImages', false)```
 * Callbacks can't be set directly, instead use ```page.set('callbackName', callback)```, e.g. ```page.set('onLoadFinished', function(success) {})```
 
-```ph.createPage()``` makes new PhantomJS WebPage objects, so use that if you want to open lots of webpages. You can also make multiple phantomjs processes by calling ```phantom.create()``` multiple times, so if you need that for some crazy reason, knock yourself out!
+```ph.createPage()``` makes new PhantomJS WebPage objects, so use that if you want to open lots of webpages. You can also make multiple phantomjs processes by calling ```phantom.create('flags', { port: someDiffNumber})``` multiple times, so if you need that for some crazy reason, knock yourself out!
 
 You can also pass command line switches to the phantomjs process by specifying additional args to ```phantom.create()```, eg:
 
