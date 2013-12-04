@@ -28,9 +28,14 @@ startPhantomProcess = (binary, port, args) ->
   ps
 
 # @Description: kills off all phantom processes within spawned by this parent process when it is exits
+onSignal = ->
+  phantom.exit() for phantom in phanta
+  process.exit()
+
 process.on 'exit', ->
   phantom.exit() for phantom in phanta
-
+process.on 'SIGINT', onSignal
+process.on 'SIGTERM', onSignal
 
 # @Description: We need this because dnode does magic clever stuff with functions, but we want the function to make it intact to phantom
 wrap = (ph) ->
