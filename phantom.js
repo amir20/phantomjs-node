@@ -20,7 +20,7 @@
       return console.log("phantom stdout: " + data);
     });
     ps.stderr.on('data', function(data) {
-      if (data.toString('utf8').match(/No such method.*socketSentData/)) {
+      if (data.toString('utf8').match(/(No such method.*socketSentData)|(CoreText performance note)/)) {
         return;
       }
       return console.warn("phantom stderr: " + data);

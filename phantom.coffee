@@ -16,7 +16,7 @@ startPhantomProcess = (binary, port, args) ->
   ps.stdout.on 'data', (data) -> console.log "phantom stdout: #{data}"
   
   ps.stderr.on 'data', (data) ->
-    return if data.toString('utf8').match /No such method.*socketSentData/ #Stupid, stupid QTWebKit
+    return if data.toString('utf8').match /(No such method.*socketSentData)|(CoreText performance note)/ #Stupid, stupid QTWebKit
     console.warn "phantom stderr: #{data}"
   
   ps.on 'error', (err) ->
