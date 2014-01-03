@@ -15,9 +15,7 @@ startPhantomProcess = (binary, port, args) ->
 
   ps.stdout.on 'data', (data) -> console.log "phantom stdout: #{data}"
   
-  ps.stderr.on 'data', (data) ->
-    return if data.toString('utf8').match /(No such method.*socketSentData)|(CoreText performance note)/ #Stupid, stupid QTWebKit
-    console.warn "phantom stderr: #{data}"
+  ps.stderr.on 'data', (data) -> module.exports.stderrHandler(data.toString('utf8'))
   
   ps.on 'error', (err) ->
     if err?.code is 'ENOENT'
@@ -96,3 +94,8 @@ module.exports =
       stream.pipe d
 
     sock.install httpServer, '/dnode'
+
+  stderrHandler: (message) ->
+    return if message.match /(No such method.*socketSentData)|(CoreText performance note)/ #Stupid, stupid QTWebKit
+    console.warn "phantom stderr: #{data}"
+

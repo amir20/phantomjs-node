@@ -20,10 +20,7 @@
       return console.log("phantom stdout: " + data);
     });
     ps.stderr.on('data', function(data) {
-      if (data.toString('utf8').match(/(No such method.*socketSentData)|(CoreText performance note)/)) {
-        return;
-      }
-      return console.warn("phantom stderr: " + data);
+      return module.exports.stderrHandler(data.toString('utf8'));
     });
     ps.on('error', function(err) {
       if ((err != null ? err.code : void 0) === 'ENOENT') {
@@ -140,6 +137,12 @@
         return stream.pipe(d);
       });
       return sock.install(httpServer, '/dnode');
+    },
+    stderrHandler: function(message) {
+      if (message.match(/(No such method.*socketSentData)|(CoreText performance note)/)) {
+        return;
+      }
+      return console.warn("phantom stderr: " + data);
     }
   };
 
