@@ -142,7 +142,7 @@
       if (message.match(/(No such method.*socketSentData)|(CoreText performance note)/)) {
         return;
       }
-      return console.warn("phantom stderr: " + data);
+      return console.warn("phantom stderr: " + message);
     }
   };
 
