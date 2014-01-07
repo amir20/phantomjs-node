@@ -97,5 +97,5 @@ module.exports =
 
   stderrHandler: (message) ->
     return if message.match /(No such method.*socketSentData)|(CoreText performance note)/ #Stupid, stupid QTWebKit
-    console.warn "phantom stderr: #{data}"
+    console.warn "phantom stderr: #{message}"
 
