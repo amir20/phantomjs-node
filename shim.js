@@ -4654,6 +4654,11 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
           height: height
         };
         return cb();
+      },
+      setPaperSize:function(paperSize, cb) {
+        if (cb == null) cb = function() {};
+        page.paperSize=paperSize;
+        return cb();
       }
     });
   };
