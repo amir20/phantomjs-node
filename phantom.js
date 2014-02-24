@@ -14,22 +14,7 @@
   phanta = [];
 
   startPhantomProcess = function(binary, port, args) {
-    var ps;
-    ps = child.spawn(binary, args.concat([__dirname + '/shim.js', port]));
-    ps.stdout.on('data', function(data) {
-      return console.log("phantom stdout: " + data);
-    });
-    ps.stderr.on('data', function(data) {
-      return module.exports.stderrHandler(data.toString('utf8'));
-    });
-    ps.on('error', function(err) {
-      if ((err != null ? err.code : void 0) === 'ENOENT') {
-        return console.error("phantomjs-node: You don't have 'phantomjs' installed");
-      } else {
-        throw err;
-      }
-    });
-    return ps;
+    return child.spawn(binary, args.concat([__dirname + '/shim.js', port]));
   };
 
   onSignal = function() {
@@ -100,6 +85,19 @@
       httpServer.on('listening', function() {
         var ps;
         ps = startPhantomProcess(options.binary, options.port, args);
+        ps.stdout.on('data', options.onStdout || function(data) {
+          return console.log("phantom stdout: " + data);
+        });
+        ps.stderr.on('data', options.onStderr || function(data) {
+          return module.exports.stderrHandler(data.toString('utf8'));
+        });
+        ps.on('error', function(err) {
+          if ((err != null ? err.code : void 0) === 'ENOENT') {
+            return console.error("phantomjs-node: You don't have 'phantomjs' installed");
+          } else {
+            throw err;
+          }
+        });
         return ps.on('exit', function(code, signal) {
           var p;
           httpServer.close();
