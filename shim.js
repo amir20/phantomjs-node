@@ -4615,6 +4615,15 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
 
   pageWrap = function(page) {
     return mkwrap(page, ['open', 'close', 'includeJs', 'sendEvent', 'release', 'uploadFile', 'close', 'goBack', 'goForward', 'reload'], {
+      onResourceRequested: function(fn, cb) {
+        if (cb == null) cb = (function() {});
+        return page.onResourceRequested = function() {
+          fn = fn.replace(/function.*\(/, 'function x(');
+          eval(fn);
+          x.apply(this, arguments);
+          return cb.apply(this, arguments);
+        };
+      },
       injectJs: function(js, cb) {
         if (cb == null) cb = function() {};
         return cb(page.injectJs(js));
