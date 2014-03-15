@@ -49,8 +49,8 @@ Due to the async nature of the bridge, some things have changed, though:
 ```
 page.onResourceRequested(
 	function(requestData, request) { request.abort(); },
-	function(requestData) { console.log(requestData.url) };
-});
+	function(requestData) { console.log(requestData.url) }
+);
 ```
 
 ```ph.createPage()``` makes new PhantomJS WebPage objects, so use that if you want to open lots of webpages. You can also make multiple phantomjs processes by calling ```phantom.create('flags', { port: someDiffNumber})``` multiple times, so if you need that for some crazy reason, knock yourself out!
