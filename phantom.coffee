@@ -30,6 +30,8 @@ wrap = (ph) ->
     ph._createPage (page) ->
       page._evaluate = page.evaluate
       page.evaluate = (fn, cb, args...) -> page._evaluate.apply(page, [fn.toString(), cb].concat(args))
+      page._onResourceRequested = page.onResourceRequested
+      page.onResourceRequested = (fn, cb) -> page._onResourceRequested.apply(page, [fn.toString(), cb])
       cb page
 
 
