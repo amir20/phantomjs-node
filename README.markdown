@@ -55,6 +55,11 @@ page.onResourceRequested(
 
 ```ph.createPage()``` makes new PhantomJS WebPage objects, so use that if you want to open lots of webpages. You can also make multiple phantomjs processes by calling ```phantom.create('flags', { port: someDiffNumber})``` multiple times, so if you need that for some crazy reason, knock yourself out!
 
+Also, you can set exit callback, which would be invoked after ```phantom.exit()``` or after phantom process crash:
+```
+phantom.create('flags', { port: 8080, onExit: exitCallback})
+```
+ 
 You can also pass command line switches to the phantomjs process by specifying additional args to ```phantom.create()```, eg:
 
 ```coffeescript
