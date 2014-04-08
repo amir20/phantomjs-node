@@ -54,8 +54,8 @@ module.exports =
     httpServer.listen options.port
 
     httpServer.on 'listening', () ->
-
-      ps = startPhantomProcess options.binary, options.port, args
+      port = httpServer.address().port
+      ps = startPhantomProcess options.binary, port, args
 
       ps.stdout.on 'data', options.onStdout || (data) -> console.log "phantom stdout: #{data}"
       

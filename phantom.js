@@ -87,8 +87,9 @@
       httpServer = http.createServer();
       httpServer.listen(options.port);
       httpServer.on('listening', function() {
-        var ps;
-        ps = startPhantomProcess(options.binary, options.port, args);
+        var port, ps;
+        port = httpServer.address().port;
+        ps = startPhantomProcess(options.binary, port, args);
         ps.stdout.on('data', options.onStdout || function(data) {
           return console.log("phantom stdout: " + data);
         });
