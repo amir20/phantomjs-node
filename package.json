@@ -19,7 +19,7 @@
         "node": ">=v0.4.9"
     },
     "dependencies": {
-        "dnode": "~1.0.5",
+        "dnode": "^1.2.0",
         "shoe": "~0.0.10"
     },
     "devDependencies": {
