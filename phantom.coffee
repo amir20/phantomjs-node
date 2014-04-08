@@ -46,7 +46,7 @@ module.exports =
         when 'string' then args.push arg
         when 'object' then options = arg
     options.binary ?= 'phantomjs'
-    options.port ?= 12300
+    options.port ?= 0
 
     phantom = null
 

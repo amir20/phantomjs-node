@@ -81,7 +81,7 @@
         options.binary = 'phantomjs';
       }
       if ((_ref1 = options.port) == null) {
-        options.port = 12300;
+        options.port = 0;
       }
       phantom = null;
       httpServer = http.createServer();
