@@ -46,7 +46,7 @@ module.exports =
         when 'string' then args.push arg
         when 'object' then options = arg
     options.binary ?= 'phantomjs'
-    options.port ?= 12300
+    options.port ?= 0
 
     phantom = null
 
@@ -54,8 +54,8 @@ module.exports =
     httpServer.listen options.port
 
     httpServer.on 'listening', () ->
-
-      ps = startPhantomProcess options.binary, options.port, args
+      port = httpServer.address().port
+      ps = startPhantomProcess options.binary, port, args
 
       ps.stdout.on 'data', options.onStdout || (data) -> console.log "phantom stdout: #{data}"
       
