@@ -5496,7 +5496,14 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
       },
       render: function(file, opts, cb) {
         if (opts == null) opts = {};
-        if (cb == null) cb = function() {};
+        if (cb == null) {
+          if (typeof opts === 'function') {
+            cb = opts;
+            opts = {};
+          } else {
+            cb = function() {};
+          }
+        }
         page.render(file, opts);
         return cb();
       },
