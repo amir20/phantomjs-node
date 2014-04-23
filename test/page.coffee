@@ -11,8 +11,8 @@ describe = (name, bat) -> vows.describe(name).addBatch(bat).export(module)
 # Make coffeescript not return anything
 # This is needed because vows topics do different things if you have a return value
 t = (fn) ->
-  (args...) ->
-    fn.apply this, args
+  ->
+    fn.apply this, arguments
     return
 
 app = express()
@@ -35,7 +35,7 @@ app.get '/', (req, res) ->
 
 appServer = app.listen()
 
-describe "Pages"
+describe "Pages",
   "A Phantom page":
     topic: t ->
       phantom.create {port: 12303}, (ph) =>
@@ -89,7 +89,7 @@ describe "Pages"
           "which return the correct result": (html) ->
             html = html.replace(/\s\s+/g, "")
             assert.equal html, '<div class="anotherdiv">Some page content</div>'
-        
+
         "can set a nested property":
           topic: t (page) ->
             page.set 'settings.loadPlugins', true, (oldVal) =>
