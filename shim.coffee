@@ -59,7 +59,7 @@ pageWrap = (page) -> mkwrap page,
       cb.apply(this, arguments)
   injectJs: (js, cb=->) -> cb page.injectJs js
   evaluate: (fn, cb=(->), args...) -> cb page.evaluate.apply(page, [fn].concat(args))
-  render: (file, cb=->) -> page.render file; cb()
+  render: (file, opts={}, cb=->) -> page.render file, opts; cb()
   getContent: (cb=->) -> cb page.content
   renderBase64: (type, cb=->) -> cb page.renderBase64 type
   setHeaders: (headers, cb=->) -> page.customHeaders = headers; cb()
