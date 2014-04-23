@@ -8,8 +8,8 @@ describe = (name, bat) -> vows.describe(name).addBatch(bat).export(module)
 # Make coffeescript not return anything
 # This is needed because vows topics do different things if you have a return value
 t = (fn) ->
-  (args...) ->
-    fn.apply this, args
+  ->
+    fn.apply this, arguments
     return
 
 app = express()
@@ -29,7 +29,7 @@ app.get '/', (req, res) ->
 
 appServer = app.listen()
 
-describe "The phantom module (adv)"
+describe "The phantom module (adv)",
   "Can create an instance with --load-images=no":
     topic: t ->
       phantom.create '--load-images=no', (ph) =>
@@ -77,4 +77,3 @@ describe "The phantom module (adv)"
 
     "which loads on the correct port": (port) ->
       assert.equal port, 12301
-

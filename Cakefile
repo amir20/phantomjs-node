@@ -1,24 +1,43 @@
-{exec} = require 'child_process'
+{spawn} = require 'child_process'
+Promise = require 'bluebird'
 
 bin = "./node_modules/.bin"
+sh = "/bin/sh"
+
+_runCmd = (prev, current) ->
+  prev.then ->
+    new Promise (resolve, reject) ->
+      args = ['-c', current]
+      child = spawn sh, args, {stdio: 'inherit'}
+
+      child.on 'error', reject
+
+      child.on 'exit', (code) ->
+        if code? then resolve() else reject()
 
 run = (cmds...) ->
-  exec cmds.join(' && '), (err, stdout, stderr) ->
-    stderr = stderr.trim()
-    stdout = stdout.trim()
-    console.log stderr if stderr
-    console.log stdout if stdout
-    if err
-      console.log "Failed."
-    else
-      console.log "Great success!"
+  seq = cmds.reduce _runCmd, Promise.resolve()
+  seq.error (err) -> console.log 'Failed.', err
+
+cleanup = ->
+  run "rm -rf .test .shim.js"
+
+task "clean", "cleanup build and test artifacts", ->
+  cleanup().then -> console.log 'All clean.'
 
 task "build", "coffee-compile and browserify phantom", ->
   run(
     "#{bin}/coffee -c phantom.coffee"
-    "rm -f shim.js .shim.js"
     "#{bin}/browserify shim.coffee -o .shim.js"
     "cat pre_shim.js .shim.js > shim.js"
-    "rm .shim.js"
-  )
-task "test", "run phantom's unit tests", -> run "#{bin}/vows --spec test/*.coffee"
+  ).then(cleanup).then ->
+    console.log 'Build successful.'
+
+task "test", "run phantom's unit tests", ->
+  invoke('build').then ->
+    run(
+      "#{bin}/coffee -o .test -c test/*.coffee"
+      "cp test/*.gif test/*.js .test/"
+      "#{bin}/vows --spec .test/*.js"
+    ).then(cleanup).then ->
+      console.log 'Great Success!'
