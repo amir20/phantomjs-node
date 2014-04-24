@@ -1,9 +1,6 @@
 vows    = require 'vows'
 assert  = require 'assert'
-psTree  = require 'ps-tree'
-child   = require 'child_process'
 phantom = require '../phantom'
-
 
 describe = (name, bat) -> vows.describe(name).addBatch(bat).export(module)
 
@@ -50,18 +47,3 @@ describe "The phantom module (basic)",
 
       "which is an object": (page) ->
         assert.isObject page
-
-    "which, when you call exit()":
-      topic: t (ph) ->
-        # Make sure other tests get a chance to run first. There's probably a better way to do this.
-        setTimeout =>
-          psTree process.pid, (err, oldChildren) =>
-            ph.exit()
-            setTimeout =>
-              psTree process.pid, (err, newChildren) =>
-                @callback null, oldChildren, newChildren
-            , 500
-        , 500
-
-      "exits after 500ms": (err, oldChildren, newChildren) ->
-        assert.equal oldChildren.length - newChildren.length, 1, "process still has #{newChildren.length} child(ren): #{JSON.stringify newChildren}"
