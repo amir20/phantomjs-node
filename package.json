@@ -16,10 +16,10 @@
   ],
   "main": "phantom.js",
   "engines": {
-    "node": ">=v0.4.9"
+    "node": ">=v0.8.0"
   },
   "dependencies": {
-    "dnode": "^1.2.0",
+    "dnode": "~1.2.0",
     "shoe": "~0.0.10"
   },
   "devDependencies": {
@@ -30,8 +30,8 @@
     "temp": "~0.4.0",
     "ps-tree": "~0.0.2",
     "vows": "~0.7.0",
-    "bluebird": "^1.2.3",
-    "phantomjs": "^1.9.7-4"
+    "bluebird": "~1.2.3",
+    "phantomjs": "~1.9.7-4"
   },
   "licenses": {
     "type": "MIT",
