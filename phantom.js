@@ -107,7 +107,9 @@
           var p;
           httpServer.close();
           if (phantom) {
-            phantom && phantom.onExit && phantom.onExit();
+            if (typeof phantom.onExit === "function") {
+              phantom.onExit();
+            }
             phanta = (function() {
               var _j, _len1, _results;
               _results = [];

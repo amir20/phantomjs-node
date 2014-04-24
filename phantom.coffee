@@ -58,9 +58,9 @@ module.exports =
       ps = startPhantomProcess options.binary, port, args
 
       ps.stdout.on 'data', options.onStdout || (data) -> console.log "phantom stdout: #{data}"
-      
+
       ps.stderr.on 'data', options.onStderr || (data) -> module.exports.stderrHandler(data.toString('utf8'))
-      
+
       ps.on 'error', (err) ->
         if err?.code is 'ENOENT'
           console.error "phantomjs-node: You don't have 'phantomjs' installed"
@@ -72,7 +72,7 @@ module.exports =
       ps.on 'exit', (code, signal) ->
         httpServer.close()
         if phantom
-          phantom && phantom.onExit && phantom.onExit() # calls the onExit method if it exist
+          phantom.onExit?()
           phanta = (p for p in phanta when p isnt phantom)
 
         if options.onExit
@@ -98,4 +98,3 @@ module.exports =
   stderrHandler: (message) ->
     return if message.match /(No such method.*socketSentData)|(CoreText performance note)/ #Stupid, stupid QTWebKit
     console.warn "phantom stderr: #{message}"
-
