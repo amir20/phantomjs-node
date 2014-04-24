@@ -30,7 +30,8 @@
     "temp": "~0.4.0",
     "ps-tree": "~0.0.2",
     "vows": "~0.7.0",
-    "bluebird": "^1.2.3"
+    "bluebird": "^1.2.3",
+    "phantomjs": "^1.9.7-4"
   },
   "licenses": {
     "type": "MIT",
