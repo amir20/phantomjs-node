@@ -1,4 +1,4 @@
-# PhantomJS bridge for NodeJS [![Build Status](https://secure.travis-ci.org/endel/phantomjs-node.png)](http://travis-ci.org/endel/phantomjs-node)
+# PhantomJS bridge for NodeJS [![Build Status](https://secure.travis-ci.org/sgentle/phantomjs-node.png)](http://travis-ci.org/sgentle/phantomjs-node)
 
 "It sure would be neat if [PhantomJS](http://www.phantomjs.org/) was a NodeJS module", I hear you say. Well, wait no longer! This node module implements a nauseously clever bridge between Phantom and Node, so that you can use all your favourite PhantomJS functions without leaving NPM behind and living in a cave.
 
@@ -13,8 +13,8 @@ If that works, so will phantomjs-node. It's only been tested with PhantomJS 1.3,
 Install it like this:
 
     npm install phantom
-    
-    
+
+
 For a brief introduction continue reading, otherwise **go to the [Wiki page](https://github.com/sgentle/phantomjs-node/wiki) for more information!**
 
 
@@ -59,7 +59,7 @@ Also, you can set exit callback, which would be invoked after ```phantom.exit()`
 ```
 phantom.create('flags', { port: 8080, onExit: exitCallback})
 ```
- 
+
 You can also pass command line switches to the phantomjs process by specifying additional args to ```phantom.create()```, eg:
 
 ```coffeescript
