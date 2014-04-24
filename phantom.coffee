@@ -34,8 +34,6 @@ wrap = (ph) ->
       page.onResourceRequested = (fn, cb) -> page._onResourceRequested.apply(page, [fn.toString(), cb])
       cb page
 
-
-
 module.exports =
   create: ->
     args = []
