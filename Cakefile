@@ -13,7 +13,7 @@ _runCmd = (prev, current) ->
       child.on 'error', reject
 
       child.on 'exit', (code) ->
-        if code? then resolve() else reject()
+        if (code or 0) is 0 then resolve() else reject()
 
 run = (cmds...) ->
   seq = cmds.reduce _runCmd, Promise.resolve()
@@ -21,6 +21,13 @@ run = (cmds...) ->
 
 cleanup = ->
   run "rm -rf .test .shim.js"
+
+exit = (code = 0) ->
+  process.exit code
+
+callbacks =
+  success: -> console.log 'Great Success!'
+  error: -> console.error 'Task failed.'
 
 task "clean", "cleanup build and test artifacts", ->
   cleanup().then -> console.log 'All clean.'
@@ -30,14 +37,19 @@ task "build", "coffee-compile and browserify phantom", ->
     "#{bin}/coffee -c phantom.coffee"
     "#{bin}/browserify shim.coffee -o .shim.js"
     "cat pre_shim.js .shim.js > shim.js"
-  ).then(cleanup).then ->
-    console.log 'Build successful.'
+  )
+    .then(callbacks.success, callbacks.error)
+    .finally cleanup
 
 task "test", "run phantom's unit tests", ->
   invoke('build').then ->
-    run(
+    batch = run(
       "#{bin}/coffee -o .test -c test/*.coffee"
       "cp test/*.gif test/*.js .test/"
       "#{bin}/vows --spec .test/*.js"
-    ).then(cleanup).then ->
-      console.log 'Great Success!'
+    )
+
+    batch
+      .then(callbacks.success, callbacks.error)
+      .then(cleanup)
+      .catch -> exit(1)
