@@ -34,7 +34,23 @@ phantom.create (ph) ->
         ph.exit()
 ```
 
-In Javascript, do the same but add parentheses and curly braces everywhere.
+In Javascript: 
+
+```js
+var phantom = require('phantom');
+
+phantom.create(function (ph) {
+  ph.createPage(function (page) {
+    page.open("http://www.google.com", function (status) {
+      console.log("opened google? ", status);
+      page.evaluate(function () { return document.title; }, function (result) {
+        console.log('Page title is ' + result);
+        ph.exit();
+      });
+    });
+  });
+});
+```
 
 You can use all the methods listed on the [PhantomJS API page](https://github.com/ariya/phantomjs/wiki/API-Reference)
 
