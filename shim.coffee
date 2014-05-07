@@ -45,7 +45,7 @@ mkwrap = (src, pass=[], special={}) ->
   obj
 
 pageWrap = (page) -> mkwrap page,
-  ['open','close','includeJs','sendEvent','release','uploadFile','close','goBack','goForward','reload']
+  ['open','close','includeJs','sendEvent','release','uploadFile','goBack','goForward','reload']
   # this is here to let the user pass in a function that has access to request.abort() and other functions on the request object.
   onResourceRequested: (fn, cb=(->)) ->
     page.onResourceRequested = ->
