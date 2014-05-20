@@ -1,7 +1,7 @@
 dnode    = require 'dnode'
 http     = require 'http'
 shoe     = require 'shoe'
-child    = require 'child_process'
+spawn    = require 'win-spawn'
 
 # the list of phantomjs RPC wrapper
 phanta = []
@@ -11,7 +11,7 @@ phanta = []
 # @args: args:object
 # @return: ps:object
 startPhantomProcess = (binary, port, args) ->
-  child.spawn binary, args.concat [__dirname+'/shim.js', port]
+  spawn binary, args.concat [__dirname+'/shim.js', port]
 
 # @Description: kills off all phantom processes within spawned by this parent process when it is exits
 onSignal = ->
