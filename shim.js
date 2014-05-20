@@ -4605,11 +4605,11 @@ Scrubber.prototype.unscrub = function (msg, f) {
 
 });
 
-require.define("/node_modules/dnode/node_modules/dnode-protocol/node_modules/traverse/package.json", function (require, module, exports, __dirname, __filename) {
+require.define("/node_modules/traverse/package.json", function (require, module, exports, __dirname, __filename) {
 module.exports = {"main":"index.js"}
 });
 
-require.define("/node_modules/dnode/node_modules/dnode-protocol/node_modules/traverse/index.js", function (require, module, exports, __dirname, __filename) {
+require.define("/node_modules/traverse/index.js", function (require, module, exports, __dirname, __filename) {
 var traverse = module.exports = function (obj) {
     return new Traverse(obj);
 };

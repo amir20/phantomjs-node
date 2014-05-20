@@ -45,6 +45,7 @@ module.exports =
         when 'object' then options = arg
     options.binary ?= 'phantomjs'
     options.port ?= 0
+    options.dnodeOpts ?= {}
 
     phantom = null
 
@@ -81,7 +82,7 @@ module.exports =
 
     sock = shoe (stream) ->
 
-      d = dnode()
+      d = dnode({}, options.dnodeOpts)
 
       d.on 'remote', (phantom) ->
         wrap phantom
