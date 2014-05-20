@@ -31,7 +31,8 @@
     "ps-tree": "~0.0.2",
     "vows": "~0.7.0",
     "bluebird": "~1.2.3",
-    "phantomjs": "~1.9.7-4"
+    "phantomjs": "~1.9.7-4",
+    "win-spawn": "~2.0.0"
   },
   "licenses": {
     "type": "MIT",
