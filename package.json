@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "dnode": "~1.2.0",
-    "shoe": "~0.0.10"
+    "shoe": "~0.0.10",
+    "win-spawn": "~2.0.0"
   },
   "devDependencies": {
     "browserify": "1.10.9",
@@ -31,8 +32,7 @@
     "ps-tree": "~0.0.2",
     "vows": "~0.7.0",
     "bluebird": "~1.2.3",
-    "phantomjs": "~1.9.7-4",
-    "win-spawn": "~2.0.0"
+    "phantomjs": "~1.9.7-5"
   },
   "licenses": {
     "type": "MIT",
