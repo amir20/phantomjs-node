@@ -79,6 +79,9 @@
       if (options.port == null) {
         options.port = 0;
       }
+      if (options.dnodeOpts == null) {
+        options.dnodeOpts = {};
+      }
       phantom = null;
       httpServer = http.createServer();
       httpServer.listen(options.port);
@@ -128,7 +131,7 @@
       });
       sock = shoe(function(stream) {
         var d;
-        d = dnode();
+        d = dnode({}, options.dnodeOpts);
         d.on('remote', function(phantom) {
           wrap(phantom);
           phanta.push(phantom);
