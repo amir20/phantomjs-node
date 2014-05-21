@@ -20,19 +20,19 @@
   },
   "dependencies": {
     "dnode": "~1.2.0",
-    "shoe": "~0.0.10"
+    "shoe": "~0.0.10",
+    "win-spawn": "~2.0.0",
+    "traverse": "~0.6.3"
   },
   "devDependencies": {
     "browserify": "1.10.9",
-    "traverse": "~0.6.3",
     "coffee-script": "~1.7.1",
     "express": "3.2.5",
     "temp": "~0.4.0",
     "ps-tree": "~0.0.2",
     "vows": "~0.7.0",
     "bluebird": "~1.2.3",
-    "phantomjs": "~1.9.7-4",
-    "win-spawn": "~2.0.0"
+    "phantomjs": "~1.9.7-5"
   },
   "licenses": {
     "type": "MIT",
