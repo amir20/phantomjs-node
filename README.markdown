@@ -34,7 +34,7 @@ phantom.create (ph) ->
         ph.exit()
 ```
 
-In Javascript: 
+In Javascript:
 
 ```js
 var phantom = require('phantom');
@@ -49,6 +49,26 @@ phantom.create(function (ph) {
       });
     });
   });
+});
+```
+
+### Use it in Windows
+
+It would use `dnode` with `weak` module by default. It means that you need to setup `node-gyp` with Microsoft VS2010 or VS2012, which is a huge installation on Windows.
+
+`dnodeOpts` property could help you to control dnode settings, so you could disable `weak` by setting it `false` to avoid that complicated installations.
+
+```js
+var phantom = require('phantom');
+
+phantom.create(function (ph) {
+  ph.createPage(function (page) {
+    /* the page actions */
+  });
+}, {
+  dnodeOpts: {
+    weak: false
+  }
 });
 ```
 
