@@ -47,6 +47,10 @@ mkwrap = (src, pass=[], special={}) ->
 pageWrap = (page) -> mkwrap page,
   ['open','close','includeJs','sendEvent','release','uploadFile','goBack','goForward','reload']
   # this is here to let the user pass in a function that has access to request.abort() and other functions on the request object.
+  onConsoleMessage: (fn, cb=(->)) ->
+    page.onConsoleMessage = ->
+      fn.apply(this, arguments)
+    cb()
   onResourceRequested: (fn, cb=(->)) ->
     page.onResourceRequested = ->
       # give a name to the anonymouse function so that we can call it
