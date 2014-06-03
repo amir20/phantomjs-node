@@ -121,7 +121,9 @@ describe "Pages",
 
           "which works correctly": (msg) ->
             assert.equal msg, "Hello, world!"
+        ###
 
+        ###
         "can register an onConsoleMessage handler":
           topic: t (page) ->
             page.set 'onConsoleMessage', (msg) =>
@@ -131,6 +133,15 @@ describe "Pages",
           "which works correctly": (msg) ->
             assert.equal msg, "Hello, world!"
         ###
+
+        "can register an onConsoleMessage handler":
+          topic: t (page) ->
+            page.onConsoleMessage (msg) =>
+              @callback null, msg
+            page.evaluate (-> console.log "Hello, world!")
+
+          "which works correctly": (msg) ->
+            assert.equal msg, "Hello, world!"
 
         "can render the page to a file":
           topic: t (page) ->
