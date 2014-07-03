@@ -5518,6 +5518,10 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
         if (cb == null) cb = function() {};
         return cb(page.content);
       },
+      getCookies: function(cb) {
+        if (cb == null) cb = function() {};
+        return cb(page.cookies);
+      },
       renderBase64: function(type, cb) {
         if (cb == null) cb = function() {};
         return cb(page.renderBase64(type));

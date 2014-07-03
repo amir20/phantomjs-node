@@ -64,6 +64,14 @@ describe "Pages",
           "which is correct": (title) ->
             assert.equal title, "Test page title"
 
+        "has cookies":
+          topic: t (page) ->
+            page.getCookies (cookies) =>
+              @callback null, cookies
+
+          "which works correctly": (cookies) ->
+            assert.ok cookies, "cookies should not be empty"
+
         "can inject Javascript from a file":
           topic: t (page) ->
             page.injectJs 'test/inject.js', (success) =>

@@ -73,6 +73,7 @@ pageWrap = (page) -> mkwrap page,
 
     page.render file, opts; cb()
   getContent: (cb=->) -> cb page.content
+  getCookies: (cb=->) -> cb page.cookies
   renderBase64: (type, cb=->) -> cb page.renderBase64 type
   setHeaders: (headers, cb=->) -> page.customHeaders = headers; cb()
   setContent: (html, url, cb=->) ->
