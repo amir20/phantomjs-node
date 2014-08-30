@@ -61,7 +61,7 @@
 
   module.exports = {
     create: function() {
-      var arg, args, cb, httpServer, options, phantom, sock, _i, _len;
+      var arg, args, cb, httpServer, options, phantom, ps, sock, _i, _len;
       args = [];
       options = {};
       for (_i = 0, _len = arguments.length; _i < _len; _i++) {
@@ -86,11 +86,12 @@
       if (options.dnodeOpts == null) {
         options.dnodeOpts = {};
       }
+      ps = null;
       phantom = null;
       httpServer = http.createServer();
       httpServer.listen(options.port);
       httpServer.on('listening', function() {
-        var port, ps;
+        var port;
         port = httpServer.address().port;
         ps = startPhantomProcess(options.binary, port, args);
         ps.stdout.on('data', options.onStdout || function(data) {
@@ -138,6 +139,7 @@
         d = dnode({}, options.dnodeOpts);
         d.on('remote', function(phantom) {
           wrap(phantom);
+          phantom.process = ps;
           phanta.push(phantom);
           return typeof cb === "function" ? cb(phantom) : void 0;
         });
