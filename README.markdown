@@ -102,6 +102,13 @@ You can also pass command line switches to the phantomjs process by specifying a
 phantom.create '--load-images=no', '--local-to-remote-url-access=yes', (page) ->
 ```
 
+If you need to access the [ChildProcess](http://nodejs.org/api/child_process.html#child_process_class_childprocess) of the phantom process to get its PID, for instance, you can access it through the `process` property like this:
+```
+phantom.create(function (ph) {
+  console.log('phantom process pid:', ph.process.pid);
+});
+```
+
 ##Note for Mac users
 
 Phantom requires you to have the XCode Command Line Tools installed on your box, or else you will get some nasty errors (`xcode` not found or `make` not found).  If you haven't already, simply install XCode through the App Store, then [install the command line tools](http://stackoverflow.com/questions/6767481/where-can-i-find-make-program-for-mac-os-x-lion).  

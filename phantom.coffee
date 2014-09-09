@@ -47,6 +47,7 @@ module.exports =
     options.port ?= 0
     options.dnodeOpts ?= {}
 
+    ps = null;
     phantom = null
 
     httpServer = http.createServer()
@@ -86,6 +87,7 @@ module.exports =
 
       d.on 'remote', (phantom) ->
         wrap phantom
+        phantom.process = ps
         phanta.push phantom
         cb? phantom
 
