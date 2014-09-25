@@ -83,7 +83,19 @@ pageWrap = (page) -> mkwrap page,
     page.setContent html, url
   setViewportSize: (width, height, cb=->) ->
     page.viewportSize = {width:width, height:height}; cb()
-  setPaperSize: (options, cb=->) -> page.paperSize = options; cb()
+  setPaperSize: (options, cb=->) ->
+    [
+      "header"
+      "footer"
+    ].forEach (key) ->
+      element = options[key]
+      fn = undefined
+      if element and element.contents
+        fn = "return " + element.contents
+        element.contents = phantom.callback(new Function(fn)())
+      return
+
+    page.paperSize = options; cb()
   setZoomFactor: (zoomFactor, cb=->) -> page.zoomFactor = zoomFactor; cb()
 
 _phantom = mkwrap phantom,

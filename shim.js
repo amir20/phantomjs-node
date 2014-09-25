@@ -1,7 +1,3 @@
-// Get in there before browserify
-
-var core_require = require;
-
 var require = function (file, cwd) {
     var resolved = require.resolve(file, cwd || '/');
     var mod = require.modules[resolved];
@@ -5549,6 +5545,15 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
       },
       setPaperSize: function(options, cb) {
         if (cb == null) cb = function() {};
+        ["header", "footer"].forEach(function(key) {
+          var element, fn;
+          element = options[key];
+          fn = void 0;
+          if (element && element.contents) {
+            fn = "return " + element.contents;
+            element.contents = phantom.callback(new Function(fn)());
+          }
+        });
         page.paperSize = options;
         return cb();
       },
