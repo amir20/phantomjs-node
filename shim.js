@@ -5442,7 +5442,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
   };
 
   _transform = function(val) {
-    if (typeof val === "string" && val.indexOf('__phantomCallback') === 0) {
+    if (typeof val === "string" && val.indexOf('__phantomCallback__') === 0) {
       val = 'return ' + val.replace('__phantomCallback__', '');
       val = phantom.callback(new Function(val)());
     }

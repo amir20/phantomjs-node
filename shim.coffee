@@ -21,7 +21,7 @@ descend = (op, obj, key, val) ->
   cur[keys[0]]
 
 _transform = (val) ->
-  if typeof val is "string" and val.indexOf('__phantomCallback') is 0
+  if typeof val is "string" and val.indexOf('__phantomCallback__') is 0
     val = 'return ' + val.replace('__phantomCallback__', '');
     val = phantom.callback(new Function(val)());
 
