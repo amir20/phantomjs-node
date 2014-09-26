@@ -41,6 +41,9 @@
   process.on('SIGTERM', onSignal);
 
   wrap = function(ph) {
+    ph.callback = function(fn) {
+      return '__phantomCallback__' + fn.toString();
+    };
     ph._createPage = ph.createPage;
     return ph.createPage = function(cb) {
       return ph._createPage(function(page) {
