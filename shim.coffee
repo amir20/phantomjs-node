@@ -20,6 +20,25 @@ descend = (op, obj, key, val) ->
 
   cur[keys[0]]
 
+_transform = (val) ->
+  if typeof val is "string" and val.indexOf('__phantomCallback__') is 0
+    val = 'return ' + val.replace('__phantomCallback__', '');
+    val = phantom.callback(new Function(val)());
+
+  return val;
+
+transform = (obj) ->
+  if typeof obj is "string"
+    _transform(obj)
+  else if typeof obj is "object"
+    for key of obj
+      if typeof obj[key] is "object"
+        transform(obj[key])
+      else
+        obj[key] = _transform(obj[key])
+
+  return obj
+
 
 mkwrap = (src, pass=[], special={}) ->
   obj =
@@ -27,6 +46,9 @@ mkwrap = (src, pass=[], special={}) ->
 
       #Fnwrap so PhantomJS doesn't segfault when it tries to call the callback
       val = fnwrap val if typeof val is "function"
+
+      val = transform(val)
+
       cb descend 'set', src, key, val
 
     get: (key, cb) -> cb descend 'get', src, key
@@ -83,7 +105,8 @@ pageWrap = (page) -> mkwrap page,
     page.setContent html, url
   setViewportSize: (width, height, cb=->) ->
     page.viewportSize = {width:width, height:height}; cb()
-  setPaperSize: (options, cb=->) -> page.paperSize = options; cb()
+  setPaperSize: (options, cb=->) ->
+    page.paperSize = transform(options); cb()
   setZoomFactor: (zoomFactor, cb=->) -> page.zoomFactor = zoomFactor; cb()
 
 _phantom = mkwrap phantom,

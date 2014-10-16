@@ -3364,6 +3364,10 @@ if (typeof module === 'object' && module && module.exports) {
 
 });
 
+require.define("/node_modules/url/package.json", function (require, module, exports, __dirname, __filename) {
+module.exports = {"main":"./url.js"}
+});
+
 require.define("url", function (require, module, exports, __dirname, __filename) {
 var punycode = { encode : function (s) { return s } };
 
@@ -5409,7 +5413,7 @@ module.exports = function (value, replacer, space) {
 
 require.define("/shim.coffee", function (require, module, exports, __dirname, __filename) {
     (function() {
-  var d, descend, dnode, fnwrap, mkwrap, pageWrap, port, shoe, stream, webpage, _phantom;
+  var d, descend, dnode, fnwrap, mkwrap, pageWrap, port, shoe, stream, transform, webpage, _phantom, _transform;
   var __slice = Array.prototype.slice, __hasProp = Object.prototype.hasOwnProperty;
 
   webpage = core_require('webpage');
@@ -5437,6 +5441,30 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     return cur[keys[0]];
   };
 
+  _transform = function(val) {
+    if (typeof val === "string" && val.indexOf('__phantomCallback__') === 0) {
+      val = 'return ' + val.replace('__phantomCallback__', '');
+      val = phantom.callback(new Function(val)());
+    }
+    return val;
+  };
+
+  transform = function(obj) {
+    var key;
+    if (typeof obj === "string") {
+      _transform(obj);
+    } else if (typeof obj === "object") {
+      for (key in obj) {
+        if (typeof obj[key] === "object") {
+          transform(obj[key]);
+        } else {
+          obj[key] = _transform(obj[key]);
+        }
+      }
+    }
+    return obj;
+  };
+
   mkwrap = function(src, pass, special) {
     var k, obj, _fn, _i, _len;
     if (pass == null) pass = [];
@@ -5445,6 +5473,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
       set: function(key, val, cb) {
         if (cb == null) cb = function() {};
         if (typeof val === "function") val = fnwrap(val);
+        val = transform(val);
         return cb(descend('set', src, key, val));
       },
       get: function(key, cb) {
@@ -5549,7 +5578,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
       },
       setPaperSize: function(options, cb) {
         if (cb == null) cb = function() {};
-        page.paperSize = options;
+        page.paperSize = transform(options);
         return cb();
       },
       setZoomFactor: function(zoomFactor, cb) {

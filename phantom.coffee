@@ -25,6 +25,8 @@ process.on 'SIGTERM', onSignal
 
 # @Description: We need this because dnode does magic clever stuff with functions, but we want the function to make it intact to phantom
 wrap = (ph) ->
+  ph.callback = (fn) ->
+    return '__phantomCallback__'+fn.toString()
   ph._createPage = ph.createPage
   ph.createPage = (cb) ->
     ph._createPage (page) ->
