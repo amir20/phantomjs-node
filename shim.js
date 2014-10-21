@@ -3364,10 +3364,6 @@ if (typeof module === 'object' && module && module.exports) {
 
 });
 
-require.define("/node_modules/url/package.json", function (require, module, exports, __dirname, __filename) {
-module.exports = {"main":"./url.js"}
-});
-
 require.define("url", function (require, module, exports, __dirname, __filename) {
 var punycode = { encode : function (s) { return s } };
 
@@ -5413,7 +5409,7 @@ module.exports = function (value, replacer, space) {
 
 require.define("/shim.coffee", function (require, module, exports, __dirname, __filename) {
     (function() {
-  var d, descend, dnode, fnwrap, mkwrap, pageWrap, port, shoe, stream, transform, webpage, _phantom, _transform;
+  var d, descend, dnode, fnwrap, mkwrap, pageWrap, port, shoe, stream, system, transform, webpage, _phantom, _transform;
   var __slice = Array.prototype.slice, __hasProp = Object.prototype.hasOwnProperty;
 
   webpage = core_require('webpage');
@@ -5422,7 +5418,9 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
 
   dnode = require('dnode');
 
-  port = phantom.args[0];
+  system = core_require('system');
+
+  port = system.args[1];
 
   fnwrap = function(target) {
     return function() {

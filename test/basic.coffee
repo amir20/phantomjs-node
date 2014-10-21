@@ -30,7 +30,8 @@ describe "The phantom module (basic)",
 
       "greater than or equal to 1.3": (ver) ->
         assert.ok ver.major >= 1, "major version too low"
-        assert.ok ver.minor >= 3, "minor version too low"
+        if (ver.major == 1)
+          assert.ok ver.minor >= 3, "minor version too low"
 
     "which can inject Javascript from a file":
       topic: t (ph) ->
