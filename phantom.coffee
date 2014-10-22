@@ -10,8 +10,8 @@ phanta = []
 # @param: port:int
 # @args: args:object
 # @return: ps:object
-startPhantomProcess = (binary, port, args) ->
-  spawn binary, args.concat [__dirname+'/shim.js', port]
+startPhantomProcess = (binary, port, hostname, args) ->
+  spawn binary, args.concat [__dirname+'/shim.js', port, hostname]
 
 # @Description: kills off all phantom processes within spawned by this parent process when it is exits
 onSignal = ->
@@ -45,19 +45,22 @@ module.exports =
         when 'function' then cb = arg
         when 'string' then args.push arg
         when 'object' then options = arg
-    options.binary ?= 'phantomjs'
+    options.path ?= ''
+    options.binary ?= options.path+'phantomjs'
     options.port ?= 0
+    options.hostname ?= 'localhost'
     options.dnodeOpts ?= {}
 
     ps = null;
     phantom = null
 
     httpServer = http.createServer()
-    httpServer.listen options.port
+    httpServer.listen options.port, options.hostname
 
     httpServer.on 'listening', () ->
       port = httpServer.address().port
-      ps = startPhantomProcess options.binary, port, args
+      hostname = httpServer.address().address
+      ps = startPhantomProcess options.binary, port, hostname, args
 
       ps.stdout.on 'data', options.onStdout || (data) -> console.log "phantom stdout: #{data}"
 

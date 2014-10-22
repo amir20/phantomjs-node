@@ -13,8 +13,8 @@
 
   phanta = [];
 
-  startPhantomProcess = function(binary, port, args) {
-    return spawn(binary, args.concat([__dirname + '/shim.js', port]));
+  startPhantomProcess = function(binary, port, hostname, args) {
+    return spawn(binary, args.concat([__dirname + '/shim.js', port, hostname]));
   };
 
   onSignal = function() {
@@ -80,11 +80,17 @@
             options = arg;
         }
       }
+      if (options.path == null) {
+        options.path = '';
+      }
       if (options.binary == null) {
-        options.binary = 'phantomjs';
+        options.binary = options.path + 'phantomjs';
       }
       if (options.port == null) {
         options.port = 0;
+      }
+      if (options.hostname == null) {
+        options.hostname = 'localhost';
       }
       if (options.dnodeOpts == null) {
         options.dnodeOpts = {};
@@ -92,11 +98,12 @@
       ps = null;
       phantom = null;
       httpServer = http.createServer();
-      httpServer.listen(options.port);
+      httpServer.listen(options.port, options.hostname);
       httpServer.on('listening', function() {
-        var port;
+        var hostname, port;
         port = httpServer.address().port;
-        ps = startPhantomProcess(options.binary, port, args);
+        hostname = httpServer.address().address;
+        ps = startPhantomProcess(options.binary, port, hostname, args);
         ps.stdout.on('data', options.onStdout || function(data) {
           return console.log("phantom stdout: " + data);
         });
