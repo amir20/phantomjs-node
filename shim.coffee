@@ -6,6 +6,7 @@ dnode    = require('dnode');
 system   = core_require('system');
 
 port = system.args[1]
+hostname = system.args[2]
 
 # controlPage = webpage.create()
 
@@ -121,7 +122,7 @@ _phantom = mkwrap phantom,
   createPage: (cb) -> cb pageWrap webpage.create()
 
 
-stream = shoe('http://localhost:' + port + '/dnode')
+stream = shoe('http://' + hostname + ':' + port + '/dnode')
 
 d = dnode _phantom
 
