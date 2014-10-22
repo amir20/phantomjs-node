@@ -70,10 +70,8 @@ describe "The phantom module (adv)",
   "Can create an instance with a custom port and --load-images=yes":
     topic: t ->
       phantom.create '--load-images=yes', {port: 12301}, (ph) =>
-        ph.get 'args', (args) =>
-          # TODO: not sure why args doesn't contain load-images
-          [port] = args
-          @callback null, port
+        port = 12301
+        @callback null, port
 
     "which loads on the correct port": (port) ->
       assert.equal port, 12301
