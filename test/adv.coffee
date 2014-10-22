@@ -2,7 +2,6 @@ vows    = require 'vows'
 assert  = require 'assert'
 express = require 'express'
 phantom = require '../phantom'
-#system  = require 'system'
 
 describe = (name, bat) -> vows.describe(name).addBatch(bat).export(module)
 
@@ -71,10 +70,6 @@ describe "The phantom module (adv)",
   "Can create an instance with a custom port and --load-images=yes":
     topic: t ->
       phantom.create '--load-images=yes', {port: 12301}, (ph) =>
-        #ph.get 'args', (args) =>
-          # TODO: not sure why args doesn't contain load-images
-          # [port] = args
-        #port = system.args[1]
         port = 12301
         @callback null, port
 
