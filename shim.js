@@ -5409,7 +5409,7 @@ module.exports = function (value, replacer, space) {
 
 require.define("/shim.coffee", function (require, module, exports, __dirname, __filename) {
     (function() {
-  var d, descend, dnode, fnwrap, mkwrap, pageWrap, port, shoe, stream, system, transform, webpage, _phantom, _transform;
+  var d, descend, dnode, fnwrap, hostname, mkwrap, pageWrap, port, shoe, stream, system, transform, webpage, _phantom, _transform;
   var __slice = Array.prototype.slice, __hasProp = Object.prototype.hasOwnProperty;
 
   webpage = core_require('webpage');
@@ -5421,6 +5421,8 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
   system = core_require('system');
 
   port = system.args[1];
+
+  hostname = system.args[2];
 
   fnwrap = function(target) {
     return function() {
@@ -5615,7 +5617,7 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     }
   });
 
-  stream = shoe('http://localhost:' + port + '/dnode');
+  stream = shoe('http://' + hostname + ':' + port + '/dnode');
 
   d = dnode(_phantom);
 
