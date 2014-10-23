@@ -72,6 +72,24 @@ phantom.create(function (ph) {
 });
 ```
 
+### Use it in restricted enviroments
+
+Some enviroments (eg. [OpenShift](https://help.openshift.com/hc/en-us/articles/202185874-I-can-t-bind-to-a-port)) have special requirements that are difficult or impossible to change, especifficaly: hostname/ip and port restrictions for the internal communication server and path for the phantomjs binary.
+
+By default, the hostname/ip used for this will be `localhost`, the port will be port `0` and the phantomjs binary is going to be assumed to be in the `PATH` enviroment variable, but you can use specific configurations using an `options` object like this:
+
+```js
+var options = {
+  port: 16000,
+  hostname: "192.168.1.3",
+  path: "/phantom_path/"
+}
+
+phantom.create(function, options);
+```
+
+## Functionality details
+
 You can use all the methods listed on the [PhantomJS API page](https://github.com/ariya/phantomjs/wiki/API-Reference)
 
 
