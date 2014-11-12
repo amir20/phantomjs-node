@@ -111,6 +111,7 @@
           return module.exports.stderrHandler(data.toString('utf8'));
         });
         ps.on('error', function(err) {
+          httpServer.close();
           if ((err != null ? err.code : void 0) === 'ENOENT') {
             return console.error("phantomjs-node: You don't have 'phantomjs' installed");
           } else {
