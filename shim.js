@@ -5614,6 +5614,10 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
     },
     createPage: function(cb) {
       return cb(pageWrap(webpage.create()));
+    },
+    setProxy: function(host, port, type, user, password, cb) {
+      if (cb == null) cb = function() {};
+      return cb(phantom.setProxy(host, port, type, user, password));
     }
   });
 

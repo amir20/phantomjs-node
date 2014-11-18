@@ -120,6 +120,7 @@ _phantom = mkwrap phantom,
     cb(phantom.addCookie(cookie))
   clearCookies: (cb=->) -> cb phantom.clearCookies()
   createPage: (cb) -> cb pageWrap webpage.create()
+  setProxy: (host, port, type, user, password, cb=->) -> cb(phantom.setProxy(host, port, type, user, password))
 
 
 stream = shoe('http://' + hostname + ':' + port + '/dnode')
