@@ -90,7 +90,7 @@ phantom.create(function, options);
 
 ## Functionality details
 
-You can use all the methods listed on the [PhantomJS API page](https://github.com/ariya/phantomjs/wiki/API-Reference)
+You can use all the methods listed on the [PhantomJS API page](http://phantomjs.org/api/)
 
 
 Due to the async nature of the bridge, some things have changed, though:
