@@ -75,3 +75,24 @@ describe "The phantom module (adv)",
 
     "which loads on the correct port": (port) ->
       assert.equal port, 12301
+
+  "Can create an instance with load-images: no in an args object":
+    topic: t ->
+      phantom.create {parameters: {'load-images': 'no'}}, (ph) =>
+        @callback null, ph
+
+    "which, when you open a page":
+      topic: t (ph) ->
+        ph.createPage (page) =>
+          page.open "http://127.0.0.1:#{appServer.address().port}/", (status) =>
+            setTimeout =>
+              @callback null, page, status
+            , 1500
+
+      "and check the settings object":
+        topic: t (page, status) ->
+          page.get 'settings', (s) =>
+            @callback null, s
+
+        "loadImages isn't set": (s) ->
+          assert.strictEqual s.loadImages, false

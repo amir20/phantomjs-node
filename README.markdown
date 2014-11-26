@@ -120,6 +120,12 @@ You can also pass command line switches to the phantomjs process by specifying a
 phantom.create '--load-images=no', '--local-to-remote-url-access=yes', (page) ->
 ```
 
+or by specifying them in the options object:
+
+```coffeescript
+phantom.create {parameters: {'load-images': 'no', 'local-to-remote-url-access': 'yes'}}, (page) ->
+```
+
 If you need to access the [ChildProcess](http://nodejs.org/api/child_process.html#child_process_class_childprocess) of the phantom process to get its PID, for instance, you can access it through the `process` property like this:
 ```
 phantom.create(function (ph) {
