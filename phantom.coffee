@@ -67,6 +67,7 @@ module.exports =
       ps.stderr.on 'data', options.onStderr || (data) -> module.exports.stderrHandler(data.toString('utf8'))
 
       ps.on 'error', (err) ->
+        httpServer.close()
         if err?.code is 'ENOENT'
           console.error "phantomjs-node: You don't have 'phantomjs' installed"
         else
