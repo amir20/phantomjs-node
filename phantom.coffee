@@ -45,6 +45,9 @@ module.exports =
         when 'function' then cb = arg
         when 'string' then args.push arg
         when 'object' then options = arg
+    if typeof options.parameters is 'object'
+      for key, value of options.parameters
+        args.push '--'+key+'='+value
     options.path ?= ''
     options.binary ?= options.path+'phantomjs'
     options.port ?= 0

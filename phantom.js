@@ -64,7 +64,7 @@
 
   module.exports = {
     create: function() {
-      var arg, args, cb, httpServer, options, phantom, ps, sock, _i, _len;
+      var arg, args, cb, httpServer, key, options, phantom, ps, sock, value, _i, _len, _ref;
       args = [];
       options = {};
       for (_i = 0, _len = arguments.length; _i < _len; _i++) {
@@ -78,6 +78,13 @@
             break;
           case 'object':
             options = arg;
+        }
+      }
+      if (typeof options.parameters === 'object') {
+        _ref = options.parameters;
+        for (key in _ref) {
+          value = _ref[key];
+          args.push('--' + key + '=' + value);
         }
       }
       if (options.path == null) {
@@ -111,7 +118,6 @@
           return module.exports.stderrHandler(data.toString('utf8'));
         });
         ps.on('error', function(err) {
-          httpServer.close();
           if ((err != null ? err.code : void 0) === 'ENOENT') {
             return console.error("phantomjs-node: You don't have 'phantomjs' installed");
           } else {
