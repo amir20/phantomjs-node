@@ -110,6 +110,10 @@ pageWrap = (page) -> mkwrap page,
   setPaperSize: (options, cb=->) ->
     page.paperSize = transform(options); cb()
   setZoomFactor: (zoomFactor, cb=->) -> page.zoomFactor = zoomFactor; cb()
+  setFileOnPicker: (fileName, cb=->) ->
+    page.onFilePicker = ->
+      cb.apply(this, arguments)
+      fileName
 
 _phantom = mkwrap phantom,
   ['exit'],
