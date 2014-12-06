@@ -5585,6 +5585,13 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
         if (cb == null) cb = function() {};
         page.zoomFactor = zoomFactor;
         return cb();
+      },
+      setFileOnPicker: function(fileName, cb) {
+        if (cb == null) cb = function() {};
+        return page.onFilePicker = function() {
+          cb.apply(this, arguments);
+          return fileName;
+        };
       }
     });
   };

@@ -29,6 +29,7 @@ app.get '/', (req, res) ->
           <div class="anotherdiv">Some page content</div>
         </div>
         <button class="clickme" style="position: absolute; top: 123px; left: 123px; width: 20px; height; 20px" onclick="window.i_got_clicked = true;" />
+        <input type='file' id='upfile' name='upfile'>
       </body>
     </html>
   """
@@ -162,6 +163,27 @@ describe "Pages",
 
           teardown: (fileName) ->
             fs.unlink fileName
+
+        # Based on https://github.com/ariya/phantomjs/blob/eddb0db1d253fd0c546060a4555554c8ee08c13c/test/webpage-spec.js
+        "can set the file to upload when the file picker is invoked (i.e. clicking on a 'input[type=file]')":
+          topic: t (page) ->
+            fileToUpload =  if /^win/.test(process.platform) then 'C:\\Windows\\System32\\drivers\\etc\\hosts' else '/etc/hosts'
+            page.setFileOnPicker fileToUpload
+            page.evaluate (->
+              upFile = document.querySelector('input[name=upfile]')
+              ev = document.createEvent('MouseEvents')
+              ev.initEvent('click', true, true)
+              upFile.dispatchEvent(ev)
+            ), => @callback null, page, fileToUpload
+
+          "which":
+            topic: t (page, fileToUpload) ->
+              page.evaluate (-> document.querySelector('input[name=upfile]').files[0].name ), (fileName) =>
+                @callback null, fileName, fileToUpload
+
+            "matches with the passed filename": (err, fileName, fileToUpload) ->
+              assert.ok fileToUpload.indexOf(fileName) > -1
+
     teardown: (page, ph) ->
       appServer.close()
       ph.exit()
