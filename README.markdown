@@ -99,11 +99,12 @@ Due to the async nature of the bridge, some things have changed, though:
 * ```page.render()``` takes a callback so you can tell when it's done writing the file
 * Properties can't be get/set directly, instead use ```page.get('version', callback)``` or ```page.set('viewportSize', {width:640,height:480})```, etc. Nested objects can be accessed by including dots in keys, such as ```page.set('settings.loadImages', false)```
 * Callbacks can't be set directly, instead use ```page.set('callbackName', callback)```, e.g. ```page.set('onLoadFinished', function(success) {})```
-* onResourceRequested takes a function that executes in the scope of phantom which has access to ```request.abort()```, ```request.changeUrl(url)```, and ```request.setHeader(key,value)```. The second argument is the callback which can execute in the scope of your code, with access to just the requestData. e.g.
+* onResourceRequested takes a function that executes in the scope of phantom which has access to ```request.abort()```, ```request.changeUrl(url)```, and ```request.setHeader(key,value)```. The second argument is the callback which can execute in the scope of your code, with access to just the requestData. This function can apply extra arguments which can be passed into the first function e.g.
 ```
 page.onResourceRequested(
-	function(requestData, request) { request.abort(); },
-	function(requestData) { console.log(requestData.url) }
+	function(requestData, request, arg1, arg2) { request.abort(); },
+	function(requestData) { console.log(requestData.url) },
+	arg1, arg2
 );
 ```
 

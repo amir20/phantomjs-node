@@ -75,16 +75,18 @@ pageWrap = (page) -> mkwrap page,
     page.onConsoleMessage = ->
       fn.apply(this, arguments)
     cb()
-  onResourceRequested: (fn, cb=(->)) ->
+  onResourceRequested: (fn, cb=(->), args...) ->
     page.onResourceRequested = ->
+      # prepare a arguments with the extra args
+      argumentsWithExtraArgs = [].slice.apply(arguments).concat(args)
       # give a name to the anonymouse function so that we can call it
       fn = fn.replace /function.*\(/, 'function x('
       # the only way we can access the request object is by passing a function to this point as a string and expanding it
       eval(fn) # :(
       # this function has access to request.abort()
-      x.apply(this, arguments)
+      x.apply(this, argumentsWithExtraArgs)
       # this function does not have access to request.abort()
-      cb.apply(this, arguments)
+      cb.apply(this, argumentsWithExtraArgs)
   injectJs: (js, cb=->) -> cb page.injectJs js
   evaluate: (fn, cb=(->), args...) -> cb page.evaluate.apply(page, [fn].concat(args))
   render: (file, opts={}, cb) ->
