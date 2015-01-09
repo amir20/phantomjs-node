@@ -75,6 +75,10 @@ pageWrap = (page) -> mkwrap page,
     page.onConsoleMessage = ->
       fn.apply(this, arguments)
     cb()
+  onError: (fn, cb=(->)) ->
+    page.onError = ->
+      fn.apply(this, arguments)
+    cb()
   onResourceRequested: (fn, cb=(->), args...) ->
     page.onResourceRequested = ->
       # prepare a arguments with the extra args

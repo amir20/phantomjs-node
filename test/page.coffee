@@ -152,6 +152,15 @@ describe "Pages",
           "which works correctly": (msg) ->
             assert.equal msg, "Hello, world!"
 
+        "can register an onError handler":
+          topic: t (page) ->
+            page.onError (msg) =>
+              @callback null, msg
+            page.evaluate (-> eval "syntaxerror[")
+
+          "which works correctly": (msg) ->
+            assert.equal msg, "SyntaxError: Parse error"
+
         "can render the page to a file":
           topic: t (page) ->
             fileName = temp.path suffix: '.png'
