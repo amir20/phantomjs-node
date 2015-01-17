@@ -125,8 +125,7 @@ _phantom = mkwrap phantom,
   ['exit'],
   injectJs: (js, cb=->) -> cb phantom.injectJs js
   getCookies: (cb=->) -> cb(phantom.cookies)
-  addCookie: (name, value, domain, cb=->) ->
-    cookie = {name:name, value:value, domain:domain}
+  addCookie: (cookie, cb=->) ->
     cb(phantom.addCookie(cookie))
   clearCookies: (cb=->) -> cb phantom.clearCookies()
   createPage: (cb) -> cb pageWrap webpage.create()

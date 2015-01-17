@@ -5616,14 +5616,8 @@ require.define("/shim.coffee", function (require, module, exports, __dirname, __
       if (cb == null) cb = function() {};
       return cb(phantom.cookies);
     },
-    addCookie: function(name, value, domain, cb) {
-      var cookie;
+    addCookie: function(cookie, cb) {
       if (cb == null) cb = function() {};
-      cookie = {
-        name: name,
-        value: value,
-        domain: domain
-      };
       return cb(phantom.addCookie(cookie));
     },
     clearCookies: function(cb) {

@@ -35,6 +35,30 @@ describe "The phantom module (callbacks)",
       phantom.create {port: 12305}, (ph) =>
         @callback null, ph
 
+    "and can add cookies":
+        topic: t (ph) ->
+            ph.addCookie
+                name: "cookieName"
+                value: "cookieValue"
+                path: "/testPath"
+                domain: "localhost", (status) =>
+                    @callback null, status
+
+        "which succeeds": (status) ->
+            assert.ok status, "addCookie should succeed"
+
+    "and, when getCookies is called,":
+        topic: t (ph) ->
+            ph.getCookies (cookies) =>
+                @callback null, cookies
+
+        "the cookie is available": (cookies) ->
+            assert.equal (c for c in cookies when (c) ->
+                c.name == "cookieName" and
+                c.value == "cookieValue" and
+                c.path == "/testPath").length, 1, "cookie must be in phantom.cookies"
+
+
     "which, when you call exit()":
       topic: t (ph) ->
         countdown = null
