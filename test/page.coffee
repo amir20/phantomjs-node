@@ -73,6 +73,26 @@ describe "Pages",
           "which works correctly": (cookies) ->
             assert.ok cookies, "cookies should not be empty"
 
+        "can add cookies":
+            topic: t (page) ->
+                page.setCookie
+                    name: "cookieName"
+                    value: "cookieValue"
+                    path: "/testPath", (status) =>
+                        @callback null, status
+                page.getCookies (cookies) =>
+                    @callback null, cookies
+
+            "which succeeds": (status) ->
+                assert.ok status, "addCookie should succeed"
+
+            "and the cookie should be available": (cookies) ->
+                assert.ok (c for c in cookies when (c) ->
+                    c.name == "cookieName" and
+                    c.value == "cookieValue" and
+                    c.path == "/testPath"),  "cookie must be in phantom.cookies"
+
+
         "can inject Javascript from a file":
           topic: t (page) ->
             page.injectJs 'test/inject.js', (success) =>
