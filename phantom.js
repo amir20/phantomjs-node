@@ -108,6 +108,13 @@
       phantom = null;
       httpServer = http.createServer();
       httpServer.listen(options.port, options.hostname);
+      httpServer.on("error", function(err) {
+        if (cb != null) {
+          return cb(null, err);
+        } else {
+          throw err;
+        }
+      });
       httpServer.on('listening', function() {
         var hostname, port;
         port = httpServer.address().port;
@@ -122,7 +129,10 @@
         ps.on('error', function(err) {
           httpServer.close();
           if ((err != null ? err.code : void 0) === 'ENOENT') {
-            return console.error("phantomjs-node: You don't have 'phantomjs' installed");
+            console.error("phantomjs-node: You don't have 'phantomjs' installed");
+          }
+          if (cb != null) {
+            return cb(null, err);
           } else {
             throw err;
           }
@@ -161,7 +171,7 @@
           wrap(phantom);
           phantom.process = ps;
           phanta.push(phantom);
-          return typeof cb === "function" ? cb(phantom) : void 0;
+          return typeof cb === "function" ? cb(phantom, null) : void 0;
         });
         d.pipe(stream);
         return stream.pipe(d);

@@ -48,7 +48,7 @@ task "test", "run phantom's unit tests", (options) ->
     batch = run(
       "#{bin}/coffee -o .test -c test/*.coffee"
       "cp test/*.gif test/*.js .test/"
-      "#{bin}/vows --spec -v .test/#{options['test-regex'] ? '*'}.js"
+      "#{bin}/vows --spec .test/#{options['test-regex'] ? '*'}.js"
     )
 
     batch
