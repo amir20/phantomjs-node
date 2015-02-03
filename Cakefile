@@ -3,7 +3,6 @@ Promise = require 'bluebird'
 
 bin = "./node_modules/.bin"
 sh = "/bin/sh"
-runRe = '*'
 
 _runCmd = (prev, current) ->
   prev.then ->
