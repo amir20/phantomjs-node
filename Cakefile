@@ -29,6 +29,8 @@ callbacks =
   success: -> console.log 'Great Success!'
   error: -> console.error 'Task failed.'
 
+option '', '--test-regex [TEST_RE]', 'Run tests matching TEST_RE.'
+
 task "clean", "cleanup build and test artifacts", ->
   cleanup().then -> console.log 'All clean.'
 
@@ -41,12 +43,12 @@ task "build", "coffee-compile and browserify phantom", ->
     .then(callbacks.success, callbacks.error)
     .finally cleanup
 
-task "test", "run phantom's unit tests", ->
+task "test", "run phantom's unit tests", (options) ->
   invoke('build').then ->
     batch = run(
       "#{bin}/coffee -o .test -c test/*.coffee"
       "cp test/*.gif test/*.js .test/"
-      "#{bin}/vows --spec .test/*.js"
+      "#{bin}/vows --spec .test/#{options['test-regex'] ? '*'}.js"
     )
 
     batch

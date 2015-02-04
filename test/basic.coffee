@@ -14,19 +14,25 @@ t = (fn) ->
 describe "The phantom module (basic)",
   "Can create an instance":
     topic: t ->
-      phantom.create {port: 12302}, (ph) =>
-        @callback null, ph
+      phantom.create {port: 12302}, (ph, err) =>
+        @callback null, [ph, err]
 
-    "which is an object": (ph) ->
+    "which is an object": ([ph, err]) ->
       assert.isObject ph
 
+    "which did not error": ([ph, err]) ->
+        assert.isNull err
+
     "with a version":
-      topic: t (ph) ->
+      topic: t ([ph, err]) ->
         ph.get 'version', (val) =>
           @callback null, val
 
       "defined": (ver) ->
         assert.notEqual ver, undefined
+
+      "an object": (ver) ->
+        assert.isObject ver
 
       "greater than or equal to 1.3": (ver) ->
         assert.ok ver.major >= 1, "major version too low"
@@ -34,7 +40,7 @@ describe "The phantom module (basic)",
           assert.ok ver.minor >= 3, "minor version too low"
 
     "which can inject Javascript from a file":
-      topic: t (ph) ->
+      topic: t ([ph, err]) ->
         ph.injectJs 'test/inject.js', (success) =>
           @callback null, success
 
@@ -42,7 +48,7 @@ describe "The phantom module (basic)",
         assert.ok success, "Injection should return true"
 
     "which can create a page":
-      topic: t (ph) ->
+      topic: t ([ph, err]) ->
         ph.createPage (page) =>
           @callback null, page
 

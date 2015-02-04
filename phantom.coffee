@@ -61,6 +61,12 @@ module.exports =
     httpServer = http.createServer()
     httpServer.listen options.port, options.hostname
 
+    httpServer.on "error", (err) ->
+        if cb?
+            cb null, err
+        else
+            throw err
+
     httpServer.on 'listening', () ->
       port = httpServer.address().port
       hostname = httpServer.address().address
@@ -74,8 +80,10 @@ module.exports =
         httpServer.close()
         if err?.code is 'ENOENT'
           console.error "phantomjs-node: You don't have 'phantomjs' installed"
+        if cb?
+            cb null, err
         else
-          throw err
+            throw err
 
       # @Description: when the background phantomjs child process exits or crashes
       #   removes the current dNode phantomjs RPC wrapper from the list of phantomjs RPC wrapper
@@ -99,7 +107,7 @@ module.exports =
         wrap phantom
         phantom.process = ps
         phanta.push phantom
-        cb? phantom
+        cb? phantom, null
 
       d.pipe stream
       stream.pipe d
