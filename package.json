@@ -25,8 +25,9 @@
     "traverse": "~0.6.3"
   },
   "devDependencies": {
-    "browserify": "1.10.9",
-    "coffee-script": "~1.7.1",
+    "browserify": "10.0.0",
+    "coffee-script": "~1.9.2",
+    "coffeeify": "^1.1.0",
     "express": "3.2.5",
     "temp": "~0.4.0",
     "ps-tree": "~0.0.2",
