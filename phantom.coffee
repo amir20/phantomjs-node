@@ -97,7 +97,8 @@ module.exports =
           options.onExit code, signal
         else
           console.assert not signal?, "signal killed phantomjs: #{signal}"
-          console.assert code is 0, "abnormal phantomjs exit code: #{code}"
+          if code != 0
+            process.exit code
 
     sock = shoe (stream) ->
 
