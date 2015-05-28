@@ -160,7 +160,9 @@
             return options.onExit(code, signal);
           } else {
             console.assert(signal == null, "signal killed phantomjs: " + signal);
-            return console.assert(code === 0, "abnormal phantomjs exit code: " + code);
+            if (code !== 0) {
+              return process.exit(code);
+            }
           }
         });
       });
