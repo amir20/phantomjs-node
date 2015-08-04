@@ -14,7 +14,9 @@
   phanta = [];
 
   startPhantomProcess = function(binary, port, hostname, args) {
-    return spawn(binary, args.concat([__dirname + '/shim.js', port, hostname]));
+    var binarySplit;
+    binarySplit = binary.split(' ');
+    return spawn(binarySplit[0], binarySplit.slice(1).concat(args).concat([__dirname + '/shim.js', port, hostname]));
   };
 
   onSignal = function() {
