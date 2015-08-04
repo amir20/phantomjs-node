@@ -11,7 +11,12 @@ phanta = []
 # @args: args:object
 # @return: ps:object
 startPhantomProcess = (binary, port, hostname, args) ->
-  spawn binary, args.concat [__dirname+'/shim.js', port, hostname]
+  binarySplit = binary.split(' ')
+  spawn binarySplit[0], binarySplit.slice(1).concat(args).concat([
+    __dirname + '/shim.js'
+    port
+    hostname
+  ])
 
 # @Description: kills off all phantom processes within spawned by this parent process when it is exits
 onSignal = ->
