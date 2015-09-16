@@ -5809,22 +5809,22 @@ dnode.prototype = {};
 function dnode (cons, opts) {
     Stream.call(this);
     var self = this;
-    
+
     self.opts = opts || {};
-    
+
     self.cons = typeof cons === 'function'
         ? cons
         : function () { return cons || {} }
     ;
-    
+
     self.readable = true;
     self.writable = true;
-    
+
     process.nextTick(function () {
         if (self._ended) return;
         self.proto = self._createProto();
         self.proto.start();
-        
+
         if (!self._handleQueue) return;
         for (var i = 0; i < self._handleQueue.length; i++) {
             self.handle(self._handleQueue[i]);
@@ -5836,39 +5836,39 @@ dnode.prototype._createProto = function () {
     var self = this;
     var proto = protocol(function (remote) {
         if (self._ended) return;
-        
+
         var ref = self.cons.call(this, remote, self);
         if (typeof ref !== 'object') ref = this;
-        
+
         self.emit('local', ref, self);
-        
+
         return ref;
     }, self.opts.proto);
-    
+
     proto.on('remote', function (remote) {
         self.emit('remote', remote, self);
         self.emit('ready'); // backwards compatability, deprecated
     });
-    
+
     proto.on('request', function (req) {
         if (!self.readable) return;
-        
+
         if (self.opts.emit === 'object') {
             self.emit('data', req);
         }
         else self.emit('data', json.stringify(req) + '\n');
     });
-    
+
     proto.on('fail', function (err) {
         // errors that the remote end was responsible for
         self.emit('fail', err);
     });
-    
+
     proto.on('error', function (err) {
         // errors that the local code was responsible for
         self.emit('error', err);
     });
-    
+
     return proto;
 };
 
@@ -5876,34 +5876,34 @@ dnode.prototype.write = function (buf) {
     if (this._ended) return;
     var self = this;
     var row;
-    
+
     if (buf && typeof buf === 'object'
     && buf.constructor && buf.constructor.name === 'Buffer'
     && buf.length
     && typeof buf.slice === 'function') {
         // treat like a buffer
         if (!self._bufs) self._bufs = [];
-        
+
         // treat like a buffer
         for (var i = 0, j = 0; i < buf.length; i++) {
             if (buf[i] === 0x0a) {
                 self._bufs.push(buf.slice(j, i));
-                
+
                 var line = '';
                 for (var k = 0; k < self._bufs.length; k++) {
                     line += String(self._bufs[k]);
                 }
-                
+
                 try { row = json.parse(line) }
                 catch (err) { return self.end() }
-                
+
                 j = i + 1;
-                
+
                 self.handle(row);
                 self._bufs = [];
             }
         }
-        
+
         if (j < buf.length) self._bufs.push(buf.slice(j, buf.length));
     }
     else if (buf && typeof buf === 'object') {
@@ -5914,12 +5914,12 @@ dnode.prototype.write = function (buf) {
     else {
         if (typeof buf !== 'string') buf = String(buf);
         if (!self._line) self._line = '';
-        
+
         for (var i = 0; i < buf.length; i++) {
             if (buf.charCodeAt(i) === 0x0a) {
                 try { row = json.parse(self._line) }
                 catch (err) { return self.end() }
-                
+
                 self._line = '';
                 self.handle(row);
             }
@@ -5970,14 +5970,14 @@ function Proto (cons, opts) {
     var self = this;
     EventEmitter.call(self);
     if (!opts) opts = {};
-    
+
     self.remote = {};
     self.callbacks = { local : [], remote : [] };
     self.wrap = opts.wrap;
     self.unwrap = opts.unwrap;
-    
+
     self.scrubber = scrubber(self.callbacks.local);
-    
+
     if (typeof cons === 'function') {
         self.instance = new cons(self.remote, self);
     }
@@ -5998,7 +5998,7 @@ Proto.prototype.cull = function (id) {
 
 Proto.prototype.request = function (method, args) {
     var scrub = this.scrubber.scrub(args);
-    
+
     this.emit('request', {
         method : method,
         arguments : scrub.arguments,
@@ -6024,7 +6024,7 @@ Proto.prototype.handle = function (req) {
             : self.callbacks.remote[id]
         ;
     });
-    
+
     if (req.method === 'methods') {
         self.handleMethods(args[0]);
     }
@@ -6057,16 +6057,16 @@ Proto.prototype.handleMethods = function (methods) {
     if (typeof methods != 'object') {
         methods = {};
     }
-    
+
     // copy since assignment discards the previous refs
     forEach(objectKeys(self.remote), function (key) {
         delete self.remote[key];
     });
-    
+
     forEach(objectKeys(methods), function (key) {
         self.remote[key] = methods[key];
     });
-    
+
     self.emit('remote', self.remote);
     self.emit('ready');
 };
@@ -6130,7 +6130,7 @@ Scrubber.prototype.scrub = function (obj) {
     var self = this;
     var paths = {};
     var links = [];
-    
+
     var args = traverse(obj).map(function (node) {
         if (typeof node === 'function') {
             var i = indexOf(self.callbacks, node);
@@ -6145,7 +6145,7 @@ Scrubber.prototype.scrub = function (obj) {
                 self.callbacks.push(node);
                 paths[id] = this.path;
             }
-            
+
             this.update('[Function]');
         }
         else if (this.circular) {
@@ -6153,14 +6153,14 @@ Scrubber.prototype.scrub = function (obj) {
             this.update('[Circular]');
         }
     });
-    
+
     return {
         arguments : args,
         callbacks : paths,
         links : links
     };
 };
- 
+
 // Replace callbacks. The supplied function should take a callback id and
 // return a callback of its own.
 Scrubber.prototype.unscrub = function (msg, f) {
@@ -6170,12 +6170,12 @@ Scrubber.prototype.unscrub = function (msg, f) {
         var path = msg.callbacks[id];
         traverse.set(args, path, f(id));
     });
-    
+
     forEach(msg.links || [], function (link) {
         var value = traverse.get(args, link.from);
         traverse.set(args, link.to, value);
     });
-    
+
     return args;
 };
 
@@ -6207,26 +6207,26 @@ var at, // The index of the current character
             text:    text
         };
     },
-    
+
     next = function (c) {
         // If a c parameter is provided, verify that it matches the current character.
         if (c && c !== ch) {
             error("Expected '" + c + "' instead of '" + ch + "'");
         }
-        
+
         // Get the next character. When there are no more characters,
         // return the empty string.
-        
+
         ch = text.charAt(at);
         at += 1;
         return ch;
     },
-    
+
     number = function () {
         // Parse a number value.
         var number,
             string = '';
-        
+
         if (ch === '-') {
             string = '-';
             next('-');
@@ -6260,14 +6260,14 @@ var at, // The index of the current character
             return number;
         }
     },
-    
+
     string = function () {
         // Parse a string value.
         var hex,
             i,
             string = '',
             uffff;
-        
+
         // When parsing for string values, we must look for " and \ characters.
         if (ch === '"') {
             while (next()) {
@@ -6424,7 +6424,7 @@ value = function () {
 
 module.exports = function (source, reviver) {
     var result;
-    
+
     text = source;
     at = 0;
     ch = ' ';
@@ -6479,7 +6479,7 @@ function quote(string) {
     // backslash characters, then we can safely slap some quotes around it.
     // Otherwise we must also replace the offending characters with safe escape
     // sequences.
-    
+
     escapable.lastIndex = 0;
     return escapable.test(string) ? '"' + string.replace(escapable, function (a) {
         var c = meta[a];
@@ -6497,47 +6497,47 @@ function str(key, holder) {
         mind = gap,
         partial,
         value = holder[key];
-    
+
     // If the value has a toJSON method, call it to obtain a replacement value.
     if (value && typeof value === 'object' &&
             typeof value.toJSON === 'function') {
         value = value.toJSON(key);
     }
-    
+
     // If we were called with a replacer function, then call the replacer to
     // obtain a replacement value.
     if (typeof rep === 'function') {
         value = rep.call(holder, key, value);
     }
-    
+
     // What happens next depends on the value's type.
     switch (typeof value) {
         case 'string':
             return quote(value);
-        
+
         case 'number':
             // JSON numbers must be finite. Encode non-finite numbers as null.
             return isFinite(value) ? String(value) : 'null';
-        
+
         case 'boolean':
         case 'null':
             // If the value is a boolean or null, convert it to a string. Note:
             // typeof null does not produce 'null'. The case is included here in
             // the remote chance that this gets fixed someday.
             return String(value);
-            
+
         case 'object':
             if (!value) return 'null';
             gap += indent;
             partial = [];
-            
+
             // Array.isArray
             if (Object.prototype.toString.apply(value) === '[object Array]') {
                 length = value.length;
                 for (i = 0; i < length; i += 1) {
                     partial[i] = str(i, value) || 'null';
                 }
-                
+
                 // Join all of the elements together, separated with commas, and
                 // wrap them in brackets.
                 v = partial.length === 0 ? '[]' : gap ?
@@ -6546,7 +6546,7 @@ function str(key, holder) {
                 gap = mind;
                 return v;
             }
-            
+
             // If the replacer is an array, use it to select the members to be
             // stringified.
             if (rep && typeof rep === 'object') {
@@ -6572,7 +6572,7 @@ function str(key, holder) {
                     }
                 }
             }
-            
+
         // Join all of the member texts together, separated with commas,
         // and wrap them in braces.
 
@@ -6588,7 +6588,7 @@ module.exports = function (value, replacer, space) {
     var i;
     gap = '';
     indent = '';
-    
+
     // If the space parameter is a number, make an indent string containing that
     // many spaces.
     if (typeof space === 'number') {
@@ -6608,7 +6608,7 @@ module.exports = function (value, replacer, space) {
     && (typeof replacer !== 'object' || typeof replacer.length !== 'number')) {
         throw new Error('JSON.stringify');
     }
-    
+
     // Make a fake root object containing our value under the key of ''.
     // Return the result of stringifying the value.
     return str('', {'': value});
@@ -6622,22 +6622,22 @@ var parse = require('url').parse;
 
 module.exports = function (u, cb) {
     var uri = parse(u).protocol ? u : resolve(window.location.href, u);
-    
+
     var stream = new Stream;
     stream.readable = true;
     stream.writable = true;
-    
+
     var ready = false;
     var buffer = [];
-    
+
     var sock = sockjs(uri);
     stream.sock = sock;
-    
+
     stream.write = function (msg) {
         if (!ready || buffer.length) buffer.push(msg)
         else sock.send(msg)
     };
-    
+
     stream.end = function (msg) {
         if (msg !== undefined) stream.write(msg);
         if (!ready) {
@@ -6647,14 +6647,14 @@ module.exports = function (u, cb) {
         stream.writable = false;
         sock.close();
     };
-    
+
     stream.destroy = function () {
         stream._ended = true;
         stream.writable = stream.readable = false;
         buffer.length = 0
         sock.close();
     };
-    
+
     sock.onopen = function () {
         if (typeof cb === 'function') cb();
         ready = true;
@@ -6665,17 +6665,17 @@ module.exports = function (u, cb) {
         stream.emit('connect');
         if (stream._ended) stream.end();
     };
-    
+
     sock.onmessage = function (e) {
         stream.emit('data', e.data);
     };
-    
+
     sock.onclose = function () {
         stream.emit('end');
         stream.writable = false;
         stream.readable = false;
     };
-    
+
     return stream;
 };
 
@@ -7588,7 +7588,7 @@ var SockJS = function(url, dep_protocols_whitelist, options) {
         // makes `new` optional
         return new SockJS(url, dep_protocols_whitelist, options);
     }
-    
+
     var that = this, protocols_whitelist;
     that._options = {devel: false, debug: false, protocols_whitelist: [],
                      info: undefined, rtt: undefined};
@@ -9072,7 +9072,7 @@ Traverse.prototype.reduce = function (cb, init) {
 Traverse.prototype.paths = function () {
     var acc = [];
     this.forEach(function (x) {
-        acc.push(this.path); 
+        acc.push(this.path);
     });
     return acc;
 };
@@ -9087,24 +9087,24 @@ Traverse.prototype.nodes = function () {
 
 Traverse.prototype.clone = function () {
     var parents = [], nodes = [];
-    
+
     return (function clone (src) {
         for (var i = 0; i < parents.length; i++) {
             if (parents[i] === src) {
                 return nodes[i];
             }
         }
-        
+
         if (typeof src === 'object' && src !== null) {
             var dst = copy(src);
-            
+
             parents.push(src);
             nodes.push(dst);
-            
+
             forEach(objectKeys(src), function (key) {
                 dst[key] = clone(src[key]);
             });
-            
+
             parents.pop();
             nodes.pop();
             return dst;
@@ -9119,13 +9119,13 @@ function walk (root, cb, immutable) {
     var path = [];
     var parents = [];
     var alive = true;
-    
+
     return (function walker (node_) {
         var node = immutable ? copy(node_) : node_;
         var modifiers = {};
-        
+
         var keepGoing = true;
-        
+
         var state = {
             node : node,
             node_ : node_,
@@ -9164,17 +9164,17 @@ function walk (root, cb, immutable) {
             stop : function () { alive = false },
             block : function () { keepGoing = false }
         };
-        
+
         if (!alive) return state;
-        
+
         function updateState() {
             if (typeof state.node === 'object' && state.node !== null) {
                 if (!state.keys || state.node_ !== state.node) {
                     state.keys = objectKeys(state.node)
                 }
-                
+
                 state.isLeaf = state.keys.length == 0;
-                
+
                 for (var i = 0; i < parents.length; i++) {
                     if (parents[i].node_ === node_) {
                         state.circular = parents[i];
@@ -9186,49 +9186,49 @@ function walk (root, cb, immutable) {
                 state.isLeaf = true;
                 state.keys = null;
             }
-            
+
             state.notLeaf = !state.isLeaf;
             state.notRoot = !state.isRoot;
         }
-        
+
         updateState();
-        
+
         // use return values to update if defined
         var ret = cb.call(state, state.node);
         if (ret !== undefined && state.update) state.update(ret);
-        
+
         if (modifiers.before) modifiers.before.call(state, state.node);
-        
+
         if (!keepGoing) return state;
-        
+
         if (typeof state.node == 'object'
         && state.node !== null && !state.circular) {
             parents.push(state);
-            
+
             updateState();
-            
+
             forEach(state.keys, function (key, i) {
                 path.push(key);
-                
+
                 if (modifiers.pre) modifiers.pre.call(state, state.node[key], key);
-                
+
                 var child = walker(state.node[key]);
                 if (immutable && hasOwnProperty.call(state.node, key)) {
                     state.node[key] = child.node;
                 }
-                
+
                 child.isLast = i == state.keys.length - 1;
                 child.isFirst = i == 0;
-                
+
                 if (modifiers.post) modifiers.post.call(state, child);
-                
+
                 path.pop();
             });
             parents.pop();
         }
-        
+
         if (modifiers.after) modifiers.after.call(state, state.node);
-        
+
         return state;
     })(root).node;
 }
@@ -9236,7 +9236,7 @@ function walk (root, cb, immutable) {
 function copy (src) {
     if (typeof src === 'object' && src !== null) {
         var dst;
-        
+
         if (isArray(src)) {
             dst = [];
         }
@@ -9274,7 +9274,7 @@ function copy (src) {
             T.prototype = proto;
             dst = new T;
         }
-        
+
         forEach(objectKeys(src), function (key) {
             dst[key] = src[key];
         });
@@ -9429,6 +9429,12 @@ mkwrap = function(src, pass, special) {
 
 pageWrap = function(page) {
   return mkwrap(page, ['open', 'close', 'includeJs', 'sendEvent', 'release', 'uploadFile', 'goBack', 'goForward', 'reload', 'switchToFrame', 'switchToMainFrame', 'switchToParentFrame', 'switchToFocusedFrame'], {
+    onPageCreated: function(cb){
+      page.onPageCreated = function(new_page) {
+        var new_page = pageWrap(new_page);
+        return cb(new_page);
+      };
+    },
     onConsoleMessage: function(fn, cb) {
       if (cb == null) {
         cb = (function() {});
