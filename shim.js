@@ -9429,10 +9429,12 @@ mkwrap = function(src, pass, special) {
 
 pageWrap = function(page) {
   return mkwrap(page, ['open', 'close', 'includeJs', 'sendEvent', 'release', 'uploadFile', 'goBack', 'goForward', 'reload', 'switchToFrame', 'switchToMainFrame', 'switchToParentFrame', 'switchToFocusedFrame'], {
-    onPageCreated: function(cb){
-      page.onPageCreated = function(new_page) {
-        var new_page = pageWrap(new_page);
-        return cb(new_page);
+    onPageCreated: function(cb) {
+      if (cb == null) {
+        cb = (function() {});
+      }
+      return page.onPageCreated = function(newpage) {
+        return cb(pageWrap(newpage));
       };
     },
     onConsoleMessage: function(fn, cb) {
