@@ -19,7 +19,7 @@
     "node": ">=v0.8.0"
   },
   "dependencies": {
-    "dnode": "~1.2.0",
+    "dnode": "~1.2.1",
     "shoe": "~0.0.15",
     "win-spawn": "~2.0.0",
     "traverse": "~0.6.3"
