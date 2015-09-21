@@ -71,6 +71,9 @@ mkwrap = (src, pass=[], special={}) ->
 pageWrap = (page) -> mkwrap page,
   ['open','close','includeJs','sendEvent','release','uploadFile','goBack','goForward','reload', 'switchToFrame', 'switchToMainFrame', 'switchToParentFrame', 'switchToFocusedFrame']
   # this is here to let the user pass in a function that has access to request.abort() and other functions on the request object.
+  onPageCreated:(cb=(->))->
+    page.onPageCreated = (newpage) ->
+      cb pageWrap newpage
   onConsoleMessage: (fn, cb=(->)) ->
     page.onConsoleMessage = ->
       fn.apply(this, arguments)
