@@ -107,7 +107,8 @@ module.exports =
 
       d = dnode({}, options.dnodeOpts)
 
-      d.on 'remote', (phantom) ->
+      d.on 'remote', (_phantom) ->
+        phantom = _phantom
         wrap phantom
         phantom.process = ps
         phanta.push phantom
