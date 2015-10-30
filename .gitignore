@@ -1,3 +1,5 @@
 node_modules
 .test
 .idea
+phantom.js
+shim.js
