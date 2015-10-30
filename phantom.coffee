@@ -11,8 +11,7 @@ phanta = []
 # @args: args:object
 # @return: ps:object
 startPhantomProcess = (binary, port, hostname, args) ->
-  binarySplit = binary.split(' ')
-  spawn binarySplit[0], binarySplit.slice(1).concat(args).concat([
+  spawn binary, args.concat([
     __dirname + '/shim.js'
     port
     hostname
