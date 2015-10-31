@@ -1,3 +1,5 @@
+sudo: false 
+
 language: node_js
 # Add build chain config for Node GYP in Node 4.x
 env:
