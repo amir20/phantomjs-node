@@ -24,7 +24,6 @@ cleanUp = ->
 
 onSignalClean = (signal) ->
   return ->
-    cleanUp()
     if process.listeners(signal).length == 1
       process.exit(0)
 
