@@ -9,7 +9,7 @@ phantom.create (ph) ->
       console.log "opened page? ", status
       someFunc = (aaa)->
         attribute_to_want = aaa
-        h2Arr = []        
+        h2Arr = []
         results = document.querySelectorAll(attribute_to_want)
         for x in [0...results.length]
           h2Arr.push(results[x].href)
@@ -18,10 +18,9 @@ phantom.create (ph) ->
           aaa: this.aaa
           sample_dom: results[0]
         }
-      
+
       finishedFunc = (result)->
         console.log result
         ph.exit()
-      
+
       page.evaluate someFunc, finishedFunc, '.listing_product_name'
-      
