@@ -7,7 +7,7 @@ phantom.create (ph) ->
   ph.createPage (page) ->
     page.open "http://www.deal.com.sg/deals/singapore", (status) ->
       console.log "opened page? ", status
-      someFunc = (aaa, my_obj)->
+      someFunc = (aaa, my_obj) ->
         attribute_to_want = aaa
         h2Arr = []
         results = document.querySelectorAll(attribute_to_want)
@@ -19,7 +19,7 @@ phantom.create (ph) ->
           obj: my_obj
         }
 
-      finishedFunc = (result)->
+      finishedFunc = (result) ->
         console.log result
         ph.exit()
 

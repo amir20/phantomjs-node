@@ -11,7 +11,7 @@ phantom.create (ph) ->
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1'
     page.open "http://www.facebook.com/VintrySingapore", (status) ->
       console.log status
-      someFunc = (aaa, my_obj)->
+      someFunc = (aaa, my_obj) ->
         attribute_to_want = aaa
         h2Arr = []
         results = document.querySelectorAll(attribute_to_want)
@@ -23,7 +23,7 @@ phantom.create (ph) ->
           obj: my_obj
         }
 
-      finishedFunc = (result)->
+      finishedFunc = (result) ->
         console.log result
         ph.exit()
 

@@ -1,17 +1,17 @@
 # This script demonstrates how phantomjs is used within Nodejs in replacement of JSDOM
 phantom =  require 'phantom'
-phantom.create (ph)->
-  ph.createPage (page)->
-    page.open 'http://www.mdscollections.com/cat_mds_accessories.cfm', (status)->
+phantom.create (ph) ->
+  ph.createPage (page) ->
+    page.open 'http://www.mdscollections.com/cat_mds_accessories.cfm', (status) ->
       console.log 'Opened site? %s', status
       another_funny page, ph
 
-another_funny = (page, ph)->
+another_funny = (page, ph) ->
   # query page for results
-  page.evaluate ()->
+  page.evaluate ->
 
     # function needs to be within the page evaluate callback
-    funny = ()->
+    funny = ->
       h2Arr = []
       results = document.querySelectorAll('.listing_product_name')
       for x in [0...results.length]
@@ -25,6 +25,6 @@ another_funny = (page, ph)->
       h2: h2Arr
     }
 
-  , (result)->
+  , (result) ->
     console.log result
     ph.exit()

@@ -74,7 +74,7 @@ module.exports =
         else
             throw err
 
-    httpServer.on 'listening', () ->
+    httpServer.on 'listening', ->
       port = httpServer.address().port
       hostname = httpServer.address().address
       ps = startPhantomProcess options.binary, port, hostname, args
