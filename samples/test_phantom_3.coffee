@@ -17,9 +17,9 @@ phantom.create (ph) ->
           h2: h2Arr
           aaa: this.aaa
         }
-      
+
       finishedFunc = (result)->
         console.log result
         ph.exit()
-      
+
       page.evaluate someFunc, finishedFunc, 'img'

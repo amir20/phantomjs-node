@@ -90,13 +90,3 @@ describe "The phantom module (frames)",
     teardown: (ph) ->
       appServer.close()
       ph.exit()
-
-
-
-
-
-
-
-
-
-
