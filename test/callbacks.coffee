@@ -54,9 +54,9 @@ describe "The phantom module (callbacks)",
 
         "the cookie is available": (cookies) ->
             assert.equal (c for c in cookies when (c) ->
-                c.name == "cookieName" and
-                c.value == "cookieValue" and
-                c.path == "/testPath").length, 1, "cookie must be in phantom.cookies"
+                c.name is "cookieName" and
+                c.value is "cookieValue" and
+                c.path is "/testPath").length, 1, "cookie must be in phantom.cookies"
 
 
     "which, when you call exit()":

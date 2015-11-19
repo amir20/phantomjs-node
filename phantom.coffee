@@ -24,7 +24,7 @@ cleanUp = ->
 
 onSignalClean = (signal) ->
   return ->
-    if process.listeners(signal).length == 1
+    if process.listeners(signal).length is 1
       process.exit(0)
 
 process.on('exit', cleanUp)
@@ -104,7 +104,7 @@ module.exports =
           options.onExit code, signal
         else
           console.assert not signal?, "signal killed phantomjs: #{signal}"
-          if code != 0
+          if code isnt 0
             process.exit code
 
     sock = shoe (stream) ->
