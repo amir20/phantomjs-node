@@ -37,27 +37,27 @@ describe "The phantom module (callbacks)",
         @callback null, ph
 
     "and can add cookies":
-        topic: t (ph) ->
-            ph.addCookie
-                name: "cookieName"
-                value: "cookieValue"
-                path: "/testPath"
-                domain: "localhost", (status) =>
-                    @callback null, status
+      topic: t (ph) ->
+        ph.addCookie
+          name: "cookieName"
+          value: "cookieValue"
+          path: "/testPath"
+          domain: "localhost", (status) =>
+            @callback null, status
 
-        "which succeeds": (status) ->
-            assert.ok status, "addCookie should succeed"
+      "which succeeds": (status) ->
+        assert.ok status, "addCookie should succeed"
 
     "and, when getCookies is called,":
-        topic: t (ph) ->
-            ph.getCookies (cookies) =>
-                @callback null, cookies
+      topic: t (ph) ->
+        ph.getCookies (cookies) =>
+          @callback null, cookies
 
-        "the cookie is available": (cookies) ->
-            assert.equal (c for c in cookies when (c) ->
-                c.name is "cookieName" and
-                c.value is "cookieValue" and
-                c.path is "/testPath").length, 1, "cookie must be in phantom.cookies"
+      "the cookie is available": (cookies) ->
+        assert.equal (c for c in cookies when (c) ->
+          c.name is "cookieName" and
+          c.value is "cookieValue" and
+          c.path is "/testPath").length, 1, "cookie must be in phantom.cookies"
 
 
     "which, when you call exit()":

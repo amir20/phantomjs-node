@@ -22,7 +22,7 @@ describe "The phantom module (basic)",
       assert.isObject ph
 
     "which did not error": ([ph, err]) ->
-        assert.isNull err
+      assert.isNull err
 
     "with a version":
       topic: t ([ph, err]) ->

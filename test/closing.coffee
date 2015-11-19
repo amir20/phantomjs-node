@@ -46,7 +46,7 @@ createTopic = (signal, p) ->
     cb = ->
     if signal
       cb = ->
-          process.kill co.pid, signal
+        process.kill co.pid, signal
     else
       cb = ->
 
