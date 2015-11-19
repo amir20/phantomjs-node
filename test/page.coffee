@@ -9,7 +9,8 @@ fs      = require 'fs'
 describe = (name, bat) -> vows.describe(name).addBatch(bat).export(module)
 
 # Make coffeescript not return anything
-# This is needed because vows topics do different things if you have a return value
+# This is needed because vows topics do different things if you have a return
+# value
 t = (fn) ->
   ->
     fn.apply this, arguments
@@ -173,10 +174,16 @@ describe "Pages",
           teardown: (fileName) ->
             fs.unlink fileName
 
-        # Based on https://github.com/ariya/phantomjs/blob/eddb0db1d253fd0c546060a4555554c8ee08c13c/test/webpage-spec.js
-        "can set the file to upload when the file picker is invoked (i.e. clicking on a 'input[type=file]')":
+        # handles clicking on 'input[type=file]'. Based on
+        # https://github.com/ariya/phantomjs/blob/eddb0db/test/webpage-spec.js
+        "can set the file to upload when the file picker is invoked":
           topic: t (page) ->
-            fileToUpload =  if /^win/.test(process.platform) then 'C:\\Windows\\System32\\drivers\\etc\\hosts' else '/etc/hosts'
+            fileToUpload = (
+              if /^win/.test(process.platform)
+                'C:\\Windows\\System32\\drivers\\etc\\hosts'
+              else
+                '/etc/hosts'
+            )
             page.setFileOnPicker fileToUpload
             page.evaluate (->
               upFile = document.querySelector('input[name=upfile]')
@@ -187,7 +194,9 @@ describe "Pages",
 
           "which":
             topic: t (page, fileToUpload) ->
-              page.evaluate (-> document.querySelector('input[name=upfile]').files[0].name ), (fileName) =>
+              page.evaluate (->
+                document.querySelector('input[name=upfile]').files[0].name
+              ), (fileName) =>
                 @callback null, fileName, fileToUpload
 
             "matches with the passed filename": (err, fileName, fileToUpload) ->

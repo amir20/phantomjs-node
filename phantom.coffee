@@ -17,7 +17,8 @@ startPhantomProcess = (binary, port, hostname, args) ->
     hostname
   ])
 
-# @Description: kills off all phantom processes within spawned by this parent process when it is exits
+# @Description: kills off all phantom processes within spawned by this parent
+# process when it is exits
 
 cleanUp = ->
   phantom.exit() for phantom in phanta
@@ -30,7 +31,8 @@ onSignalClean = (signal) ->
 process.on('exit', cleanUp)
 process.on(signal, onSignalClean(signal)) for signal in ['SIGINT', 'SIGTERM']
 
-# @Description: We need this because dnode does magic clever stuff with functions, but we want the function to make it intact to phantom
+# @Description: We need this because dnode does magic clever stuff with
+# functions, but we want the function to make it intact to phantom
 wrap = (ph) ->
   ph.callback = (fn) ->
     return '__phantomCallback__'+fn.toString()
@@ -38,10 +40,13 @@ wrap = (ph) ->
   ph.createPage = (cb) ->
     ph._createPage (page) ->
       page._evaluate = page.evaluate
-      page.evaluate = (fn, cb, args...) -> page._evaluate.apply(page, [fn.toString(), cb].concat(args))
+      page.evaluate = (fn, cb, args...) ->
+        page._evaluate.apply(page, [fn.toString(), cb].concat(args))
       page._onResourceRequested = page.onResourceRequested
-      # can apply extra args which will be passed to phantomjs onResourceRequested scope
-      page.onResourceRequested = (fn, cb, args...) -> page._onResourceRequested.apply(page, [fn.toString(), cb].concat(args))
+      # can apply extra args which will be passed to phantomjs
+      # onResourceRequested scope
+      page.onResourceRequested = (fn, cb, args...) ->
+        page._onResourceRequested.apply(page, [fn.toString(), cb].concat(args))
       cb page
 
 module.exports =
@@ -79,9 +84,11 @@ module.exports =
       hostname = httpServer.address().address
       ps = startPhantomProcess options.binary, port, hostname, args
 
-      ps.stdout.on 'data', options.onStdout || (data) -> console.log "phantom stdout: #{data}"
+      ps.stdout.on 'data', options.onStdout || (data) ->
+        console.log "phantom stdout: #{data}"
 
-      ps.stderr.on 'data', options.onStderr || (data) -> module.exports.stderrHandler(data.toString('utf8'))
+      ps.stderr.on 'data', options.onStderr || (data) ->
+        module.exports.stderrHandler(data.toString('utf8'))
 
       ps.on 'error', (err) ->
         httpServer.close()
@@ -92,8 +99,9 @@ module.exports =
         else
             throw err
 
-      # @Description: when the background phantomjs child process exits or crashes
-      #   removes the current dNode phantomjs RPC wrapper from the list of phantomjs RPC wrapper
+      # @Description: when the background phantomjs child process exits or
+      # crashes removes the current dNode phantomjs RPC wrapper from the list of
+      # phantomjs RPC wrapper
       ps.on 'exit', (code, signal) ->
         httpServer.close()
         if phantom
@@ -124,5 +132,9 @@ module.exports =
     sock.install httpServer, '/dnode'
 
   stderrHandler: (message) ->
-    return if message.match /(No such method.*socketSentData)|(CoreText performance note)/ #Stupid, stupid QTWebKit
+    NON_ERROR_MESSAGE =
+      /No such method.*socketSentData|CoreText performance note/
+
+    if NON_ERROR_MESSAGE.test message
+      return # Stupid, stupid QTWebKit
     console.warn "phantom stderr: #{message}"

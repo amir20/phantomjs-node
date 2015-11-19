@@ -5,7 +5,8 @@ phantom = require 'phantom'
 phantom.create (ph) ->
   # Creates on page
   ph.createPage (page) ->
-    page.open "http://www.mdscollections.com/cat_mds_accessories.cfm", (status) ->
+    URL = "http://www.mdscollections.com/cat_mds_accessories.cfm"
+    page.open URL, (status) ->
       console.log "opened page? ", status
       someFunc = (aaa) ->
         attribute_to_want = aaa

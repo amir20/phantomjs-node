@@ -1,8 +1,10 @@
-# This script demonstrates how phantomjs is used within Nodejs in replacement of JSDOM
+# This script demonstrates how phantomjs is used within Nodejs in replacement of
+# JSDOM
 phantom =  require 'phantom'
 phantom.create (ph) ->
   ph.createPage (page) ->
-    page.open 'http://www.mdscollections.com/cat_mds_accessories.cfm', (status) ->
+    URL = 'http://www.mdscollections.com/cat_mds_accessories.cfm'
+    page.open URL, (status) ->
       console.log 'Opened site? %s', status
       another_funny page, ph
 
