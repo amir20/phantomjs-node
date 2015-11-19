@@ -62,7 +62,7 @@ module.exports =
     options.hostname ?= 'localhost'
     options.dnodeOpts ?= {}
 
-    ps = null;
+    ps = null
     phantom = null
 
     httpServer = http.createServer()

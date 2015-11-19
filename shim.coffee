@@ -1,9 +1,9 @@
 # Require gets overwritten by browserify, so we have to reimplement it from scratch - boo :(
-webpage = core_require('webpage');
+webpage = core_require('webpage')
 
-shoe     = require('shoe');
-dnode    = require('dnode');
-system   = core_require('system');
+shoe     = require('shoe')
+dnode    = require('dnode')
+system   = core_require('system')
 
 port = system.args[1]
 hostname = system.args[2]
@@ -24,10 +24,10 @@ descend = (op, obj, key, val) ->
 
 _transform = (val) ->
   if typeof val is "string" and val.indexOf('__phantomCallback__') is 0
-    val = 'return ' + val.replace('__phantomCallback__', '');
-    val = phantom.callback(new Function(val)());
+    val = 'return ' + val.replace('__phantomCallback__', '')
+    val = phantom.callback(new Function(val)())
 
-  return val;
+  return val
 
 transform = (obj) ->
   if typeof obj is "string"
@@ -104,21 +104,28 @@ pageWrap = (page) -> mkwrap page,
       else
         cb = ->
 
-    page.render file, opts; cb()
+    page.render file, opts
+    cb()
   getContent: (cb=->) -> cb page.content
   getCookies: (cb=->) -> cb page.cookies
   renderBase64: (type, cb=->) -> cb page.renderBase64 type
-  setHeaders: (headers, cb=->) -> page.customHeaders = headers; cb()
+  setHeaders: (headers, cb=->) ->
+    page.customHeaders = headers
+    cb()
   setContent: (html, url, cb=->) ->
     page.onLoadFinished = (status) ->
       page.onLoadFinished = null
       cb status
     page.setContent html, url
   setViewportSize: (width, height, cb=->) ->
-    page.viewportSize = {width:width, height:height}; cb()
+    page.viewportSize = {width:width, height:height}
+    cb()
   setPaperSize: (options, cb=->) ->
-    page.paperSize = transform(options); cb()
-  setZoomFactor: (zoomFactor, cb=->) -> page.zoomFactor = zoomFactor; cb()
+    page.paperSize = transform(options)
+    cb()
+  setZoomFactor: (zoomFactor, cb=->) ->
+    page.zoomFactor = zoomFactor
+    cb()
   setFileOnPicker: (fileName, cb=->) ->
     page.onFilePicker = ->
       cb.apply(this, arguments)

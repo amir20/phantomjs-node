@@ -15,7 +15,7 @@ another_funny = (page, ph) ->
       h2Arr = []
       results = document.querySelectorAll('p')
       for x in [0...results.length]
-        h2Arr.push(results[x].innerHTML);
+        h2Arr.push(results[x].innerHTML)
       return h2Arr
 
     h2Arr = []
