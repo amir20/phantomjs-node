@@ -7,7 +7,7 @@ phantom.create (ph) ->
   ph.createPage (page) ->
     page.open "http://wikitravel.org/en/singapore", (status) ->
       console.log "opened page? ", status
-      someFunc = (aaa)->
+      someFunc = (aaa) ->
         attribute_to_want = aaa
         h2Arr = []
         results = document.querySelectorAll(attribute_to_want)
@@ -18,7 +18,7 @@ phantom.create (ph) ->
           aaa: this.aaa
         }
 
-      finishedFunc = (result)->
+      finishedFunc = (result) ->
         console.log result
         ph.exit()
 

@@ -5,7 +5,8 @@ phantom = require '../phantom'
 describe = (name, bat) -> vows.describe(name).addBatch(bat).export(module)
 
 # Make coffeescript not return anything
-# This is needed because vows topics do different things if you have a return value
+# This is needed because vows topics do different things if you have a return
+# value
 t = (fn) ->
   ->
     fn.apply this, arguments
@@ -21,7 +22,7 @@ describe "The phantom module (basic)",
       assert.isObject ph
 
     "which did not error": ([ph, err]) ->
-        assert.isNull err
+      assert.isNull err
 
     "with a version":
       topic: t ([ph, err]) ->
@@ -36,7 +37,7 @@ describe "The phantom module (basic)",
 
       "greater than or equal to 1.3": (ver) ->
         assert.ok ver.major >= 1, "major version too low"
-        if (ver.major == 1)
+        if (ver.major is 1)
           assert.ok ver.minor >= 3, "minor version too low"
 
     "which can inject Javascript from a file":

@@ -6,7 +6,8 @@ phantom = require '../phantom'
 describe = (name, bat) -> vows.describe(name).addBatch(bat).export(module)
 
 # Make coffeescript not return anything
-# This is needed because vows topics do different things if you have a return value
+# This is needed because vows topics do different things if you have a return
+# value
 t = (fn) ->
   ->
     fn.apply this, arguments

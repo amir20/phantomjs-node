@@ -11,9 +11,32 @@ t = (fn) ->
     fn.apply this, arguments
     return
 
-program = "var phantom = require('./'); process.on('SIGINT', function() {  console.log('SIGINT'); process.exit(0); }); process.on('SIGTERM', function() { console.log('SIGTERM'); process.exit(0); }); process.on('exit', function() { console.log('EXIT'); }); console.log('Setup'); setTimeout(function() { console.log('Going out'); }, 1000);"
+program = '''
+var phantom = require('./');
+process.on('SIGINT', function() {
+  console.log('SIGINT');
+  process.exit(0);
+});
+process.on('SIGTERM', function() {
+  console.log('SIGTERM');
+  process.exit(0);
+});
+process.on('exit', function() {
+  console.log('EXIT');
+});
+console.log('Setup');
+setTimeout(function() {
+  console.log('Going out');
+}, 1000);
+'''
 
-programCbless = "var phantom = require('./'); console.log('Setup'); setTimeout(function() { console.log('Going out'); }, 200);"
+programCbless = '''
+var phantom = require('./');
+console.log('Setup');
+setTimeout(function() {
+  console.log('Going out');
+}, 200);
+'''
 
 createTopic = (signal, p) ->
   ->
@@ -23,7 +46,7 @@ createTopic = (signal, p) ->
     cb = ->
     if signal
       cb = ->
-          process.kill co.pid, signal
+        process.kill co.pid, signal
     else
       cb = ->
 

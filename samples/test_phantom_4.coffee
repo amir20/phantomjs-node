@@ -5,9 +5,10 @@ phantom = require 'phantom'
 phantom.create (ph) ->
   # Creates on page
   ph.createPage (page) ->
-    page.open "http://www.mdscollections.com/cat_mds_accessories.cfm", (status) ->
+    URL = "http://www.mdscollections.com/cat_mds_accessories.cfm"
+    page.open URL, (status) ->
       console.log "opened page? ", status
-      someFunc = (aaa)->
+      someFunc = (aaa) ->
         attribute_to_want = aaa
         h2Arr = []
         results = document.querySelectorAll(attribute_to_want)
@@ -19,7 +20,7 @@ phantom.create (ph) ->
           sample_dom: results[0]
         }
 
-      finishedFunc = (result)->
+      finishedFunc = (result) ->
         console.log result
         ph.exit()
 
