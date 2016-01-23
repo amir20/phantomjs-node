@@ -113,7 +113,7 @@ page.onResourceRequested(
 
 Also, you can set exit callback, which would be invoked after ```phantom.exit()``` or after phantom process crash:
 ```
-phantom.create('flags', { port: 8080, onExit: exitCallback})
+phantom.create({ port: 8080, onExit: exitCallback}, createCallback)
 ```
 
 You can also pass command line switches to the phantomjs process by specifying additional args to ```phantom.create()```, eg:
