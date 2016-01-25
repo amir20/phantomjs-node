@@ -1,5 +1,5 @@
 # PhantomJS bridge for NodeJS
-[![Build Status](https://travis-ci.org/sgentle/phantomjs-node.svg?branch=master)](https://travis-ci.org/sgentle/phantomjs-node) [![NPM Version](https://badge.fury.io/js/phantom.svg)](https://badge.fury.io/js/phantom)
+[![Build Status](https://travis-ci.org/amir20/phantomjs-node.svg?branch=master)](https://travis-ci.org/amir20/phantomjs-node) [![NPM Version](https://badge.fury.io/js/phantom.svg)](https://badge.fury.io/js/phantom)
 
 "It sure would be neat if [PhantomJS](http://phantomjs.org/) was a NodeJS module", I hear you say. Well, wait no longer! This node module implements a nauseatingly clever bridge between Phantom and Node, so that you can use all your favourite PhantomJS functions without leaving NPM behind and living in a cave.
 
@@ -16,7 +16,7 @@ Install it like this:
     npm install phantom
 
 
-For a brief introduction continue reading, otherwise **go to the [Wiki page](https://github.com/sgentle/phantomjs-node/wiki) for more information!**
+For a brief introduction continue reading, otherwise **go to the [Wiki page](https://github.com/amir20/phantomjs-node/wiki) for more information!**
 
 
 ## How do I use it?
