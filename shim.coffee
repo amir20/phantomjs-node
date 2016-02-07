@@ -147,7 +147,8 @@ _phantom = mkwrap phantom,
   injectJs: (js, cb=->) -> cb phantom.injectJs js
   getCookies: (cb=->) -> cb(phantom.cookies)
   addCookie: (cookie, cb=->) ->
-    cb(phantom.addCookie(cookie))
+    phantom.addCookie(cookie)
+    cb(true)
   clearCookies: (cb=->) -> cb phantom.clearCookies()
   createPage: (cb) -> cb pageWrap webpage.create()
   setProxy: (host, port, type, user, password, cb=->) ->

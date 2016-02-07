@@ -160,7 +160,7 @@ describe "Pages",
             page.evaluate (-> eval "syntaxerror[")
 
           "which works correctly": (msg) ->
-            assert.equal msg, "SyntaxError: Parse error"
+            assert.equal msg, "SyntaxError: Unexpected EOF"
 
         "can render the page to a file":
           topic: t (page) ->

@@ -72,7 +72,7 @@ describe "The phantom module (callbacks)",
 
         countdown = setTimeout =>
           @callback 'timeout'
-        , 500
+        , 1000
 
-      "runs the onExit callback within 500ms": (status) ->
+      "runs the onExit callback within 1000ms": (status) ->
         assert.equal status, 'success'
