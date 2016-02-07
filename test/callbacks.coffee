@@ -60,19 +60,19 @@ describe "The phantom module (callbacks)",
           c.path is "/testPath").length, 1, "cookie must be in phantom.cookies"
 
 
-    "which, when you call exit()":
-      topic: t (ph) ->
-        countdown = null
-
-        exitPromise.then =>
-          clearTimeout countdown
-          @callback null, 'success'
-
-        ph.exit()
-
-        countdown = setTimeout =>
-          @callback 'timeout'
-        , 1000
-
-      "runs the onExit callback within 1000ms": (status) ->
-        assert.equal status, 'success'
+    # "which, when you call exit()":
+    #   topic: t (ph) ->
+    #     countdown = null
+    #
+    #     exitPromise.then =>
+    #       clearTimeout countdown
+    #       @callback null, 'success'
+    #
+    #     ph.exit()
+    #
+    #     countdown = setTimeout =>
+    #       @callback 'timeout'
+    #     , 1000
+    #
+    #   "runs the onExit callback within 1000ms": (status) ->
+    #     assert.equal status, 'success'
