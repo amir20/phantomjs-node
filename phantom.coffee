@@ -51,7 +51,7 @@ wrap = (ph) ->
 
 module.exports =
   create: ->
-    args = []
+    args = ['--web-security=no']
     options = {}
     for arg in arguments
       switch typeof arg
