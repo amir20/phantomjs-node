@@ -61,8 +61,13 @@ module.exports =
     if typeof options.parameters is 'object'
       for key, value of options.parameters
         args.push '--'+key+'='+value
-    options.path ?= ''
-    options.binary ?= options.path+'phantomjs'
+
+    if require('phantomjs').path?
+      options.binary = require('phantomjs').path
+    else 
+      options.path ?= ''
+      options.binary ?= options.path+'phantomjs'
+      
     options.port ?= 0
     options.hostname ?= 'localhost'
     options.dnodeOpts ?= {}

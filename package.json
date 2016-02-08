@@ -12,6 +12,10 @@
     {
       "name": "Amir Raminfar",
       "email": "findamir@gmail.com"
+    },
+    {
+      "name": "Krzysztof Daniel",
+      "email": "krzysztof.daniel@gmail.com"
     }
   ],
   "main": "phantom.js",
@@ -22,7 +26,8 @@
     "dnode": ">=1.2.2",
     "shoe": "~0.0.15",
     "win-spawn": "~2.0.0",
-    "traverse": "~0.6.3"
+    "traverse": "~0.6.3",
+    "phantomjs": "~1.9.7-5"
   },
   "devDependencies": {
     "browserify": "10.0.0",
@@ -32,8 +37,7 @@
     "temp": "~0.4.0",
     "ps-tree": "~0.0.2",
     "vows": "~0.7.0",
-    "bluebird": "~1.2.3",
-    "phantomjs": "~1.9.7-5"
+    "bluebird": "~1.2.3"
   },
   "license": "MIT",
   "scripts": {
