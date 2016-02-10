@@ -1,19 +1,19 @@
 import Command from './command'
 
 export default class Page {
-    constructor(session) {
-        this.session = session;
+    constructor(phantom) {
+        this.phantom = phantom;
     }
 
     open(url) {
-        return this.session.execute(new Command(null, 'page', 'open', [url]));
+        return this.phantom.execute(new Command(null, 'page', 'open', [url]));
     }
 
     render(path) {
-        return this.session.execute(new Command(null, 'page', 'render', [path]));
+        return this.phantom.execute(new Command(null, 'page', 'render', [path]));
     }
 
     close() {
-        return this.session.execute(new Command(null, 'page', 'close'));
+        return this.phantom.execute(new Command(null, 'page', 'close'));
     }
 }

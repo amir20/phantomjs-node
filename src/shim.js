@@ -1,14 +1,37 @@
-// todo read port from system
 import webpage from 'webpage'
+import system from 'system'
+const page = webpage.create();
 
-const socket = new WebSocket(`ws://127.0.0.1:9999`);
-const objectSpace = {};
 
-socket.onclose = () => phantom.exit();
-socket.onmessage = (event) => {
-    const command = JSON.parse(event.data);
-    executeCommand(command);
+const objectSpace = {
+    phantom: phantom,
+    page: page
 };
+
+const commands = {
+    createPage: (command) => {
+        completeCommand(command);
+    },
+    open: (command) => {
+        page.open(command.params[0], (status) => {
+            command.response = status;
+            completeCommand(command);
+        })
+    },
+    exit: (command) => {
+        if(command.target === 'phantom') {
+            phantom.exit();
+        }
+    }
+};
+
+function read() {
+    let line = system.stdin.readLine();
+    if (line) {
+        let command = JSON.parse(line);
+        executeCommand(command)
+    }
+}
 
 function executeCommand(command) {
     if (commands[command.name]) {
@@ -16,22 +39,16 @@ function executeCommand(command) {
     } else if (objectSpace[command.target]) {
         const target = objectSpace[command.target];
         const method = target[command.name];
+
         command.response = method.apply(target, command.params);
+        completeCommand(command);
     }
 }
 
-const commands = {
-    createPage: (command) => {
-        objectSpace['page'] = webpage.create();
-        socket.send(JSON.stringify(command));
-    },
-    open: (command) => {
-        objectSpace['page'].open(command.params[0], (status) => {
-            command.response = status;
-            socket.send(JSON.stringify(command));
-        })
-    }
-};
+function completeCommand(command) {
+    system.stdout.writeLine('>' + JSON.stringify(command));
+    read();
+}
 
-
+read();
 

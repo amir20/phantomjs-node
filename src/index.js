@@ -1,5 +1,5 @@
-import Server from './Server'
+import Phantom from './phantom'
 
-const server = new Server();
-
-module.exports.create = server.createPhantom.bind(server);
+module.exports.create = () => {
+    return Promise.resolve(new Phantom());
+};
