@@ -3,11 +3,11 @@ import Page from '../page'
 
 describe('Phantom', () => {
     let instance;
-    beforeEach(() => {
+    beforeAll(() => {
         instance = new Phantom();
     });
 
-    afterEach(() => {
+    beforeAll(() => {
         instance.exit();
     });
 
