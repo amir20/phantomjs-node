@@ -6,7 +6,7 @@ import Command from './command'
 
 export default class Phantom {
     constructor() {
-        console.log(`${new Date()} Starting ${phantomjs.path} ${__dirname + '/shim.js'}`);
+        //console.log(`${new Date()} Starting ${phantomjs.path} ${__dirname + '/shim.js'}`);
         this.process = spawn(phantomjs.path, [__dirname + '/shim.js']);
         this.commands = new Map();
 
@@ -16,7 +16,7 @@ export default class Phantom {
             const message = data.toString();
             if (message[0] === '>') {
                 const json = message.substr(1);
-                console.log('Parsing: %s', json);
+                //console.log('Parsing: %s', json);
 
                 const command = JSON.parse(json);
                 this.commands.get(command.id).deferred.resolve(command.response);
@@ -31,7 +31,7 @@ export default class Phantom {
         });
 
         this.process.on('exit', (code) => {
-            console.log(`Child exited with code ${code}`);
+            //console.log(`Child exited with code ${code}`);
         });
     }
 
@@ -42,7 +42,7 @@ export default class Phantom {
     execute(command) {
         command.deferred = Promise.defer();
         this.commands.set(command.id, command);
-        console.log('Sending: %s', JSON.stringify(command));
+        //console.log('Sending: %s', JSON.stringify(command));
         this.process.stdin.write(JSON.stringify(command) + os.EOL, 'utf8');
 
         return command.deferred.promise;
@@ -50,6 +50,5 @@ export default class Phantom {
 
     exit() {
         this.execute(new Command(null, 'phantom', 'exit'));
-        //this.process.kill('SIGINT');
     }
 }

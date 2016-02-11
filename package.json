@@ -19,17 +19,18 @@
     "node": ">=v0.8.0"
   },
   "dependencies": {
-    "phantomjs-prebuilt": "^2.1.4",
-    "websocket": "^1.0.22",
-    "ws": "^1.0.1"
+    "phantomjs-prebuilt": "^2.1.4"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
     "babel-preset-es2015": "^6.5.0",
-    "babel-preset-stage-0": "^6.5.0"
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-jasmine": "^2.2.1"
   },
   "license": "MIT",
   "scripts": {
-    "compile": "babel -d lib/ src/"
+    "test": "gulp test"
   }
 }

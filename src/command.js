@@ -6,6 +6,6 @@ export default class Command {
         this.target = target;
         this.name = name;
         this.params = params;
-        this.deferred = null;
+        this.deferred = undefined;
     }
 }
