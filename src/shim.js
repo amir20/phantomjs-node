@@ -8,20 +8,11 @@ const objectSpace = {
     page: page
 };
 
+const haveCallbacks = ['open', 'includeJs'];
+
 const commands = {
     createPage: (command) => {
         completeCommand(command);
-    },
-    open: (command) => {
-        page.open(command.params[0], (status) => {
-            command.response = status;
-            completeCommand(command);
-        })
-    },
-    includeJs: (command) => {
-        page.includeJs(command.params[0], () => {
-            completeCommand(command);
-        })
     },
     exit: (command) => {
         if (command.target === 'phantom') {
@@ -52,8 +43,17 @@ function executeCommand(command) {
         const target = objectSpace[command.target];
         const method = target[command.name];
 
-        command.response = method.apply(target, command.params);
-        completeCommand(command);
+        if (haveCallbacks.indexOf(command.name) === -1) {
+            command.response = method.apply(target, command.params);
+            completeCommand(command);
+        } else {
+            let params = command.params.slice();
+            params.push((status) => {
+                command.response = status;
+                completeCommand(command);
+            });
+            method.apply(target, params);
+        }
     }
 }
 
