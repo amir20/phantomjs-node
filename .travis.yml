@@ -11,7 +11,8 @@ addons:
     packages:
       - g++-4.8
 node_js:
-  - "5.1"
   - "stable"
+  - "5.5"
+  - "5.0"
   - "4.1"
   - "4.0"
