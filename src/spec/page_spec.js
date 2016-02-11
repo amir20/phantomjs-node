@@ -40,4 +40,17 @@ describe('Page', () => {
             });
         })
     });
+
+    it('.evaluate(function()) executes correctly', (done) => {
+        let phantom = new Phantom();
+        phantom.createPage().then((page) => {
+            page.evaluate(function () {
+                return 'test'
+            }).then((response) => {
+                expect(response).toEqual('test');
+                phantom.exit();
+                done();
+            });
+        })
+    });
 });

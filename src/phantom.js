@@ -44,7 +44,9 @@ export default class Phantom {
         command.deferred = Promise.defer();
         this.commands.set(command.id, command);
         //console.log('Sending: %s', JSON.stringify(command));
-        this.process.stdin.write(JSON.stringify(command) + os.EOL, 'utf8');
+        this.process.stdin.write(
+            JSON.stringify(command, (key, val) => typeof val === 'function' ? val.toString() : val) + os.EOL, 'utf8'
+        );
 
         return command.deferred.promise;
     }
