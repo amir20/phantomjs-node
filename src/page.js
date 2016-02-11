@@ -4,16 +4,14 @@ export default class Page {
     constructor(phantom) {
         this.phantom = phantom;
     }
-
-    open(url) {
-        return this.phantom.execute(new Command(null, 'page', 'open', [url]));
-    }
-
-    render(path) {
-        return this.phantom.execute(new Command(null, 'page', 'render', [path]));
-    }
-
-    close() {
-        return this.phantom.execute(new Command(null, 'page', 'close'));
-    }
 }
+
+
+const methods = ['open', 'render', 'close', 'property'];
+
+methods.forEach((method) => {
+    Page.prototype[method] = function () {
+        const args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
+        return this.phantom.execute(new Command(null, 'page', method, args));
+    }
+});

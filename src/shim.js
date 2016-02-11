@@ -19,8 +19,15 @@ const commands = {
         })
     },
     exit: (command) => {
-        if(command.target === 'phantom') {
+        if (command.target === 'phantom') {
             phantom.exit();
+        }
+    },
+    property: (command) => {
+        if (command.target === 'page') {
+            command.response = page[command.params[0]];
+
+            completeCommand(command);
         }
     }
 };

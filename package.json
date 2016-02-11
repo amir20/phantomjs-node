@@ -19,6 +19,7 @@
     "node": ">=v0.8.0"
   },
   "dependencies": {
+    "linerstream": "^0.1.4",
     "phantomjs-prebuilt": "^2.1.4"
   },
   "devDependencies": {
@@ -31,6 +32,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "prepublish": "gulp build"
   }
 }

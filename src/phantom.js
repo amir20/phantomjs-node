@@ -1,6 +1,7 @@
 import phantomjs from 'phantomjs-prebuilt'
 import { spawn } from 'child_process'
 import os from 'os'
+import Linerstream from 'linerstream'
 import Page from './page'
 import Command from './command'
 
@@ -12,11 +13,12 @@ export default class Phantom {
 
         this.process.stdin.setEncoding('utf-8');
 
-        this.process.stdout.on('data', (data) => {
-            const message = data.toString();
+
+        this.process.stdout.pipe(new Linerstream()).on('data', (data) => {
+            const message = data.toString('utf8');
             if (message[0] === '>') {
-                const json = message.substr(1);
-                //console.log('Parsing: %s', json);
+                let json = message.substr(1);
+                console.log('Parsing: start|%s|end', json);
 
                 const command = JSON.parse(json);
                 this.commands.get(command.id).deferred.resolve(command.response);
