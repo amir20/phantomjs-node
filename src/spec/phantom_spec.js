@@ -3,13 +3,8 @@ import Page from '../page'
 
 describe('Phantom', () => {
     let instance;
-    beforeAll(() => {
-        instance = new Phantom();
-    });
-
-    beforeAll(() => {
-        instance.exit();
-    });
+    beforeAll(() => instance = new Phantom());
+    beforeAll(() => instance.exit());
 
     it('createPage() returns a Promise', () => {
         expect(instance.createPage()).toEqual(jasmine.any(Promise));

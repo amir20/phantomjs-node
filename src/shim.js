@@ -18,6 +18,11 @@ const commands = {
             completeCommand(command);
         })
     },
+    includeJs: (command) => {
+        page.includeJs(command.params[0], () => {
+            completeCommand(command);
+        })
+    },
     exit: (command) => {
         if (command.target === 'phantom') {
             phantom.exit();
