@@ -7,7 +7,7 @@ export default class Page {
 }
 
 
-const methods = ['open', 'render', 'close', 'property'];
+const methods = ['open', 'render', 'close', 'property', 'injectJs', 'openUrl', 'stop', 'renderBase64'];
 
 methods.forEach((method) => {
     Page.prototype[method] = function () {

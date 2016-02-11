@@ -27,4 +27,17 @@ describe('Page', () => {
             });
         })
     });
+
+    it('.property(\'content\') returns valid content', (done) => {
+        let phantom = new Phantom();
+        phantom.createPage().then((page) => {
+            page.open('http://localhost:8888/test').then((status)=> {
+                page.property('plainText').then((content) => {
+                    expect(content).toEqual('hi, /test');
+                    phantom.exit();
+                    done();
+                })
+            });
+        })
+    });
 });
