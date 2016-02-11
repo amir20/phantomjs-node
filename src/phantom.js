@@ -18,8 +18,7 @@ export default class Phantom {
             const message = data.toString('utf8');
             if (message[0] === '>') {
                 let json = message.substr(1);
-                console.log('Parsing: start|%s|end', json);
-
+                //console.log('Parsing: start|%s|end', json);
                 const command = JSON.parse(json);
                 this.commands.get(command.id).deferred.resolve(command.response);
                 this.commands.delete(command.id);
