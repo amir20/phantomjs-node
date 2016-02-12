@@ -1,14 +1,24 @@
 import phantomjs from 'phantomjs-prebuilt'
 import { spawn } from 'child_process'
+import winston from 'winston'
 import os from 'os'
 import Linerstream from 'linerstream'
 import Page from './page'
 import Command from './command'
 
+const logger = new winston.Logger({
+    transports: [
+        new winston.transports.Console({
+            level: process.env.DEBUG === 'true' ? 'debug' : 'info',
+            colorize: true
+        })
+    ]
+});
+
 export default class Phantom {
     constructor(args = []) {
-        //console.log(`${new Date()} Starting ${phantomjs.path} ${__dirname + '/shim.js'}`);
-        this.process = spawn(phantomjs.path, [__dirname + '/shim.js'].concat(args));
+        logger.debug(`Starting ${phantomjs.path} ${args.concat([__dirname + '/shim.js']).join(' ')}`);
+        this.process = spawn(phantomjs.path, args.concat([__dirname + '/shim.js']));
         this.commands = new Map();
 
         this.process.stdin.setEncoding('utf-8');
@@ -17,17 +27,17 @@ export default class Phantom {
             const message = data.toString('utf8');
             if (message[0] === '>') {
                 let json = message.substr(1);
-                //console.log('Parsing: start|%s|end', json);
+                logger.debug('Parsing: %s', json);
                 const command = JSON.parse(json);
                 this.commands.get(command.id).deferred.resolve(command.response);
                 this.commands.delete(command.id);
             } else {
-                console.log(message);
+                logger.info(message);
             }
         });
 
         this.process.stderr.on('data', (data) => {
-            console.log('Error:' + data);
+            logger.error(data);
         });
 
         this.process.on('exit', (code) => {
@@ -42,7 +52,7 @@ export default class Phantom {
     execute(command) {
         command.deferred = Promise.defer();
         this.commands.set(command.id, command);
-        //console.log('Sending: %s', JSON.stringify(command));
+        logger.debug('Sending: %s', JSON.stringify(command));
         this.process.stdin.write(
             JSON.stringify(command, (key, val) => typeof val === 'function' ? val.toString() : val) + os.EOL, 'utf8'
         );

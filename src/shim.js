@@ -30,7 +30,7 @@ const commands = {
             completeCommand(command);
         }
     },
-    settings: (command) => {
+    setting: (command) => {
         if (command.target === 'page') {
             if (command.params.length == 2) {
                 page.settings[command.params[0]] = command.params[1];

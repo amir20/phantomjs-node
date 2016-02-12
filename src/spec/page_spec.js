@@ -51,19 +51,19 @@ describe('Page', () => {
         })
     });
 
-    it('#settings(\'javascriptEnabled\') returns true', (done) => {
+    it('#setting(\'javascriptEnabled\') returns true', (done) => {
         phantom.createPage().then((page) => {
-            page.settings('javascriptEnabled').then((value) => {
+            page.setting('javascriptEnabled').then((value) => {
                 expect(value).toEqual(true);
                 done();
             });
         })
     });
 
-    it('#settings(\'key\', value) sets settings', (done) => {
+    it('#setting(\'key\', value) sets setting', (done) => {
         phantom.createPage().then((page) => {
-            page.settings('javascriptEnabled', false);
-            page.settings('javascriptEnabled').then((value) => {
+            page.setting('javascriptEnabled', false);
+            page.setting('javascriptEnabled').then((value) => {
                 expect(value).toEqual(false);
                 done();
             });
