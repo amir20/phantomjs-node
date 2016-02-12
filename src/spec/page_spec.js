@@ -13,16 +13,14 @@ describe('Page', () => {
                 response.end('hi, ' + request.url);
             }
         });
-        server.listen(8888, () => {
-            done()
-        });
+        server.listen(8888, done);
     });
 
     afterAll(() => server.close());
     beforeEach(() => phantom = new Phantom());
     afterEach(() => phantom.exit());
 
-    it('.open() a valid page', (done) => {
+    it('#open() a valid page', (done) => {
         phantom.createPage().then((page) => {
             page.open('http://localhost:8888/test').then((status)=> {
                 expect(status).toEqual('success');
@@ -31,7 +29,7 @@ describe('Page', () => {
         })
     });
 
-    it('.property(\'plainText\') returns valid content', (done) => {
+    it('#property(\'plainText\') returns valid content', (done) => {
         phantom.createPage().then((page) => {
             page.open('http://localhost:8888/test').then((status) => {
                 page.property('plainText').then((content) => {
@@ -42,7 +40,7 @@ describe('Page', () => {
         })
     });
 
-    it('.property(\'key\', value) sets property', (done) => {
+    it('#property(\'key\', value) sets property', (done) => {
         phantom.createPage().then((page) => {
             page.property('viewportSize', {width: 800, height: 600}).then(() => {
                 page.property('viewportSize').then((value) => {
@@ -53,7 +51,26 @@ describe('Page', () => {
         })
     });
 
-    it('.evaluate(function(){...}) executes correctly', (done) => {
+    it('#settings(\'javascriptEnabled\') returns true', (done) => {
+        phantom.createPage().then((page) => {
+            page.settings('javascriptEnabled').then((value) => {
+                expect(value).toEqual(true);
+                done();
+            });
+        })
+    });
+
+    it('#settings(\'key\', value) sets settings', (done) => {
+        phantom.createPage().then((page) => {
+            page.settings('javascriptEnabled', false);
+            page.settings('javascriptEnabled').then((value) => {
+                expect(value).toEqual(false);
+                done();
+            });
+        })
+    });
+
+    it('#evaluate(function(){...}) executes correctly', (done) => {
         phantom.createPage().then((page) => {
             page.evaluate(function () {
                 return 'test'
@@ -64,7 +81,7 @@ describe('Page', () => {
         })
     });
 
-    it('.injectJs() properly injects a js file', (done) => {
+    it('#injectJs() properly injects a js file', (done) => {
         phantom.createPage().then((page) => {
             page.open('http://localhost:8888/test').then((status) => {
                 // inject_example.js: window.foo = 1;
@@ -80,7 +97,7 @@ describe('Page', () => {
         })
     });
 
-    it('.includeJs() properly injects a js file', (done) => {
+    it('#includeJs() properly injects a js file', (done) => {
         phantom.createPage().then((page) => {
             page.open('http://localhost:8888/test').then((status) => {
                 page.includeJs('http://localhost:8888/script.js').then(() => {
