@@ -6,13 +6,12 @@ import Page from './page'
 import Command from './command'
 
 export default class Phantom {
-    constructor() {
+    constructor(args = []) {
         //console.log(`${new Date()} Starting ${phantomjs.path} ${__dirname + '/shim.js'}`);
-        this.process = spawn(phantomjs.path, [__dirname + '/shim.js']);
+        this.process = spawn(phantomjs.path, [__dirname + '/shim.js'].concat(args));
         this.commands = new Map();
 
         this.process.stdin.setEncoding('utf-8');
-
 
         this.process.stdout.pipe(new Linerstream()).on('data', (data) => {
             const message = data.toString('utf8');

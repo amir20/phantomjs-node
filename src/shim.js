@@ -21,7 +21,11 @@ const commands = {
     },
     property: (command) => {
         if (command.target === 'page') {
-            command.response = page[command.params[0]];
+            if (command.params.length == 2) {
+                page[command.params[0]] = command.params[1];
+            } else {
+                command.response = page[command.params[0]];
+            }
 
             completeCommand(command);
         }

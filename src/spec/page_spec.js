@@ -42,6 +42,17 @@ describe('Page', () => {
         })
     });
 
+    it('.property(\'key\', value) sets property', (done) => {
+        phantom.createPage().then((page) => {
+            page.property('viewportSize', {width: 800, height: 600}).then(() => {
+                page.property('viewportSize').then((value) => {
+                    expect(value).toEqual({width: 800, height: 600});
+                    done();
+                })
+            });
+        })
+    });
+
     it('.evaluate(function(){...}) executes correctly', (done) => {
         phantom.createPage().then((page) => {
             page.evaluate(function () {
