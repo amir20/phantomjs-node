@@ -1,7 +1,7 @@
 {
-  "author": "Sam Gentle <sam@samgentle.com>",
+  "author": "Amir Raminfar <findamir@gmail.com>",
   "name": "phantom",
-  "description": "PhantomJS wrapper for Node",
+  "description": "PhantomJS integration module for NodeJS",
   "homepage": "https://github.com/amir20/phantomjs-node",
   "version": "2.0.0-alpha",
   "repository": {
@@ -13,6 +13,11 @@
       "name": "Amir Raminfar",
       "email": "findamir@gmail.com"
     }
+  ],
+  "keywords": [
+    "phantom",
+    "phantomjs",
+    "driver"
   ],
   "main": "lib/index.js",
   "engines": {
@@ -30,7 +35,7 @@
     "gulp-babel": "^6.1.2",
     "gulp-jasmine": "^2.2.1"
   },
-  "license": "MIT",
+  "license": "ISC",
   "scripts": {
     "test": "gulp test",
     "prepublish": "gulp build"
