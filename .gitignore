@@ -1,5 +1,4 @@
 node_modules
-.test
+lib/
 .idea
-phantom.js
-shim.js
+coverage/
