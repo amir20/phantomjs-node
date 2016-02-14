@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+import crypto from "crypto";
 
 export default class Command {
     constructor(id, target, name, params = []) {

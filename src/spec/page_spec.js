@@ -1,6 +1,5 @@
-import http from 'http'
-import Phantom from '../phantom'
-import Page from '../page'
+import http from "http";
+import Phantom from "../phantom";
 
 describe('Page', () => {
     let server;
@@ -36,6 +35,21 @@ describe('Page', () => {
                     expect(content).toEqual('hi, /test');
                     done();
                 })
+            });
+        })
+    });
+
+    it('#property(\'onResourceRequested\', function(){}) sets property', (done) => {
+        phantom.createPage().then((page) => {
+            page.property('onResourceRequested', (requestData, networkRequest) => {
+                page.foo = requestData.url;
+            }).then(() => {
+                page.open('http://localhost:8888/foo-bar-xyz').then((status)=> {
+                    page.property('foo').then((value) => {
+                        expect(value).toEqual('http://localhost:8888/foo-bar-xyz');
+                        done();
+                    });
+                });
             });
         })
     });
@@ -112,3 +126,4 @@ describe('Page', () => {
         })
     });
 });
+

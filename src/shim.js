@@ -1,5 +1,5 @@
-import webpage from 'webpage'
-import system from 'system'
+import webpage from "webpage";
+import system from "system";
 const page = webpage.create();
 
 
@@ -46,7 +46,19 @@ const commands = {
 function read() {
     let line = system.stdin.readLine();
     if (line) {
-        let command = JSON.parse(line);
+        let command = JSON.parse(line, function (key, value) {
+
+            if (value && typeof value === 'string' && value.substr(0, 8) == 'function' && value.indexOf('[native code]') === -1) {
+                var startBody = value.indexOf('{') + 1;
+                var endBody = value.lastIndexOf('}');
+                var startArgs = value.indexOf('(') + 1;
+                var endArgs = value.indexOf(')');
+
+                return new Function(value.substring(startArgs, endArgs), value.substring(startBody, endBody));
+            }
+            return value;
+        });
+
         executeCommand(command)
     }
 }

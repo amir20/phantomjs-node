@@ -1,10 +1,10 @@
-import phantomjs from 'phantomjs-prebuilt'
-import { spawn } from 'child_process'
-import winston from 'winston'
-import os from 'os'
-import Linerstream from 'linerstream'
-import Page from './page'
-import Command from './command'
+import phantomjs from "phantomjs-prebuilt";
+import {spawn} from "child_process";
+import winston from "winston";
+import os from "os";
+import Linerstream from "linerstream";
+import Page from "./page";
+import Command from "./command";
 
 const logger = new winston.Logger({
     transports: [

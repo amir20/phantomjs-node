@@ -1,4 +1,4 @@
-import Command from '../command'
+import Command from "../command";
 
 describe('Command', () => {
     it('id to be randomly generated', () => {

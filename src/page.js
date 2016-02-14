@@ -1,4 +1,4 @@
-import Command from './command'
+import Command from "./command";
 
 export default class Page {
     constructor(phantom) {
@@ -9,7 +9,7 @@ export default class Page {
 
 const methods = [
     'open', 'render', 'close', 'property', 'injectJs', 'includeJs', 'openUrl', 'stop', 'renderBase64',
-    'evaluate', 'setting', 'onResourceRequested'
+    'evaluate', 'setting'
 ];
 
 methods.forEach((method) => {
