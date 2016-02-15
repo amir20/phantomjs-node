@@ -9,7 +9,7 @@ export default class Page {
 
 const methods = [
     'open', 'render', 'close', 'property', 'injectJs', 'includeJs', 'openUrl', 'stop', 'renderBase64',
-    'evaluate', 'setting'
+    'evaluate', 'setting', 'addCookie', 'deleteCookie', 'clearCookies'
 ];
 
 methods.forEach((method) => {

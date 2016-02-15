@@ -102,7 +102,9 @@ describe('Page', () => {
         yield page.open('http://localhost:8888/test');
         let file = 'test.png';
         yield page.render(file);
-        expect(function(){fs.accessSync(file, fs.F_OK)}).not.toThrow();
+        expect(function () {
+            fs.accessSync(file, fs.F_OK)
+        }).not.toThrow();
         fs.unlinkSync(file);
     });
 
@@ -111,6 +113,74 @@ describe('Page', () => {
         yield page.open('http://localhost:8888/test');
         let content = yield  page.renderBase64('PNG');
         expect(content).not.toBeNull();
+    });
+
+    it('#addCookie() adds a cookie to the page', function*() {
+        let page = yield phantom.createPage();
+        yield page.addCookie({
+            'name': 'Valid-Cookie-Name',
+            'value': 'Valid-Cookie-Value',
+            'domain': 'localhost',
+            'path': '/foo',
+            'httponly': true,
+            'secure': false,
+            'expires': (new Date()).getTime() + (1000 * 60 * 60)
+        });
+        let cookies = yield page.property('cookies');
+        expect(cookies[0].name).toEqual('Valid-Cookie-Name');
+    });
+
+    it('#clearCookies() removes all cookies', function*() {
+        let page = yield phantom.createPage();
+
+        // Probably not the best test if this method doesn't work
+        yield page.addCookie({
+            'name': 'Valid-Cookie-Name',
+            'value': 'Valid-Cookie-Value',
+            'domain': 'localhost',
+            'path': '/foo',
+            'httponly': true,
+            'secure': false,
+            'expires': (new Date()).getTime() + (1000 * 60 * 60)
+        });
+
+        yield page.clearCookies();
+        let cookies = yield page.property('cookies');
+        expect(cookies).toEqual([]);
+    });
+
+    it('#deleteCookie() removes one cookie', function*() {
+        let page = yield phantom.createPage();
+
+        // Probably not the best test if this method doesn't work
+        yield page.addCookie({
+            'name': 'cookie-1',
+            'value': 'Valid-Cookie-Value',
+            'domain': 'localhost',
+            'path': '/foo',
+            'httponly': true,
+            'secure': false,
+            'expires': (new Date()).getTime() + (1000 * 60 * 60)
+        });
+
+        yield page.addCookie({
+            'name': 'cookie-2',
+            'value': 'Valid-Cookie-Value',
+            'domain': 'localhost',
+            'path': '/foo',
+            'httponly': true,
+            'secure': false,
+            'expires': (new Date()).getTime() + (1000 * 60 * 60)
+        });
+
+        let cookies = yield page.property('cookies');
+        expect(cookies.length).toBe(2);
+
+        yield page.deleteCookie('cookie-1');
+        cookies = yield page.property('cookies');
+
+        expect(cookies.length).toBe(1);
+        expect(cookies[0].name).toEqual('cookie-2');
     });
 });
 
