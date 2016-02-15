@@ -40,8 +40,8 @@ export default class Phantom {
             logger.error(data);
         });
 
-        this.process.on('exit', (code) => {
-            //console.log(`Child exited with code ${code}`);
+        this.process.on('exit', code => {
+            logger.debug(`Child exited with code [${code}].`);
         });
     }
 
@@ -50,14 +50,20 @@ export default class Phantom {
     }
 
     execute(command) {
-        command.deferred = Promise.defer();
+        let resolve, reject;
+        let promise = new Promise((res, rej) => {
+            resolve = res;
+            reject = rej;
+        });
+
+        command.deferred = {resolve: resolve, reject: reject};
         this.commands.set(command.id, command);
         logger.debug('Sending: %s', JSON.stringify(command));
         this.process.stdin.write(
             JSON.stringify(command, (key, val) => typeof val === 'function' ? val.toString() : val) + os.EOL, 'utf8'
         );
 
-        return command.deferred.promise;
+        return promise;
     }
 
     exit() {

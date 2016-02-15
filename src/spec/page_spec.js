@@ -1,6 +1,9 @@
+import "babel-polyfill"
 import http from "http";
 import fs from "fs";
 import Phantom from "../phantom";
+
+require('jasmine-co').install();
 
 describe('Page', () => {
     let server;
@@ -20,137 +23,94 @@ describe('Page', () => {
     beforeEach(() => phantom = new Phantom());
     afterEach(() => phantom.exit());
 
-    it('#open() a valid page', done => {
-        phantom.createPage().then((page) => {
-            page.open('http://localhost:8888/test').then((status)=> {
-                expect(status).toEqual('success');
-                done();
-            });
-        })
+    it('#open() a valid page', function*() {
+        let page = yield phantom.createPage();
+        let status = yield page.open('http://localhost:8888/test');
+        expect(status).toEqual('success');
     });
 
-    it('#property(\'plainText\') returns valid content', done => {
-        phantom.createPage().then((page) => {
-            page.open('http://localhost:8888/test').then(() => {
-                page.property('plainText').then((content) => {
-                    expect(content).toEqual('hi, /test');
-                    done();
-                })
-            });
-        })
+    it('#property(\'plainText\') returns valid content', function*() {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/test');
+        let content = yield page.property('plainText');
+        expect(content).toEqual('hi, /test');
     });
 
-    it('#property(\'onResourceRequested\', function(){}) sets property', done => {
-        phantom.createPage().then((page) => {
-            page.property('onResourceRequested', (requestData, networkRequest) => {
-                page.foo = requestData.url;
-            }).then(() => {
-                page.open('http://localhost:8888/foo-bar-xyz').then((status)=> {
-                    page.property('foo').then((value) => {
-                        expect(value).toEqual('http://localhost:8888/foo-bar-xyz');
-                        done();
-                    });
-                });
-            });
-        })
+    it('#property(\'onResourceRequested\', function(){}) sets property', function*() {
+        let page = yield phantom.createPage();
+        yield page.property('onResourceRequested', (requestData, networkRequest) => {
+            page.foo = requestData.url;
+        });
+        yield page.open('http://localhost:8888/foo-bar-xyz');
+        let value = yield page.property('foo');
+        expect(value).toEqual('http://localhost:8888/foo-bar-xyz');
     });
 
-    it('#property(\'key\', value) sets property', done => {
-        phantom.createPage().then((page) => {
-            page.property('viewportSize', {width: 800, height: 600}).then(() => {
-                page.property('viewportSize').then((value) => {
-                    expect(value).toEqual({width: 800, height: 600});
-                    done();
-                })
-            });
-        })
+    it('#property(\'key\', value) sets property', function*() {
+        let page = yield phantom.createPage();
+        yield page.property('viewportSize', {width: 800, height: 600});
+        let value = yield page.property('viewportSize');
+        expect(value).toEqual({width: 800, height: 600});
     });
 
-    it('#setting(\'javascriptEnabled\') returns true', done => {
-        phantom.createPage().then((page) => {
-            page.setting('javascriptEnabled').then((value) => {
-                expect(value).toEqual(true);
-                done();
-            });
-        })
+    it('#setting(\'javascriptEnabled\') returns true', function*() {
+        let page = yield phantom.createPage();
+        let value = yield page.setting('javascriptEnabled');
+        expect(value).toBe(true);
     });
 
-    it('#setting(\'key\', value) sets setting', done => {
-        phantom.createPage().then((page) => {
-            page.setting('javascriptEnabled', false);
-            page.setting('javascriptEnabled').then((value) => {
-                expect(value).toEqual(false);
-                done();
-            });
-        })
+    it('#setting(\'key\', value) sets setting', function*() {
+        let page = yield phantom.createPage();
+        yield page.setting('javascriptEnabled', false);
+        let value = yield page.setting('javascriptEnabled');
+        expect(value).toBe(false);
     });
 
-    it('#evaluate(function(){...}) executes correctly', done => {
-        phantom.createPage().then((page) => {
-            page.evaluate(function () {
-                return 'test'
-            }).then((response) => {
-                expect(response).toEqual('test');
-                done();
-            });
-        })
+    it('#evaluate(function(){...}) executes correctly', function*() {
+        let page = yield phantom.createPage();
+        let response = yield page.evaluate(function () {
+            return 'test'
+        });
+        expect(response).toEqual('test');
     });
 
-    it('#injectJs() properly injects a js file', done => {
-        phantom.createPage().then((page) => {
-            page.open('http://localhost:8888/test').then(() => {
-                // inject_example.js: window.foo = 1;
-                page.injectJs(__dirname + '/inject_example.js').then(() => {
-                    page.evaluate(function () {
-                        return foo;
-                    }).then((response) => {
-                        expect(response).toEqual(1);
-                        done();
-                    });
-                })
-            });
-        })
+    it('#injectJs() properly injects a js file', function*() {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/test');
+        // inject_example.js: window.foo = 1;
+        yield page.injectJs(__dirname + '/inject_example.js');
+
+        let response = yield page.evaluate(function () {
+            return foo;
+        });
+
+        expect(response).toEqual(1);
     });
 
-    it('#includeJs() properly injects a js file', done => {
-        phantom.createPage().then((page) => {
-            page.open('http://localhost:8888/test').then(() => {
-                page.includeJs('http://localhost:8888/script.js').then(() => {
-                    page.evaluate(function () {
-                        return fooBar;
-                    }).then((response) => {
-                        expect(response).toEqual(2);
-                        done();
-                    });
-                })
-            });
-        })
+    it('#includeJs() properly injects a js file', function*() {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/test');
+        yield page.includeJs('http://localhost:8888/script.js');
+        let response = yield page.evaluate(function () {
+            return fooBar;
+        });
+        expect(response).toEqual(2);
     });
 
-    it('#render() creates a file', done => {
-        phantom.createPage().then((page) => {
-            page.open('http://localhost:8888/test').then(() => {
-                let file = 'test.png';
-                page.render(file).then(() => {
-                    fs.access(file, fs.F_OK, (err) => {
-                        expect(err).toBeNull();
-                        fs.unlinkSync(file);
-                        done();
-                    });
-                });
-            });
-        })
+    it('#render() creates a file', function* () {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/test');
+        let file = 'test.png';
+        yield page.render(file);
+        expect(function(){fs.accessSync(file, fs.F_OK)}).not.toThrow();
+        fs.unlinkSync(file);
     });
 
-    it('#renderBase64() returns encoded PNG', done => {
-        phantom.createPage().then((page) => {
-            page.open('http://localhost:8888/test').then(() => {
-                page.renderBase64('PNG').then((content) => {
-                    expect(content).not.toBeNull();
-                    done();
-                });
-            });
-        })
+    it('#renderBase64() returns encoded PNG', function*() {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/test');
+        let content = yield  page.renderBase64('PNG');
+        expect(content).not.toBeNull();
     });
 });
 
