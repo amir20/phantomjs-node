@@ -6,6 +6,7 @@ phantom is fast and reliable node wrapper for phantomjs.
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Linux Build][travis-image]][travis-url]
+[![Dependencies][david-image]][david-url]
 
 ```js
 var phantom = require('phantom');
@@ -108,3 +109,5 @@ $ npm test
 [downloads-url]: https://npmjs.org/package/phantom
 [travis-image]: https://img.shields.io/travis/amir20/phantomjs-node.svg
 [travis-url]: https://travis-ci.org/amir20/phantomjs-node
+[david-image]: https://david-dm.org/amir20/phantomjs-node.svg
+[david-url]: https://david-dm.org/amir20/phantomjs-node
