@@ -1,10 +1,11 @@
 import http from "http";
+import fs from "fs";
 import Phantom from "../phantom";
 
 describe('Page', () => {
     let server;
     let phantom;
-    beforeAll((done) => {
+    beforeAll(done => {
         server = http.createServer((request, response) => {
             if (request.url === '/script.js') {
                 response.end('window.fooBar = 2;');
@@ -19,7 +20,7 @@ describe('Page', () => {
     beforeEach(() => phantom = new Phantom());
     afterEach(() => phantom.exit());
 
-    it('#open() a valid page', (done) => {
+    it('#open() a valid page', done => {
         phantom.createPage().then((page) => {
             page.open('http://localhost:8888/test').then((status)=> {
                 expect(status).toEqual('success');
@@ -28,9 +29,9 @@ describe('Page', () => {
         })
     });
 
-    it('#property(\'plainText\') returns valid content', (done) => {
+    it('#property(\'plainText\') returns valid content', done => {
         phantom.createPage().then((page) => {
-            page.open('http://localhost:8888/test').then((status) => {
+            page.open('http://localhost:8888/test').then(() => {
                 page.property('plainText').then((content) => {
                     expect(content).toEqual('hi, /test');
                     done();
@@ -39,7 +40,7 @@ describe('Page', () => {
         })
     });
 
-    it('#property(\'onResourceRequested\', function(){}) sets property', (done) => {
+    it('#property(\'onResourceRequested\', function(){}) sets property', done => {
         phantom.createPage().then((page) => {
             page.property('onResourceRequested', (requestData, networkRequest) => {
                 page.foo = requestData.url;
@@ -54,7 +55,7 @@ describe('Page', () => {
         })
     });
 
-    it('#property(\'key\', value) sets property', (done) => {
+    it('#property(\'key\', value) sets property', done => {
         phantom.createPage().then((page) => {
             page.property('viewportSize', {width: 800, height: 600}).then(() => {
                 page.property('viewportSize').then((value) => {
@@ -65,7 +66,7 @@ describe('Page', () => {
         })
     });
 
-    it('#setting(\'javascriptEnabled\') returns true', (done) => {
+    it('#setting(\'javascriptEnabled\') returns true', done => {
         phantom.createPage().then((page) => {
             page.setting('javascriptEnabled').then((value) => {
                 expect(value).toEqual(true);
@@ -74,7 +75,7 @@ describe('Page', () => {
         })
     });
 
-    it('#setting(\'key\', value) sets setting', (done) => {
+    it('#setting(\'key\', value) sets setting', done => {
         phantom.createPage().then((page) => {
             page.setting('javascriptEnabled', false);
             page.setting('javascriptEnabled').then((value) => {
@@ -84,7 +85,7 @@ describe('Page', () => {
         })
     });
 
-    it('#evaluate(function(){...}) executes correctly', (done) => {
+    it('#evaluate(function(){...}) executes correctly', done => {
         phantom.createPage().then((page) => {
             page.evaluate(function () {
                 return 'test'
@@ -95,9 +96,9 @@ describe('Page', () => {
         })
     });
 
-    it('#injectJs() properly injects a js file', (done) => {
+    it('#injectJs() properly injects a js file', done => {
         phantom.createPage().then((page) => {
-            page.open('http://localhost:8888/test').then((status) => {
+            page.open('http://localhost:8888/test').then(() => {
                 // inject_example.js: window.foo = 1;
                 page.injectJs(__dirname + '/inject_example.js').then(() => {
                     page.evaluate(function () {
@@ -111,9 +112,9 @@ describe('Page', () => {
         })
     });
 
-    it('#includeJs() properly injects a js file', (done) => {
+    it('#includeJs() properly injects a js file', done => {
         phantom.createPage().then((page) => {
-            page.open('http://localhost:8888/test').then((status) => {
+            page.open('http://localhost:8888/test').then(() => {
                 page.includeJs('http://localhost:8888/script.js').then(() => {
                     page.evaluate(function () {
                         return fooBar;
@@ -122,6 +123,32 @@ describe('Page', () => {
                         done();
                     });
                 })
+            });
+        })
+    });
+
+    it('#render() creates a file', done => {
+        phantom.createPage().then((page) => {
+            page.open('http://localhost:8888/test').then(() => {
+                let file = 'test.png';
+                page.render(file).then(() => {
+                    fs.access(file, fs.F_OK, (err) => {
+                        expect(err).toBeNull();
+                        fs.unlinkSync(file);
+                        done();
+                    });
+                });
+            });
+        })
+    });
+
+    it('#renderBase64() returns encoded PNG', done => {
+        phantom.createPage().then((page) => {
+            page.open('http://localhost:8888/test').then(() => {
+                page.renderBase64('PNG').then((content) => {
+                    expect(content).not.toBeNull();
+                    done();
+                });
             });
         })
     });
