@@ -1,13 +1,14 @@
-phantom
+phantom - fast and reliable node wrapper for phantomjs
 ========
-phantom is fast and reliable node wrapper for phantomjs.
-
+[![NPM](https://nodei.co/npm/phantom.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/phantom/)
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Linux Build][travis-image]][travis-url]
 [![Dependencies][david-image]][david-url]
 
+
+## Super easy to use
 ```js
 var phantom = require('phantom');
 
