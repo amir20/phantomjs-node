@@ -182,5 +182,13 @@ describe('Page', () => {
         expect(cookies.length).toBe(1);
         expect(cookies[0].name).toEqual('cookie-2');
     });
+
+    it('#reject works when there is an error', function*() {
+        try {
+            yield phantom.execute('phantom', 'doesNotExist');
+        } catch (e) {
+            expect(e.message).toEqual("undefined is not an object (evaluating 'method.apply')");
+        }
+    });
 });
 
