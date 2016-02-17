@@ -52,7 +52,7 @@ export default class Phantom {
     }
 
     createPage() {
-        return Promise.resolve(new Page(this));
+        return this.execute('phantom', 'createPage').then(response => new Page(this, response.pageId));
     }
 
     executeCommand(command) {
@@ -65,6 +65,7 @@ export default class Phantom {
         command.deferred = {resolve: resolve, reject: reject};
         this.commands.set(command.id, command);
         logger.debug('Sending: %s', JSON.stringify(command));
+
         this.process.stdin.write(
             JSON.stringify(command, (key, val) => typeof val === 'function' ? val.toString() : val) + os.EOL, 'utf8'
         );

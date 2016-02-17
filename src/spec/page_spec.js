@@ -39,11 +39,11 @@ describe('Page', () => {
     it('#property(\'onResourceRequested\', function(){}) sets property', function*() {
         let page = yield phantom.createPage();
         yield page.property('onResourceRequested', (requestData, networkRequest) => {
-            page.foo = requestData.url;
+            networkRequest.changeUrl('http://localhost:8888/foo-bar-xyz');
         });
-        yield page.open('http://localhost:8888/foo-bar-xyz');
-        let value = yield page.property('foo');
-        expect(value).toEqual('http://localhost:8888/foo-bar-xyz');
+        yield page.open('http://localhost:8888/whatever');
+        let content = yield page.property('plainText');
+        expect(content).toEqual('hi, /foo-bar-xyz'); // should have been changed to /foo-bar-xyz
     });
 
     it('#property(\'key\', value) sets property', function*() {
@@ -183,12 +183,24 @@ describe('Page', () => {
         expect(cookies[0].name).toEqual('cookie-2');
     });
 
-    it('#reject works when there is an error', function*() {
+    it('#reject(...) works when there is an error', function*() {
         try {
             yield phantom.execute('phantom', 'doesNotExist');
         } catch (e) {
             expect(e.message).toEqual("undefined is not an object (evaluating 'method.apply')");
         }
+    });
+
+    it('multiple pages can be opened', function*() {
+        let page1 = yield phantom.createPage();
+        yield page1.open('http://localhost:8888/test1');
+        page1.close();
+
+        let page2 = yield phantom.createPage();
+        yield page2.open('http://localhost:8888/test2');
+        let content = yield page2.property('plainText');
+        expect(content).toEqual('hi, /test2');
+        page2.close();
     });
 });
 

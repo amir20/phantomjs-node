@@ -1,45 +1,42 @@
 import webpage from "webpage";
 import system from "system";
-const page = webpage.create();
 
 
 const objectSpace = {
-    phantom: phantom,
-    page: page
+    phantom: phantom
 };
 
 const haveCallbacks = ['open', 'includeJs'];
 
 const commands = {
-    createPage: (command) => {
+    createPage: command => {
+        let page = webpage.create();
+        objectSpace['page$' + command.id] = page;
+        command.response = {pageId: command.id};
         completeCommand(command);
     },
-    exit: (command) => {
+    exit: command => {
         if (command.target === 'phantom') {
             phantom.exit();
         }
     },
-    property: (command) => {
-        if (command.target === 'page') {
-            if (command.params.length == 2) {
-                page[command.params[0]] = command.params[1];
-            } else {
-                command.response = page[command.params[0]];
-            }
-
-            completeCommand(command);
+    property: command => {
+        if (command.params.length == 2) {
+            objectSpace[command.target][command.params[0]] = command.params[1];
+        } else {
+            command.response = objectSpace[command.target][command.params[0]];
         }
+
+        completeCommand(command);
     },
-    setting: (command) => {
-        if (command.target === 'page') {
-            if (command.params.length == 2) {
-                page.settings[command.params[0]] = command.params[1];
-            } else {
-                command.response = page.settings[command.params[0]];
-            }
-
-            completeCommand(command);
+    setting: command => {
+        if (command.params.length == 2) {
+            objectSpace[command.target].settings[command.params[0]] = command.params[1];
+        } else {
+            command.response = objectSpace[command.target].settings[command.params[0]];
         }
+
+        completeCommand(command);
     }
 };
 
