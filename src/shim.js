@@ -59,7 +59,13 @@ function read() {
             return value;
         });
 
-        executeCommand(command)
+        try {
+            executeCommand(command);
+        } catch (e) {
+            command.error = e.message;
+            completeCommand(command);
+        }
+
     }
 }
 
@@ -74,13 +80,15 @@ function executeCommand(command) {
             command.response = method.apply(target, command.params);
             completeCommand(command);
         } else {
-            let params = command.params.slice();
+            let params = command.params.slice(); // copy params
             params.push((status) => {
                 command.response = status;
                 completeCommand(command);
             });
             method.apply(target, params);
         }
+    } else {
+        throw new Error(`Cannot find ${command.name} method to execute on ${command.target} object.`);
     }
 }
 

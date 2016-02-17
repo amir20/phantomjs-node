@@ -29,7 +29,13 @@ export default class Phantom {
                 let json = message.substr(1);
                 logger.debug('Parsing: %s', json);
                 const command = JSON.parse(json);
-                this.commands.get(command.id).deferred.resolve(command.response);
+
+                let deferred = this.commands.get(command.id).deferred;
+                if (command.error === undefined) {
+                    deferred.resolve(command.response);
+                } else {
+                    deferred.reject(new Error(command.error));
+                }
                 this.commands.delete(command.id);
             } else {
                 logger.info(message);
@@ -41,7 +47,7 @@ export default class Phantom {
         });
 
         this.process.on('exit', code => {
-            logger.debug(`Child exited with code [${code}].`);
+            logger.debug(`Child exited with code [${code}]`);
         });
     }
 
@@ -49,7 +55,7 @@ export default class Phantom {
         return Promise.resolve(new Page(this));
     }
 
-    execute(command) {
+    executeCommand(command) {
         let resolve, reject;
         let promise = new Promise((res, rej) => {
             resolve = res;
@@ -66,7 +72,11 @@ export default class Phantom {
         return promise;
     }
 
+    execute(target, name, args = []) {
+        return this.executeCommand(new Command(null, target, name, args));
+    }
+
     exit() {
-        this.execute(new Command(null, 'phantom', 'exit'));
+        this.execute('phantom', 'exit');
     }
 }
