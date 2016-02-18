@@ -12,6 +12,8 @@ describe('Page', () => {
         server = http.createServer((request, response) => {
             if (request.url === '/script.js') {
                 response.end('window.fooBar = 2;');
+            } else if (request.url === '/test.html') {
+                response.end('<html><head><title>Page Title</title></head><body>Test</body></html>');
             } else {
                 response.end('hi, ' + request.url);
             }
@@ -64,6 +66,15 @@ describe('Page', () => {
         yield page.setting('javascriptEnabled', false);
         let value = yield page.setting('javascriptEnabled');
         expect(value).toBe(false);
+    });
+
+    it('#evaluate(function(){return document.title}) executes correctly', function*() {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/test.html');
+        let response = yield page.evaluate(function () {
+            return document.title
+        });
+        expect(response).toEqual('Page Title');
     });
 
     it('#evaluate(function(){...}) executes correctly', function*() {

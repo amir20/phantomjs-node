@@ -1,4 +1,4 @@
-phantom - fast and reliable node wrapper for phantomjs
+phantom - Fast NodeJS API for PhantomJS
 ========
 [![NPM](https://nodei.co/npm/phantom.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/phantom/)
 
@@ -44,7 +44,29 @@ $ npm install phantom --save
 
   The API is much more consistent now. All properties can be read with `page.property(key)` and settings can be read with `page.setting(key)`. See below for more example.
 
-## `page` API
+## `phantom` object API
+
+To create a new instance of `phantom` use `phantom.create()` to return a `Promise` which should resolve to a `phantom` object. If you want add parameters to the phantomjs process you can do so by doing:
+
+```js
+var phantom = require('phantom');
+phnatom.create(['--ignore-ssl-errors=yes', ' --load-images=no']).then(...)
+```
+To create a new `page`, you have to call `createPage()`:
+
+```js
+var phantom = require('phantom');
+phantom.create().then(function(ph) {
+    ph.createPage().then(function(page) {
+        // use page
+        ph.exit();
+    });
+});
+```
+
+Make sure to call `#exit()` on the phantom instance to kill the phantomjs process. Otherwise, the process will never exit.
+
+## `page` object API
 
   The `page` object that is returned with `createPage` is a proxy that sends all methods to `phantom`. Most method calls should be identical to PhantomJS API. You must remember that each method returns a `Promise`.
 

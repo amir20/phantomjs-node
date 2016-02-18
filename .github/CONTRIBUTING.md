@@ -27,4 +27,4 @@ Pull request are welcomed. Please make sure the following has been done:
 * Add new test cases to test new functionality
 * Make sure that your tests pass with `npm test`
 * Commit with a clear message that explains what the commit does
-* Issues a pull request and make sure that TravisCI is green
+* Issue a pull request and make sure that TravisCI is green
