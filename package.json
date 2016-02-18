@@ -36,7 +36,8 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-jasmine": "^2.2.1",
-    "jasmine-co": "^1.1.0"
+    "jasmine-co": "^1.1.0",
+    "proxyquire": "^1.7.4"
   },
   "license": "ISC",
   "scripts": {
