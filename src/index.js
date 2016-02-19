@@ -1,5 +1,7 @@
 import Phantom from "./phantom";
 
 module.exports.create = (args) => {
-    return Promise.resolve(new Phantom(args));
+    new Promise((resolve, reject) => {
+        return resolve(new Phantom(args));
+    });
 };
