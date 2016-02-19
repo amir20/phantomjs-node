@@ -11,7 +11,7 @@ addons:
     packages:
       - g++-4.8
 
-before_script:
+before_install:
       - npm install -g gulp-cli
 node_js:
   - "stable"
