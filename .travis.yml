@@ -12,7 +12,7 @@ addons:
       - g++-4.8
 
 before_install:
-      - npm install -g gulp-cli
+      - npm install -g gulp-cli gulp
 node_js:
   - "stable"
   - "5.5"
