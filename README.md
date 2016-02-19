@@ -126,11 +126,11 @@ $ npm test
 
   [ISC](LICENSE)
 
-[npm-image]: https://img.shields.io/npm/v/phantom.svg
+[npm-image]: https://img.shields.io/npm/v/phantom.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/phantom
-[downloads-image]: https://img.shields.io/npm/dm/phantom.svg
+[downloads-image]: https://img.shields.io/npm/dm/phantom.svg?style=flat-square
 [downloads-url]: https://npmjs.org/package/phantom
-[travis-image]: https://img.shields.io/travis/amir20/phantomjs-node.svg
+[travis-image]: https://img.shields.io/travis/amir20/phantomjs-node.svg?style=flat-square
 [travis-url]: https://travis-ci.org/amir20/phantomjs-node
-[david-image]: https://david-dm.org/amir20/phantomjs-node.svg
+[david-image]: https://david-dm.org/amir20/phantomjs-node.svg?style=flat-square
 [david-url]: https://david-dm.org/amir20/phantomjs-node
