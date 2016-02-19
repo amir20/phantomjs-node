@@ -23,7 +23,7 @@ export default class Phantom {
 
         this.process.stdin.setEncoding('utf-8');
 
-        this.process.stdout.pipe(new Linerstream()).on('data', (data) => {
+        this.process.stdout.pipe(new Linerstream()).on('data', data => {
             const message = data.toString('utf8');
             if (message[0] === '>') {
                 let json = message.substr(1);
@@ -58,11 +58,14 @@ export default class Phantom {
         });
 
         command.deferred = {resolve: resolve, reject: reject};
+
         this.commands.set(command.id, command);
-        logger.debug('Sending: %s', JSON.stringify(command));
+
+        let json = JSON.stringify(command, (key, val) => typeof val === 'function' ? val.toString() : val);
+        logger.debug('Sending: %s', json);
 
         this.process.stdin.write(
-            JSON.stringify(command, (key, val) => typeof val === 'function' ? val.toString() : val) + os.EOL, 'utf8'
+            json + os.EOL, 'utf8'
         );
 
         return promise;
