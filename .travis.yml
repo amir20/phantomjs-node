@@ -10,6 +10,9 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+
+before_script:
+      - npm install -g gulp-cli
 node_js:
   - "stable"
   - "5.5"
