@@ -1,5 +1,3 @@
-import Command from "./command";
-
 export default class Page {
     constructor(phantom, pageId) {
         this.target = 'page$' + pageId;

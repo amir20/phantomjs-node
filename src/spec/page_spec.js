@@ -1,7 +1,7 @@
-import "babel-polyfill"
 import http from "http";
 import fs from "fs";
 import Phantom from "../phantom";
+import "babel-polyfill";
 
 require('jasmine-co').install();
 
@@ -108,7 +108,7 @@ describe('Page', () => {
         expect(response).toEqual(2);
     });
 
-    it('#render() creates a file', function* () {
+    it('#render() creates a file', function*() {
         let page = yield phantom.createPage();
         yield page.open('http://localhost:8888/test');
         let file = 'test.png';
