@@ -1,10 +1,10 @@
 import gulp from "gulp";
-import del from "del";
 import babel from "gulp-babel";
 import jasmine from "gulp-jasmine";
+import rimraf from "rimraf";
 
 
-gulp.task('clean', () => del(['lib/']));
+gulp.task('clean', done => rimraf('lib/', done));
 
 gulp.task('build', () => {
     return gulp.src('src/**.js')
