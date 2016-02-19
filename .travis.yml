@@ -1,21 +1,6 @@
 sudo: false
-
 language: node_js
-# Add build chain config for Node GYP in Node 4.x
-env:
-  - CXX=g++-4.8
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
-
-before_install:
-      - npm install -g gulp-cli gulp
 node_js:
   - "stable"
   - "5.5"
   - "5.0"
-  - "4.1"
-  - "4.0"
