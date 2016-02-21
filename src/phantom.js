@@ -15,7 +15,16 @@ const logger = new winston.Logger({
     ]
 });
 
+/**
+ * A phantom instance that communicates with phantomjs
+ */
 export default class Phantom {
+
+    /**
+     * Creates a new instance of Phantom
+     *
+     * @param args command args to pass to phantom process
+     */
     constructor(args = []) {
         logger.debug(`Starting ${phantomjs.path} ${args.concat([__dirname + '/shim.js']).join(' ')}`);
         this.process = spawn(phantomjs.path, args.concat([__dirname + '/shim.js']));
@@ -50,10 +59,19 @@ export default class Phantom {
         });
     }
 
+    /**
+     * Returns a new instance of Promise which resolves to a {@link Page}.
+     * @returns {Promise.<Page>}
+     */
     createPage() {
         return this.execute('phantom', 'createPage').then(response => new Page(this, response.pageId));
     }
 
+    /**
+     * Executes a command object
+     * @param command the command to run
+     * @returns {Promise}
+     */
     executeCommand(command) {
         let resolve, reject;
         let promise = new Promise((res, rej) => {
@@ -75,11 +93,33 @@ export default class Phantom {
         return promise;
     }
 
+    /**
+     * Executes a command
+     *
+     * @param target target object to execute against
+     * @param name the name of the method execute
+     * @param args an array of args to pass to the method
+     * @returns {Promise}
+     */
     execute(target, name, args = []) {
         return this.executeCommand(new Command(null, target, name, args));
     }
 
+    /**
+     * Cleans up and end the phantom process
+     */
     exit() {
         this.execute('phantom', 'exit');
     }
-}
+
+    /**
+     * This gets called in an interval and only tries to do a noop to phantomjs if there are no events queued.
+     *
+     * @private
+     */
+    _heartBeat() {
+        if (this.commands.size == 0) {
+            this.execute('phantom', 'noop', [300]);
+        }
+    }
+};

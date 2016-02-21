@@ -1,3 +1,6 @@
+/**
+ * Page class that proxies everything to phantomjs
+ */
 export default class Page {
     constructor(phantom, pageId) {
         this.target = 'page$' + pageId;
