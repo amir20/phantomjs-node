@@ -13,6 +13,7 @@ const commands = {
         let page = webpage.create();
         objectSpace['page$' + command.id] = page;
         page.onClosing = () => delete objectSpace['page$' + command.id];
+        page.onConsoleMessage = (msg, lineNum, sourceId) => console.log(msg);
 
         command.response = {pageId: command.id};
         completeCommand(command);
