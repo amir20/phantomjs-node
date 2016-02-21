@@ -63,7 +63,7 @@ function read() {
     if (line) {
         let command = JSON.parse(line, function (key, value) {
 
-            if (value && typeof value === 'string' && value.substr(0, 8) == 'function' && value.indexOf('[native code]') === -1) {
+            if (value && typeof value === 'string' && value.substr(0, 8) === 'function' && value.indexOf('[native code]') === -1) {
                 var startBody = value.indexOf('{') + 1;
                 var endBody = value.lastIndexOf('}');
                 var startArgs = value.indexOf('(') + 1;
