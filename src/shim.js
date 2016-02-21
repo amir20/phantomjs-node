@@ -1,18 +1,28 @@
 import webpage from "webpage";
 import system from "system";
 
-
+/**
+ * Stores all all pages and single instance of phantom
+ */
 const objectSpace = {
     phantom: phantom
 };
 
+/**
+ * All methods that have a callback in their signature
+ * @type {string[]}
+ */
 const haveCallbacks = ['open', 'includeJs'];
 
+/**
+ * All commands that have a custom implementation
+ */
 const commands = {
     createPage: command => {
         let page = webpage.create();
         objectSpace['page$' + command.id] = page;
         page.onClosing = () => delete objectSpace['page$' + command.id];
+        page.onConsoleMessage = (msg, lineNum, sourceId) => console.log(msg);
 
         command.response = {pageId: command.id};
         completeCommand(command);
@@ -42,6 +52,9 @@ const commands = {
     }
 };
 
+/**
+ * Calls readLine() and blocks until a message is ready
+ */
 function read() {
     let line = system.stdin.readLine();
     if (line) {
@@ -68,6 +81,10 @@ function read() {
     }
 }
 
+/**
+ * Executes a command by first checking if it is a custom method and then calling the method on the target.
+ * @param command the command to execute
+ */
 function executeCommand(command) {
     if (commands[command.name]) {
         return commands[command.name](command);
@@ -91,6 +108,10 @@ function executeCommand(command) {
     }
 }
 
+/**
+ * Completes a command by return a response to node and listening again for next command.
+ * @param command
+ */
 function completeCommand(command) {
     system.stdout.writeLine('>' + JSON.stringify(command));
     // Prevent event-queue from clogging up by reads that block.
