@@ -93,7 +93,8 @@ function executeCommand(command) {
 
 function completeCommand(command) {
     system.stdout.writeLine('>' + JSON.stringify(command));
-    read();
+    // Prevent event-queue from clogging up by reads that block.
+    setTimeout(read, 0);
 }
 
 read();
