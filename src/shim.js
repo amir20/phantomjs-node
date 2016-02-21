@@ -22,9 +22,9 @@ const commands = {
         let page = webpage.create();
         objectSpace['page$' + command.id] = page;
 
-        page.onError = (msg, trace) => console.error(msg);
+        page.onError = msg => console.error(msg);
+        page.onConsoleMessage = msg => console.log(msg);
         page.onClosing = () => delete objectSpace['page$' + command.id];
-        page.onConsoleMessage = (msg, lineNum, sourceId) => console.log(msg);
 
         command.response = {pageId: command.id};
         completeCommand(command);

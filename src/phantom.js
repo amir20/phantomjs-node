@@ -75,13 +75,12 @@ export default class Phantom {
      * @returns {Promise}
      */
     executeCommand(command) {
-        let resolve, reject;
-        let promise = new Promise((res, rej) => {
-            resolve = res;
-            reject = rej;
-        });
+        command.deferred = {};
 
-        command.deferred = {resolve: resolve, reject: reject};
+        let promise = new Promise((res, rej) => {
+            command.deferred.resolve = res;
+            command.deferred.reject = rej;
+        });
 
         this.commands.set(command.id, command);
 
