@@ -21,6 +21,19 @@ const commands = {
     createPage: command => {
         let page = webpage.create();
         objectSpace['page$' + command.id] = page;
+
+        page.onError = (msg, trace) => {
+            let msgStack = ['ERROR: ' + msg];
+            if (trace && trace.length) {
+                msgStack.push('TRACE:');
+                trace.forEach(function (t) {
+                    msgStack.push(' -> ' + t.file + ': ' + t.line + (t.function ? ' (in function "' + t.function + '")' : ''));
+                });
+            }
+            console.error(msgStack.join('\n'));
+        };
+
+        page.onConsoleMessage = (msg, lineNum, sourceId) => console.log(msg);
         page.onClosing = () => delete objectSpace['page$' + command.id];
         page.onConsoleMessage = (msg, lineNum, sourceId) => console.log(msg);
 
@@ -49,7 +62,8 @@ const commands = {
         }
 
         completeCommand(command);
-    }
+    },
+    noop: command => setTimeout(() => completeCommand(command), command.params[0])
 };
 
 /**
