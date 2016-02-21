@@ -57,6 +57,8 @@ export default class Phantom {
             logger.error(`Could not spawn [${phantomjs.path}] executable. Please make sure phantomjs is installed correctly.`);
             process.exit(1);
         });
+
+        this.heartBeatId = setInterval(this._heartBeat.bind(this), 100);
     }
 
     /**
@@ -109,6 +111,13 @@ export default class Phantom {
      * Cleans up and end the phantom process
      */
     exit() {
+        clearInterval(this.heartBeatId);
         this.execute('phantom', 'exit');
     }
-};
+
+    _heartBeat() {
+        if(this.commands.size === 0) {
+            this.execute('phantom', 'noop', [300]);
+        }
+    }
+}
