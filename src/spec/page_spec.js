@@ -92,7 +92,7 @@ describe('Page', () => {
         yield page.injectJs(__dirname + '/inject_example.js');
 
         let response = yield page.evaluate(function () {
-            return foo;
+            return foo; // eslint-disable-line no-undef
         });
 
         expect(response).toEqual(1);
@@ -103,7 +103,7 @@ describe('Page', () => {
         yield page.open('http://localhost:8888/test');
         yield page.includeJs('http://localhost:8888/script.js');
         let response = yield page.evaluate(function () {
-            return fooBar;
+            return fooBar; // eslint-disable-line no-undef
         });
         expect(response).toEqual(2);
     });

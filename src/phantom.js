@@ -55,6 +55,7 @@ export default class Phantom {
         this.process.on('exit', code => logger.debug(`Child exited with code [${code}]`));
         this.process.on('error', error => {
             logger.error(`Could not spawn [${phantomjs.path}] executable. Please make sure phantomjs is installed correctly.`);
+            logger.error(error);
             process.exit(1);
         });
 
