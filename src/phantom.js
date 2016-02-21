@@ -117,7 +117,7 @@ export default class Phantom {
 
     _heartBeat() {
         if(this.commands.size === 0) {
-            this.execute('phantom', 'noop', [300]);
+            this.execute('phantom', 'noop');
         }
     }
 }

@@ -35,7 +35,7 @@ const commands = {
         }
     },
     property: command => {
-        if (command.params.length == 2) {
+        if (command.params.length === 2) {
             objectSpace[command.target][command.params[0]] = command.params[1];
         } else {
             command.response = objectSpace[command.target][command.params[0]];
@@ -44,7 +44,7 @@ const commands = {
         completeCommand(command);
     },
     setting: command => {
-        if (command.params.length == 2) {
+        if (command.params.length === 2) {
             objectSpace[command.target].settings[command.params[0]] = command.params[1];
         } else {
             command.response = objectSpace[command.target].settings[command.params[0]];
@@ -52,7 +52,7 @@ const commands = {
 
         completeCommand(command);
     },
-    noop: command => setTimeout(() => completeCommand(command), command.params[0])
+    noop: command => completeCommand(command)
 };
 
 /**
