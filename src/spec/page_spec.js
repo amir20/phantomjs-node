@@ -213,5 +213,19 @@ describe('Page', () => {
         expect(content).toEqual('hi, /test2');
         page2.close();
     });
+
+    fit('#evaluate(function(){...}) executes correctly', function*() {
+        let page = yield phantom.createPage();
+
+        yield page.property('onResourceReceived', function (response) {
+            lastResponse = response;
+        });
+
+        yield page.open('http://amirraminfar.com/');
+        
+        let lastResponse = yield page.eval('lastResponse');
+
+        console.log(lastResponse);
+    });
 });
 

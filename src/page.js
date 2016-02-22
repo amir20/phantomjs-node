@@ -11,7 +11,7 @@ export default class Page {
 
 const methods = [
     'open', 'render', 'close', 'property', 'injectJs', 'includeJs', 'openUrl', 'stop', 'renderBase64',
-    'evaluate', 'setting', 'addCookie', 'deleteCookie', 'clearCookies'
+    'evaluate', 'setting', 'addCookie', 'deleteCookie', 'clearCookies', 'eval'
 ];
 
 methods.forEach(method => {

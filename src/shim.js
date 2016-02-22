@@ -21,7 +21,7 @@ const commands = {
     createPage: command => {
         let page = webpage.create();
         objectSpace['page$' + command.id] = page;
-        
+
         page.onClosing = () => delete objectSpace['page$' + command.id];
 
         command.response = {pageId: command.id};
@@ -50,6 +50,13 @@ const commands = {
 
         completeCommand(command);
     },
+    
+    eval: command => {
+        command.response = eval(command.params[0]);
+
+        completeCommand(command);
+    },
+    
     noop: command => completeCommand(command)
 };
 

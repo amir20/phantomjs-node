@@ -25,9 +25,11 @@ gulp.task('build:test', ['build'], () => {
         .pipe(gulp.dest('lib/spec'));
 });
 
-gulp.task('test', ['lint', 'build:test'], () => {
+gulp.task('test', ['build:test'], () => {
     return gulp.src('lib/spec/*_spec.js')
         .pipe(jasmine());
 });
 
-gulp.task('default', ['build']);
+gulp.task('default', ['lint', 'test'], () => {
+    gulp.watch('src/**/*.js', ['test']);
+});
