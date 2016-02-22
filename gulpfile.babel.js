@@ -10,7 +10,8 @@ gulp.task('clean', () => del(['lib/']));
 gulp.task('lint', () => {
     return gulp.src('src/**/*.js')
         .pipe(eslint())
-        .pipe(eslint.format());
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
 });
 
 gulp.task('build', ['clean'], () => {
@@ -30,6 +31,8 @@ gulp.task('test', ['build:test'], () => {
         .pipe(jasmine());
 });
 
-gulp.task('default', ['lint', 'test'], () => {
+gulp.task('watch', () => {
     gulp.watch('src/**/*.js', ['test']);
 });
+
+gulp.task('default', ['lint', 'test']);

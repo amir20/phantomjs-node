@@ -70,7 +70,7 @@ export default class Phantom {
      * Returns a value in the global space of phantom process
      * @returns {Promise}
      */
-    windowProperty(){
+    windowProperty() {
         const args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
         return this.execute('phantom', 'windowProperty', args);
     }
