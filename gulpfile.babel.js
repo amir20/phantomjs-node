@@ -8,7 +8,7 @@ import del from "del";
 gulp.task('clean', () => del(['lib/']));
 
 gulp.task('lint', () => {
-    return gulp.src('src/')
+    return gulp.src('src/**/*.js')
         .pipe(eslint())
         .pipe(eslint.format());
 });

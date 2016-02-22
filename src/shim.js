@@ -21,9 +21,7 @@ const commands = {
     createPage: command => {
         let page = webpage.create();
         objectSpace['page$' + command.id] = page;
-
-        page.onError = msg => console.error(msg);
-        page.onConsoleMessage = msg => console.log(msg);
+        
         page.onClosing = () => delete objectSpace['page$' + command.id];
 
         command.response = {pageId: command.id};

@@ -204,7 +204,7 @@ rules:
   wrap-iife: 2
   wrap-regex: 2
   yield-star-spacing: 2
-  no-console: 0
+  no-console: 2
   yoda:
     - 2
     - never
