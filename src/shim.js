@@ -21,7 +21,7 @@ const commands = {
     createPage: command => {
         let page = webpage.create();
         objectSpace['page$' + command.id] = page;
-        
+
         page.onClosing = () => delete objectSpace['page$' + command.id];
 
         command.response = {pageId: command.id};
@@ -50,6 +50,17 @@ const commands = {
 
         completeCommand(command);
     },
+
+    windowProperty: command => {
+        if (command.params.length === 2) {
+            window[command.params[0]] = command.params[1];
+        } else {
+            command.response = window[command.params[0]];
+        }
+        
+        completeCommand(command);
+    },
+
     noop: command => completeCommand(command)
 };
 

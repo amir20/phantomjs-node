@@ -37,12 +37,13 @@
     "gulp-babel": "^6.1.2",
     "gulp-eslint": "^2.0.0",
     "gulp-jasmine": "^2.2.1",
+    "gulp-watch": "^4.3.5",
     "jasmine-co": "^1.1.0",
     "proxyquire": "^1.7.4"
   },
   "license": "ISC",
   "scripts": {
-    "test": "gulp test",
+    "test": "gulp lint test",
     "prepublish": "gulp build"
   }
 }

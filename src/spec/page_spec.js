@@ -213,5 +213,16 @@ describe('Page', () => {
         expect(content).toEqual('hi, /test2');
         page2.close();
     });
+
+    it('#windowProperty() returns a window value', function*() {
+        let page = yield phantom.createPage();
+
+        yield page.property('onResourceReceived', function (response) {
+            lastResponse = response;
+        });
+        yield page.open('http://localhost:8888/test');
+        let lastResponse = yield phantom.windowProperty('lastResponse');
+        expect(lastResponse.url).toEqual('http://localhost:8888/test');
+    });
 });
 
