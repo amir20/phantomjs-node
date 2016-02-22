@@ -43,4 +43,12 @@ describe('Phantom', () => {
         expect(child_process.spawn).toHaveBeenCalledWith(phantomjs.path, ['--ignore-ssl-errors=yes', pathToShim]);
         pp.exit();
     });
+
+    it('#create("--ignore-ssl-errors=yes") to throw an exception', () => {
+        expect(() => new Phantom('--ignore-ssl-errors=yes')).toThrow();
+    });
+
+    it('#create(true) to throw an exception', () => {
+        expect(() => new Phantom(true)).toThrow();
+    });
 });

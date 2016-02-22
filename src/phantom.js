@@ -26,6 +26,10 @@ export default class Phantom {
      * @param args command args to pass to phantom process
      */
     constructor(args = []) {
+        if (!Array.isArray(args)) {
+            throw new Error('Unexpected type of parameters. Expecting args to be array.');
+        }
+
         logger.debug(`Starting ${phantomjs.path} ${args.concat([__dirname + '/shim.js']).join(' ')}`);
         this.process = spawn(phantomjs.path, args.concat([__dirname + '/shim.js']));
         this.commands = new Map();
@@ -116,7 +120,7 @@ export default class Phantom {
     }
 
     _heartBeat() {
-        if(this.commands.size === 0) {
+        if (this.commands.size === 0) {
             this.execute('phantom', 'noop');
         }
     }
