@@ -67,6 +67,15 @@ export default class Phantom {
     }
 
     /**
+     * Returns a value in the global space of phantom process
+     * @returns {Promise}
+     */
+    windowProperty(){
+        const args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
+        return this.execute('phantom', 'windowProperty', args);
+    }
+
+    /**
      * Returns a new instance of Promise which resolves to a {@link Page}.
      * @returns {Promise.<Page>}
      */

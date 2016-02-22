@@ -214,18 +214,15 @@ describe('Page', () => {
         page2.close();
     });
 
-    fit('#evaluate(function(){...}) executes correctly', function*() {
+    it('#windowProperty() returns a window value', function*() {
         let page = yield phantom.createPage();
 
         yield page.property('onResourceReceived', function (response) {
             lastResponse = response;
         });
-
-        yield page.open('http://amirraminfar.com/');
-        
-        let lastResponse = yield page.eval('lastResponse');
-
-        console.log(lastResponse);
+        yield page.open('http://localhost:8888/test');
+        let lastResponse = yield phantom.windowProperty('lastResponse');
+        expect(lastResponse.url).toEqual('http://localhost:8888/test');
     });
 });
 

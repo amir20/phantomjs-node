@@ -50,13 +50,17 @@ const commands = {
 
         completeCommand(command);
     },
-    
-    eval: command => {
-        command.response = eval(command.params[0]);
 
+    windowProperty: command => {
+        if (command.params.length === 2) {
+            window[command.params[0]] = command.params[1];
+        } else {
+            command.response = window[command.params[0]];
+        }
+        
         completeCommand(command);
     },
-    
+
     noop: command => completeCommand(command)
 };
 
