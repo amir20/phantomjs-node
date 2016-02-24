@@ -68,7 +68,7 @@ Make sure to call `#exit()` on the phantom instance to kill the phantomjs proces
 
 ## `page` object API
 
-  The `page` object that is returned with `createPage` is a proxy that sends all methods to `phantom`. Most method calls should be identical to PhantomJS API. You must remember that each method returns a `Promise`.
+  The `page` object that is returned with `#createPage` is a proxy that sends all methods to `phantom`. Most method calls should be identical to PhantomJS API. You must remember that each method returns a `Promise`.
 
   Page properties can be read using the `#property(key)` method.
 
@@ -94,12 +94,22 @@ page.setting('javascriptEnabled').then(function(value){
 });
 ```
 
-You can set events using `property` because they are property members of `page`.
+You can set events using `#property()` because they are property members of `page`.
 
 ```js
 page.property('onResourceRequested', function(requestData, networkRequest) {
     console.log(requestData.url);
 })
+```
+
+Using `#evaluate()` is similar to passing a function above. For example, to return HTML of an element you can do:
+
+```js
+page.evaluate(function() {
+    return document.getElementById('foo').innerHTML;
+}).then(function(html){
+    console.log(html);
+});
 ```
 
 
