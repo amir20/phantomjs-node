@@ -71,8 +71,7 @@ export default class Phantom {
      * @returns {Promise}
      */
     windowProperty() {
-        const args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
-        return this.execute('phantom', 'windowProperty', args);
+        return this.execute('phantom', 'windowProperty', [].slice.call(arguments));
     }
 
     /**
