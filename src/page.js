@@ -16,7 +16,6 @@ const methods = [
 
 methods.forEach(method => {
     Page.prototype[method] = function () {
-        const args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
-        return this.phantom.execute(this.target, method, args);
+        return this.phantom.execute(this.target, method, [].slice.call(arguments));
     }
 });
