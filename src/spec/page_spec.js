@@ -48,6 +48,17 @@ describe('Page', () => {
         expect(content).toEqual('hi, /foo-bar-xyz'); // should have been changed to /foo-bar-xyz
     });
 
+    it('#property(\'onResourceRequested\', function(){}, params...) passes parameters', function*() {
+        let page = yield phantom.createPage();
+        page.property('onResourceRequested', (requestData, networkRequest, foo, a, b) => {
+            RESULT = [foo, a, b];
+        }, 'foobar', 1, -100);
+        yield page.open('http://localhost:8888/whatever');
+
+        let RESULT = yield phantom.windowProperty('RESULT');
+        expect(RESULT).toEqual(['foobar', 1, -100]);
+    });
+
     it('#property(\'key\', value) sets property', function*() {
         let page = yield phantom.createPage();
         yield page.property('viewportSize', {width: 800, height: 600});

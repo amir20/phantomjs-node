@@ -33,8 +33,19 @@ const commands = {
         }
     },
     property: command => {
-        if (command.params.length === 2) {
-            objectSpace[command.target][command.params[0]] = command.params[1];
+        if (command.params.length > 1) {
+            if (typeof command.params[1] === 'function') {
+                // If the second parameter is a function then we want to proxy and pass parameters too
+                let callback = command.params[1];
+                let args = command.params.slice(2);
+                objectSpace[command.target][command.params[0]] = function () {
+                    let params = [].slice.call(arguments).concat(args);
+                    return callback.apply(objectSpace[command.target], params);
+                };
+            } else {
+                // If the second parameter is not a function then just assign
+                objectSpace[command.target][command.params[0]] = command.params[1];
+            }
         } else {
             command.response = objectSpace[command.target][command.params[0]];
         }
@@ -57,7 +68,6 @@ const commands = {
         } else {
             command.response = window[command.params[0]];
         }
-        
         completeCommand(command);
     },
 
