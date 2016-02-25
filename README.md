@@ -70,6 +70,19 @@ Make sure to call `#exit()` on the phantom instance to kill the phantomjs proces
 
   The `page` object that is returned with `#createPage` is a proxy that sends all methods to `phantom`. Most method calls should be identical to PhantomJS API. You must remember that each method returns a `Promise`.
 
+### `page#setting`
+
+`page.settings` can be accessed via `page.setting(key)` or set via `page.setting(key, value)`. Here is an example to read `javascriptEnabled` property.
+
+```js
+page.setting('javascriptEnabled').then(function(value){
+    expect(value).toEqual(true);
+});
+```
+
+### `page#property`
+
+
   Page properties can be read using the `#property(key)` method.
 
   ```js
@@ -86,21 +99,24 @@ page.property('viewportSize', {width: 800, height: 600}).then(function() {
   ```
 When setting values, using `then()` is optional. But beware that the next method to phantom will block until it is ready to accept a new message.
 
-`page.settings` can be accessed via `page.setting(key)` or set via `page.setting(key, value)`. Here is an example to read `javascriptEnabled` property.
-
-```js
-page.setting('javascriptEnabled').then(function(value){
-    expect(value).toEqual(true);
-});
-```
-
 You can set events using `#property()` because they are property members of `page`.
 
 ```js
 page.property('onResourceRequested', function(requestData, networkRequest) {
     console.log(requestData.url);
-})
+});
 ```
+It is important to understand that the function above executes in the PhantomJS process. PhantomJS does not share any memory or variables with node. So using closures in javascript to share any variables outside of the function is not possible. Variables can be passed to `#property` instead. So for example, let's say you wanted to pass `process.env.DEBUG` to `onResourceRequested` method above. You could this by:
+
+```js
+page.property('onResourceRequested', function(requestData, networkRequest, debug) {
+    if(debug){
+      // do something with it
+    }
+}, process.env.DEBUG);
+```
+
+### `page#evaluate`
 
 Using `#evaluate()` is similar to passing a function above. For example, to return HTML of an element you can do:
 
