@@ -235,5 +235,18 @@ describe('Page', () => {
         let lastResponse = yield phantom.windowProperty('lastResponse');
         expect(lastResponse.url).toEqual('http://localhost:8888/test');
     });
+
+    it('#setContent() works with custom url', function*() {
+        let page = yield phantom.createPage();
+        let html = '<html><head><title>setContent Title</title></head><body></body></html>';
+
+        yield page.setContent(html, 'http://localhost:8888/');
+
+        let response = yield page.evaluate(function () {
+            return [document.title, location.href];
+        });
+
+        expect(response).toEqual(['setContent Title', 'http://localhost:8888/']);
+    });
 });
 
