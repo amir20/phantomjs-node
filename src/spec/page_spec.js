@@ -248,5 +248,21 @@ describe('Page', () => {
 
         expect(response).toEqual(['setContent Title', 'http://localhost:8888/']);
     });
+
+
+    it('#sendEvent() sends an event', function*() {
+        let page = yield phantom.createPage();
+        let html = '<html  onclick="docClicked = true;"><head><title>setContent Title</title></head><body></body></html>';
+
+        yield page.setContent(html, 'http://localhost:8888/');
+        yield page.sendEvent('click', 1, 2);
+
+        let response = yield page.evaluate(function () {
+            return window.docClicked;
+        });
+
+        expect(response).toBe(true);
+    });
+
 });
 

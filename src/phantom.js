@@ -2,6 +2,7 @@ import phantomjs from "phantomjs-prebuilt";
 import {spawn} from "child_process";
 import winston from "winston";
 import os from "os";
+import path from "path";
 import Linerstream from "linerstream";
 import Page from "./page";
 import Command from "./command";
@@ -30,8 +31,9 @@ export default class Phantom {
             throw new Error('Unexpected type of parameters. Expecting args to be array.');
         }
 
-        logger.debug(`Starting ${phantomjs.path} ${args.concat([__dirname + '/shim.js']).join(' ')}`);
-        this.process = spawn(phantomjs.path, args.concat([__dirname + '/shim.js']));
+        let pathToShim = path.normalize(__dirname + '/shim.js');
+        logger.debug(`Starting ${phantomjs.path} ${args.concat([pathToShim]).join(' ')}`);
+        this.process = spawn(phantomjs.path, args.concat([pathToShim]));
         this.commands = new Map();
 
         this.process.stdin.setEncoding('utf-8');
