@@ -27,11 +27,6 @@ const commands = {
         command.response = {pageId: command.id};
         completeCommand(command);
     },
-    exit: command => {
-        if (command.target === 'phantom') {
-            phantom.exit();
-        }
-    },
     property: command => {
         if (command.params.length > 1) {
             if (typeof command.params[1] === 'function') {
