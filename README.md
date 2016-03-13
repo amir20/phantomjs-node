@@ -26,6 +26,8 @@ phantom.create().then(function(ph) {
 });
 ```
 
+See [examples](examples) folder for more ways to use this module.
+
 ## Installation
 
 ```bash
