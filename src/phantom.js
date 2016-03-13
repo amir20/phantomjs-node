@@ -6,6 +6,7 @@ import path from "path";
 import Linerstream from "linerstream";
 import Page from "./page";
 import Command from "./command";
+import OutObject from "./out_object"
 
 const logger = new winston.Logger({
     transports: [
@@ -58,7 +59,7 @@ export default class Phantom {
         });
 
         this.process.stderr.on('data', data => logger.error(data.toString('utf8')));
-        this.process.on('exit', code => logger.debug(`Child exited with code [${code}]`));
+        this.process.on('exit', code => logger.debug(`Child exited with code {${code}}`));
         this.process.on('error', error => {
             logger.error(`Could not spawn [${phantomjs.path}] executable. Please make sure phantomjs is installed correctly.`);
             logger.error(error);
@@ -84,6 +85,10 @@ export default class Phantom {
         return this.execute('phantom', 'createPage').then(response => new Page(this, response.pageId));
     }
 
+    createOutObject() {
+        return new OutObject(this);
+    }
+
     /**
      * Executes a command object
      * @param command the command to run
@@ -99,7 +104,15 @@ export default class Phantom {
 
         this.commands.set(command.id, command);
 
-        let json = JSON.stringify(command, (key, val) => typeof val === 'function' ? val.toString() : val);
+        let json = JSON.stringify(command, (key, val) => {
+            let r;
+            if (key[0] === '_') {
+                r = undefined
+            } else {
+                r = typeof val === 'function' ? val.toString() : val
+            }
+            return r;
+        });
         logger.debug('Sending: %s', json);
 
         this.process.stdin.write(
