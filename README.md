@@ -116,6 +116,22 @@ page.property('onResourceRequested', function(requestData, networkRequest, debug
 }, process.env.DEBUG);
 ```
 
+You can return data to NodeJS by using `#createOutObject()`. This is a special object that let's you write data in PhantomJS and read it in NodeJS. Using the example above, data can be read like:
+
+```js
+var outObj = phantom.createOutObject();
+page.property('onResourceRequested', function(requestData, networkRequest, debug, out) {
+    if(debug){      
+      out.url = requestData.url;
+    }
+}, process.env.DEBUG, outObj);
+
+outObj.property('url').then(function(url){
+   console.log(url);
+});
+
+```
+
 ### `page#evaluate`
 
 Using `#evaluate()` is similar to passing a function above. For example, to return HTML of an element you can do:

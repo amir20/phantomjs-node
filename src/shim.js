@@ -33,6 +33,11 @@ const commands = {
                 // If the second parameter is a function then we want to proxy and pass parameters too
                 let callback = command.params[1];
                 let args = command.params.slice(2);
+                args.forEach(param => {
+                    if (param.target !== undefined) {
+                        objectSpace[param.target] = param;
+                    }
+                });
                 objectSpace[command.target][command.params[0]] = function () {
                     let params = [].slice.call(arguments).concat(args);
                     return callback.apply(objectSpace[command.target], params);
@@ -82,7 +87,6 @@ function read() {
                 var endBody = value.lastIndexOf('}');
                 var startArgs = value.indexOf('(') + 1;
                 var endArgs = value.indexOf(')');
-
                 return new Function(value.substring(startArgs, endArgs), value.substring(startBody, endBody));
             }
             return value;
@@ -114,7 +118,7 @@ function executeCommand(command) {
             completeCommand(command);
         } else {
             let params = command.params.slice(); // copy params
-            params.push((status) => {
+            params.push(status => {
                 command.response = status;
                 completeCommand(command);
             });
