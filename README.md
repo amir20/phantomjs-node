@@ -108,7 +108,7 @@ page.property('onResourceRequested', function(requestData, networkRequest) {
     console.log(requestData.url);
 });
 ```
-It is important to understand that the function above executes in the PhantomJS process. PhantomJS does not share any memory or variables with node. So using closures in javascript to share any variables outside of the function is not possible. Variables can be passed to `#property` instead. So for example, let's say you wanted to pass `process.env.DEBUG` to `onResourceRequested` method above. You could this by:
+It is important to understand that the function above executes in the PhantomJS process. PhantomJS does not share any memory or variables with node. So using closures in javascript to share any variables outside of the function is not possible. Variables can be passed to `#property` instead. So for example, let's say you wanted to pass `process.env.DEBUG` to `onResourceRequested` method above. You could do this by:
 
 ```js
 page.property('onResourceRequested', function(requestData, networkRequest, debug) {
@@ -118,7 +118,7 @@ page.property('onResourceRequested', function(requestData, networkRequest, debug
 }, process.env.DEBUG);
 ```
 
-You can return data to NodeJS by using `#createOutObject()`. This is a special object that let's you write data in PhantomJS and read it in NodeJS. Using the example above, data can be read like:
+You can return data to NodeJS by using `#createOutObject()`. This is a special object that let's you write data in PhantomJS and read it in NodeJS. Using the example above, data can be read by doing:
 
 ```js
 var outObj = phantom.createOutObject();

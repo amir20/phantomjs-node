@@ -2,8 +2,6 @@ import {
     create
 } from "phantom";
 
-
-
 (async function() {
     const phantom = await create(["--ignore-ssl-errors=true", "--local-to-remote-url-access=true"]);
     const page = await phantom.createPage();
@@ -19,4 +17,4 @@ import {
 }());
 
 // npm install babel-cli
-// babel-node async.js 
+// babel-node async.js
