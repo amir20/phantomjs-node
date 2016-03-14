@@ -1,13 +1,13 @@
 sudo: false
 language: node_js
 node_js:
-  - stable
-  - '5.5'
-  - '5.0'
+- stable
+- '5.5'
+- '5.0'
 deploy:
   provider: npm
   email: findamir@gmail.com
   api_key:
-    secure: Xj6pQaVzUL5gmQz3TSPzqNb5kyXw0hG5pxp1vinwKgsnJFaWYFZW2qkJHdkBzFPoLdduTzE9L66OnBQAfivMD8Lw7KLBiaW8VBDXEVnJAGuCTZgN8OkCJpgi1hkhHJo+S/4AMEmlHHZcm7491gPWQbvEsJn95pIITr9f+5wL0Wc=
+    secure: L7fEIv/FiVl+cHY3qOdQihEIyYYR+NeyRCgqCOliigmznTrys7x7sAhSl9/+OgtI1LNteU7KM9hblM1r+butPnrJyq96vAMdG2eEbpgCq19MT0iYz3dBI1Az/4MZEl0KONRNGxm6p23lyMAD/ml/Iy1wfCRWbVphlEsaOTsi0tk=
   on:
     tags: true
