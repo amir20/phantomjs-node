@@ -1,4 +1,5 @@
-let _ph, _page;
+var phantom = require("phantom");
+var _ph, _page, _outObj;
 
 phantom.create().then(ph => {
     _ph = ph;

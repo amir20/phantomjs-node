@@ -32,7 +32,7 @@ gulp.task('test', ['build:test'], () => {
 });
 
 gulp.task('watch', () => {
-    gulp.watch('src/**/*.js', ['test']);
+    gulp.watch('src/**/*.js', ['build']);
 });
 
 gulp.task('default', ['lint', 'test']);
