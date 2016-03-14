@@ -21,7 +21,7 @@
   ],
   "main": "lib/index.js",
   "engines": {
-    "node": ">=v0.8.0"
+    "node": ">=0.12"
   },
   "dependencies": {
     "linerstream": "^0.1.4",
