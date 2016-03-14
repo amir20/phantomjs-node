@@ -1,8 +1,7 @@
 var cluster = require("cluster");
 
 if (cluster.isMaster) {
-    // var cpuCount = require('os').cpus().length;
-    var cpuCount = 1;
+    var cpuCount = require('os').cpus().length;
 
     for (var i = 0; i < cpuCount; i++) {
         console.log('Forking process #' + (i + 1));
@@ -34,3 +33,6 @@ if (cluster.isMaster) {
         });
     }).listen(3000);
 }
+
+// npm install express
+// node cluster.js
