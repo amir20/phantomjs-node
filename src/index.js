@@ -5,6 +5,5 @@ import Phantom from "./phantom";
  * @param args
  * @returns {Promise}
  */
-module.exports.create = (args) => {
-    return new Promise(resolve => resolve(new Phantom(args)));
-};
+module.exports.create = args => new Promise(resolve => resolve(new Phantom(args)));
+
