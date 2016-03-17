@@ -91,6 +91,9 @@ function read() {
             return value;
         });
 
+        // Call here to look for transform key
+        transform(command.params);
+
         try {
             executeCommand(command);
         } catch (e) {
@@ -98,6 +101,23 @@ function read() {
             completeCommand(command);
         }
 
+    }
+}
+
+/**
+ * Looks for transform key and uses objectSpace to call objects
+ * @param object
+ */
+function transform(object) {
+    for (let key in object) {
+        if (object.hasOwnProperty(key)) {
+            let child = object[key];
+            if (child.transform === true) {
+                object[key] = objectSpace[child.parent][child.method](child.target);
+            } else if (typeof child === 'object') {
+                transform(child);
+            }
+        }
     }
 }
 

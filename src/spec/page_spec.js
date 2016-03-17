@@ -66,6 +66,34 @@ describe('Page', () => {
         expect(value).toEqual({width: 800, height: 600});
     });
 
+    it('#property(\'paperSize\', value) sets value properly with phantom.paperSize', function*() {
+        let page = yield phantom.createPage();
+        page.property('paperSize', {
+            width: '8.5in',
+            height: '11in',
+            header: {
+                height: "1cm",
+                contents: phantom.callback(function (pageNum, numPages) {
+                    return "<h1>Header <span style='float:right'>" + pageNum + " / " + numPages + "</span></h1>";
+                })
+            },
+            footer: {
+                height: "1cm",
+                contents: phantom.callback(function (pageNum, numPages) {
+                    return "<h1>Footer <span style='float:right'>" + pageNum + " / " + numPages + "</span></h1>";
+                })
+            }
+        });
+
+        yield page.open('http://localhost:8888/test');
+        let file = 'test.pdf';
+        yield page.render(file);
+        expect(function () {
+            fs.accessSync(file, fs.F_OK)
+        }).not.toThrow();
+        fs.unlinkSync(file);
+    });
+
     it('#setting(\'javascriptEnabled\') returns true', function*() {
         let page = yield phantom.createPage();
         let value = yield page.setting('javascriptEnabled');
