@@ -6,7 +6,7 @@ import path from "path";
 import Linerstream from "linerstream";
 import Page from "./page";
 import Command from "./command";
-import OutObject from "./out_object"
+import OutObject from "./out_object";
 
 const logger = new winston.Logger({
     transports: [
@@ -85,8 +85,21 @@ export default class Phantom {
         return this.execute('phantom', 'createPage').then(response => new Page(this, response.pageId));
     }
 
+
+    /**
+     * Creates a special object that can be used for returning data back from PhantomJS
+     * @returns {OutObject}
+     */
     createOutObject() {
         return new OutObject(this);
+    }
+
+    /**
+     * Used for creating a callback in phantomjs for content header and footer
+     * @param obj
+     */
+    callback(obj) {
+        return {transform: true, target: obj, method: 'callback', parent: 'phantom'};
     }
 
     /**
