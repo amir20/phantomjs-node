@@ -12,18 +12,30 @@ phantom - Fast NodeJS API for PhantomJS
 ```js
 var phantom = require('phantom');
 
-phantom.create().then(function(ph) {
-  ph.createPage().then(function(page) {
-    page.open('https://stackoverflow.com/').then(function(status) {
-      console.log(status);
-      page.property('content').then(function(content) {
+var sitepage = null;
+var phInstance = null;
+phantom.create()
+    .then((instance) => {
+        phInstance = instance;
+        return instance.createPage();
+    })
+    .then((page) => {
+        sitepage = page;
+        return page.open('https://stackoverflow.com/');
+    })
+    .then((status) => {
+        console.log(status);
+        return sitepage.property('content');
+    })
+    .then((content) => {
         console.log(content);
-        page.close();
-        ph.exit();
-      });
+        sitepage.close();
+        phInstance.exit();
+    })
+    .catch((error) => {
+        console.log(error);
+        phInstance.exit(); 
     });
-  });
-});
 ```
 
 See [examples](examples) folder for more ways to use this module.
