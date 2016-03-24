@@ -123,6 +123,19 @@ describe('Page', () => {
         });
         expect(response).toEqual('test');
     });
+    
+    it('#evaluateJavaScript(\'function(){return document.title}\') executes correctly', function*() {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/test.html');
+        let response = yield page.evaluate('function () { return document.title }');
+        expect(response).toEqual('Page Title');
+    });
+
+    it('#evaluateJavaScript(\'function(){...}\') executes correctly', function*() {
+        let page = yield phantom.createPage();
+        let response = yield page.evaluate('function () { return \'test\' }');
+        expect(response).toEqual('test');
+    });
 
     it('#injectJs() properly injects a js file', function*() {
         let page = yield phantom.createPage();
