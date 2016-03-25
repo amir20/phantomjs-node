@@ -64,7 +64,7 @@ To create a new instance of `phantom` use `phantom.create()` to return a `Promis
 
 ```js
 var phantom = require('phantom');
-phantom.create(['--ignore-ssl-errors=yes', ' --load-images=no']).then(...)
+phantom.create(['--ignore-ssl-errors=yes', '--load-images=no']).then(...)
 ```
 To create a new `page`, you have to call `createPage()`:
 
