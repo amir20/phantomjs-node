@@ -31,7 +31,6 @@
   "devDependencies": {
     "babel-polyfill": "^6.5.0",
     "babel-preset-es2015": "^6.5.0",
-    "babel-register": "^6.7.2",
     "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",

@@ -1,6 +1,5 @@
 import gulp from "gulp";
 import babel from "gulp-babel";
-import "babel-register";
 import jasmine from "gulp-jasmine";
 import eslint from "gulp-eslint";
 import del from "del";
