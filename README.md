@@ -158,6 +158,16 @@ page.evaluate(function() {
 });
 ```
 
+### `page#evaluateJavaScript`
+
+Evaluate a function contained in a string. It is similar to `#evaluate()`, but the function can't take any arguments. This example does the same thing as the example of `#evaluate()`:
+
+```js
+page.evaluateJavaScript('function() { return document.getElementById(\'foo\').innerHTML; }').then(function(html){
+    console.log(html);
+});
+```
+
 
 ## Tests
 
