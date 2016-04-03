@@ -133,7 +133,7 @@ page.property('onResourceRequested', function(requestData, networkRequest, debug
 You can return data to NodeJS by using `#createOutObject()`. This is a special object that let's you write data in PhantomJS and read it in NodeJS. Using the example above, data can be read by doing:
 
 ```js
-var outObj = phantom.createOutObject();
+var outObj = phInstance.createOutObject();
 page.property('onResourceRequested', function(requestData, networkRequest, debug, out) {
     if(debug){      
       out.url = requestData.url;
