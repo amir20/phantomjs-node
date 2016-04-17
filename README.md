@@ -15,26 +15,26 @@ var phantom = require('phantom');
 var sitepage = null;
 var phInstance = null;
 phantom.create()
-    .then((instance) => {
+    .then(instance => {
         phInstance = instance;
         return instance.createPage();
     })
-    .then((page) => {
+    .then(page => {
         sitepage = page;
         return page.open('https://stackoverflow.com/');
     })
-    .then((status) => {
+    .then(status => {
         console.log(status);
         return sitepage.property('content');
     })
-    .then((content) => {
+    .then(content => {
         console.log(content);
         sitepage.close();
         phInstance.exit();
     })
-    .catch((error) => {
+    .catch(error => {
         console.log(error);
-        phInstance.exit(); 
+        phInstance.exit();
     });
 ```
 
@@ -134,14 +134,14 @@ You can return data to NodeJS by using `#createOutObject()`. This is a special o
 
 ```js
 var outObj = phInstance.createOutObject();
-page.property('onResourceRequested', function(requestData, networkRequest, debug, out) {
-    if(debug){      
-      out.url = requestData.url;
-    }
-}, process.env.DEBUG, outObj);
+outObj.urls = [];
+page.property('onResourceRequested', function(requestData, networkRequest, out) {
+    outObj.urls.push(requestData.url);
+}, outObj);
 
-outObj.property('url').then(function(url){
-   console.log(url);
+// after call to page.open()
+outObj.property('urls').then(function(urls){
+   console.log(urls);
 });
 
 ```
