@@ -136,7 +136,7 @@ You can return data to NodeJS by using `#createOutObject()`. This is a special o
 var outObj = phInstance.createOutObject();
 outObj.urls = [];
 page.property('onResourceRequested', function(requestData, networkRequest, out) {
-    outObj.urls.push(requestData.url);
+    out.urls.push(requestData.url);
 }, outObj);
 
 // after call to page.open()
