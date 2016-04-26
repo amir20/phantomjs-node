@@ -2,6 +2,8 @@ sudo: false
 language: node_js
 node_js:
 - stable
+- 6.0.0
+- 5.10.1
 - '5.5'
 - '5.0'
 deploy:
