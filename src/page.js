@@ -8,13 +8,21 @@ export default class Page {
     }
 
     on(event, runOnPhantom, callback) {
+        let mustRunOnPhantom;
+        let listener;
+        let args;
+
         if (typeof runOnPhantom === 'function') {
-            let args = [].slice.call(arguments, 2);
-            return this.phantom.on(event, this.target, false, runOnPhantom.bind(this), args);
+            args = [].slice.call(arguments, 2);
+            mustRunOnPhantom = false;
+            listener = runOnPhantom.bind(this);
         } else {
-            let args = [].slice.call(arguments, 3);
-            return this.phantom.on(event, this.target, runOnPhantom, runOnPhantom ? callback : callback.bind(this), args);
+            args = [].slice.call(arguments, 3);
+            mustRunOnPhantom = runOnPhantom;
+            listener = mustRunOnPhantom ? callback : callback.bind(this)
         }
+
+        return this.phantom.on(event, this.target, mustRunOnPhantom, listener, args);
     }
 
     off(event) {

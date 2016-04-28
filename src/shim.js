@@ -290,11 +290,7 @@ function triggerEvent(target, eventName) {
 function getOutsideListener(eventName, targetId) {
     return function () {
         var args = [].slice.call(arguments, 0);
-        system.stdout.writeLine('<event>' + JSON.stringify({
-            target: targetId,
-            type: eventName,
-            args
-        }));
+        system.stdout.writeLine('<event>' + JSON.stringify({target: targetId, type: eventName, args}));
     };
 }
 

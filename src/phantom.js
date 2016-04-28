@@ -55,7 +55,7 @@ export default class Phantom {
                     deferred.reject(new Error(command.error));
                 }
                 this.commands.delete(command.id);
-            } else if (message.indexOf('<event>') !== -1) {
+            } else if (message.indexOf('<event>') === 0) {
                 let json = message.substr(7);
                 logger.debug('Parsing: %s', json);
                 const event = JSON.parse(json);

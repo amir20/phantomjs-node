@@ -370,28 +370,27 @@ describe('Page', () => {
 
         yield page.on('onLoadFinished', true, function () {
             runnedHere = true;
-            this.runnedInPhantomRuntime = true;
+            runnedInPhantomRuntime = true;
         });
 
         yield page.open('http://localhost:8888/test');
 
-        let runnedOnPhantomRuntime = yield page.property('runnedInPhantomRuntime');
+        let runnedInPhantomRuntime = yield phantom.windowProperty('runnedInPhantomRuntime');
 
         expect(runnedHere).toBe(false);
-        expect(runnedOnPhantomRuntime).toBe(true);
+        expect(runnedInPhantomRuntime).toBe(true);
     });
 
     it('#on() can pass parameters to functions to be executed in phantom runtime', function* () {
-        //failing
         let page = yield phantom.createPage();
 
         yield page.on('onResourceReceived', true, function (status, param) {
-            this.parameterProvided = param;
+            parameterProvided = param;
         }, 'param');
 
         yield page.open('http://localhost:8888/test');
 
-        let parameterProvided = yield page.property('parameterProvided');
+        let parameterProvided = yield phantom.windowProperty('parameterProvided');
 
         expect(parameterProvided).toBe('param');
     });
@@ -400,12 +399,12 @@ describe('Page', () => {
         let page = yield phantom.createPage();
 
         yield page.on('onResourceReceived', true, function () {
-            this.runnedInPhantomRuntime = true;
+            runnedInPhantomRuntime = true;
         });
 
-        let runnedOnPhantomRuntime = yield page.property('runnedInPhantomRuntime');
+        let runnedInPhantomRuntime = yield phantom.windowProperty('runnedInPhantomRuntime');
 
-        expect(runnedOnPhantomRuntime).toBeFalsy();
+        expect(runnedInPhantomRuntime).toBeFalsy();
     });
 
     it('#on() can register at the same event to run locally or in phantom runtime', function* () {
@@ -413,7 +412,7 @@ describe('Page', () => {
         let runnedHere = false;
 
         yield page.on('onResourceReceived', true, function () {
-            this.runnedInPhantomRuntime = true;
+            runnedInPhantomRuntime = true;
         });
 
         yield page.on('onResourceReceived', function () {
@@ -422,10 +421,10 @@ describe('Page', () => {
 
         yield page.open('http://localhost:8888/test');
 
-        let runnedOnPhantomRuntime = yield page.property('runnedInPhantomRuntime');
+        let runnedInPhantomRuntime = yield phantom.windowProperty('runnedInPhantomRuntime');
 
         expect(runnedHere).toBe(true);
-        expect(runnedOnPhantomRuntime).toBe(true);
+        expect(runnedInPhantomRuntime).toBe(true);
     });
 
     it('#off() can disable an event whose listener is going to run locally', function*() {
@@ -450,16 +449,16 @@ describe('Page', () => {
         let page = yield phantom.createPage();
 
         yield page.on('onResourceReceived', true, function () {
-            this.runnedInPhantomRuntime = true;
+            runnedInPhantomRuntime = true;
         });
 
         yield page.off('onResourceReceived');
 
         yield page.open('http://localhost:8888/test');
 
-        let runnedOnPhantomRuntime = yield page.property('runnedInPhantomRuntime');
+        let runnedInPhantomRuntime = yield phantom.windowProperty('runnedInPhantomRuntime');
 
-        expect(runnedOnPhantomRuntime).toBeFalsy();
+        expect(runnedInPhantomRuntime).toBeFalsy();
 
     });
 
