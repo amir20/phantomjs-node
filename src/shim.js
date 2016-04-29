@@ -87,6 +87,34 @@ const commands = {
         completeCommand(command);
     },
 
+    addEvent: command => {
+        let type = getTargetType(command.target);
+
+        if (isEventSupported(type, command.params[0].type)) {
+            let listeners = getEventListeners(command.target, command.params[0].type);
+
+            if (typeof command.params[0].event === 'function') {
+                listeners.otherListeners.push(function () {
+                    let params = [].slice.call(arguments).concat(command.params[0].args);
+                    return command.params[0].event.apply(objectSpace[command.target], params);
+                });
+            }
+        }
+
+        completeCommand(command);
+    },
+
+    removeEvent: function (command) {
+        let type = getTargetType(command.target);
+
+        if (isEventSupported(type, command.params[0].type)) {
+            events[command.target][command.params[0].type] = null;
+            objectSpace[command.target][command.params[0].type] = null;
+        }
+
+        completeCommand(command);
+    },
+
     noop: command => completeCommand(command)
 };
 
@@ -161,13 +189,7 @@ function executeCommand(command) {
         const target = objectSpace[command.target];
         const method = target[command.name];
 
-        if (command.name === 'addEvent') {
-            addEvent(command.target, command.params[0].type, command.params[0].event, command.params[0].args);
-            completeCommand(command);
-        } else if (command.name === 'removeEvent') {
-            removeEvent(command.target, command.params[0].type);
-            completeCommand(command);
-        } else if (haveCallbacks.indexOf(command.name) === -1) {
+        if (haveCallbacks.indexOf(command.name) === -1) {
             command.response = method.apply(target, command.params);
             completeCommand(command);
         } else {
@@ -180,44 +202,6 @@ function executeCommand(command) {
         }
     } else {
         throw new Error(`Cannot find ${command.name} method to execute on ${command.target} object.`);
-    }
-}
-
-/**
- * Adds an event to the target
- *
- * @param target the id of the object to listen
- * @param eventName the name off the event
- * @param callback the callback of the event
- * @param args the additional arguments for the callback
- */
-function addEvent(target, eventName, callback, args) {
-    let type = getTargetType(target);
-
-    if (isEventSupported(type, eventName)) {
-        let listeners = getEventListeners(target, eventName);
-
-        if (typeof callback === 'function') {
-            listeners.otherListeners.push(function () {
-                let params = [].slice.call(arguments).concat(args);
-                return callback.apply(objectSpace[target], params);
-            });
-        }
-    }
-}
-
-/**
- * Removes all the listeners for an event in a target
- *
- * @param target the id of the target
- * @param eventName the name of the event
- */
-function removeEvent(target, eventName) {
-    let type = getTargetType(target);
-
-    if (isEventSupported(type, eventName)) {
-        events[target][eventName] = null;
-        objectSpace[target][eventName] = null;
     }
 }
 
