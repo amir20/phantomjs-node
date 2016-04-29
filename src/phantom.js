@@ -164,7 +164,7 @@ export default class Phantom {
      *
      * @param event the event type
      * @param target target object to execute against
-     * @param runOnPhantom would the callback run in phanthomjs or not
+     * @param runOnPhantom would the callback run in phantomjs or not
      * @param callback the event callback
      * @param args an array of args to pass to the callback
      */

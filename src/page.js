@@ -7,24 +7,39 @@ export default class Page {
         this.phantom = phantom;
     }
 
-    on(event, runOnPhantom, callback) {
+    /**
+     * Add an event listener to the page on phantom
+     *
+     * @param event The name of the event (Ej. onResourceLoaded)
+     * @param [runOnPhantom=false] Indicate if the event must run on the phantom runtime or not
+     * @param listener The event listener. When runOnPhantom=true, this listener code would be run on phantom, and thus,
+     * all the closure info wont work
+     * @returns {*}
+     */
+    on(event, runOnPhantom, listener) {
         let mustRunOnPhantom;
-        let listener;
+        let callback;
         let args;
 
         if (typeof runOnPhantom === 'function') {
             args = [].slice.call(arguments, 2);
             mustRunOnPhantom = false;
-            listener = runOnPhantom.bind(this);
+            callback = runOnPhantom.bind(this);
         } else {
             args = [].slice.call(arguments, 3);
             mustRunOnPhantom = runOnPhantom;
-            listener = mustRunOnPhantom ? callback : callback.bind(this)
+            callback = mustRunOnPhantom ? listener : listener.bind(this)
         }
 
-        return this.phantom.on(event, this.target, mustRunOnPhantom, listener, args);
+        return this.phantom.on(event, this.target, mustRunOnPhantom, callback, args);
     }
 
+    /**
+     * Removes an event listener
+     *
+     * @param event the event name
+     * @returns {*}
+     */
     off(event) {
         return this.phantom.off(event, this.target);
     }
