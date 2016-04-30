@@ -129,6 +129,8 @@ page.property('onResourceRequested', function(requestData, networkRequest, debug
     }
 }, process.env.DEBUG);
 ```
+Even if it is possible to set the events using this way, we recommend you use `#on()` for events (see below).
+
 
 You can return data to NodeJS by using `#createOutObject()`. This is a special object that let's you write data in PhantomJS and read it in NodeJS. Using the example above, data can be read by doing:
 
@@ -145,6 +147,42 @@ outObj.property('urls').then(function(urls){
 });
 
 ```
+
+### `page#on`
+
+By using `on(event, [runOnPhantom=false],listener, args*)`, you can listen to the events the events the page emits.
+
+```js
+var urls = [];
+
+page.on('onResourceRequested', function (requestData, networkRequest) {
+    urls.push(requestData.url); // this would push the url into the urls array above
+    networkRequest.abort(); // This will fail, because the params are a serialized version of what was provided
+});
+
+page.load('http://google.com');
+```
+As you see, using on you have access to the closure variables and all the node goodness using this function ans in contrast of setting and event with property, you can set as many events as you want.
+
+If you want to register a listener to run in phantomjs runtime (and thus, be able to cancel the request lets say), you can make it by passing the optional param `runOnPhantom` as `true`;
+
+```js
+var urls = [];
+
+page.on('onResourceRequested', true, function (requestData, networkRequest) {
+    urls.push(requestData.url); // now this wont work, because this function would exercute in phantom runtime and thus wont have acces to the closure.
+    networkRequest.abort(); // This would work, because you are accessing to the non serialized networkRequest.
+});
+
+page.load('http://google.com');
+```
+The same as in property, you can pass additional params to the function in the same way, and even use the object created by `#createOutObject()`.
+
+You cannot use `#property()` and `#on()` at the same time, because it would conflict. Property just sets the function in phantomjs, while `#on()` manages the event in a different way.
+
+### `age#off`
+
+`#of(event)` is usefull to remove all the event listeners set by `#on()` for ans specific event.
 
 ### `page#evaluate`
 

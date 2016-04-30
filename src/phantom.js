@@ -7,6 +7,7 @@ import Linerstream from "linerstream";
 import Page from "./page";
 import Command from "./command";
 import OutObject from "./out_object";
+import EventEmitter from 'events';
 
 const logger = new winston.Logger({
     transports: [
@@ -36,6 +37,7 @@ export default class Phantom {
         logger.debug(`Starting ${phantomjs.path} ${args.concat([pathToShim]).join(' ')}`);
         this.process = spawn(phantomjs.path, args.concat([pathToShim]));
         this.commands = new Map();
+        this.events = new Map();
 
         this.process.stdin.setEncoding('utf-8');
 
@@ -53,10 +55,20 @@ export default class Phantom {
                     deferred.reject(new Error(command.error));
                 }
                 this.commands.delete(command.id);
+            } else if (message.indexOf('<event>') === 0) {
+                let json = message.substr(7);
+                logger.debug('Parsing: %s', json);
+                const event = JSON.parse(json);
+
+                var emitter = this.events[event.target];
+                if (emitter) {
+                    emitter.emit.apply(emitter, [event.type].concat(event.args));
+                }
             } else {
                 logger.info(message);
             }
         });
+
 
         this.process.stderr.on('data', data => logger.error(data.toString('utf8')));
         this.process.on('exit', code => logger.debug(`Child exited with code {${code}}`));
@@ -145,6 +157,51 @@ export default class Phantom {
      */
     execute(target, name, args = []) {
         return this.executeCommand(new Command(null, target, name, args));
+    }
+
+    /**
+     * Adds an event listener to a target object (currently only works on pages)
+     *
+     * @param event the event type
+     * @param target target object to execute against
+     * @param runOnPhantom would the callback run in phantomjs or not
+     * @param callback the event callback
+     * @param args an array of args to pass to the callback
+     */
+    on(event, target, runOnPhantom, callback, args = []) {
+        var eventDescriptor = {type: event};
+
+        if (runOnPhantom) {
+            eventDescriptor.event = callback;
+            eventDescriptor.args = args;
+        } else {
+            var emitter = this.getEmitterForTarget(target);
+            emitter.on(event, function () {
+                let params = [].slice.call(arguments).concat(args);
+                return callback.apply(null, params);
+            });
+        }
+        return this.execute(target, 'addEvent', [eventDescriptor]);
+    }
+
+    /**
+     * Removes an event from a target object
+     *
+     * @param event
+     * @param target
+     */
+    off(event, target) {
+        var emitter = this.getEmitterForTarget(target);
+        emitter.removeAllListeners(event);
+        return this.execute(target, 'removeEvent', [{type: event}]);
+    }
+
+    getEmitterForTarget(target) {
+        if (!this.events[target]) {
+            this.events[target] = new EventEmitter();
+        }
+
+        return this.events[target];
     }
 
     /**
