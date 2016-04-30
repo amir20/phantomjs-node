@@ -113,7 +113,7 @@ page.property('viewportSize', {width: 800, height: 600}).then(function() {
   ```
 When setting values, using `then()` is optional. But beware that the next method to phantom will block until it is ready to accept a new message.
 
-You can set events using `#property()` because they are property members of `page.
+You can set events using `#property()` because they are property members of `page`.
 
 ```js
 page.property('onResourceRequested', function(requestData, networkRequest) {
