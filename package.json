@@ -3,7 +3,7 @@
   "name": "phantom",
   "description": "PhantomJS integration module for NodeJS",
   "homepage": "https://github.com/amir20/phantomjs-node",
-  "version": "2.0.10",
+  "version": "2.1.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/amir20/phantomjs-node.git"
