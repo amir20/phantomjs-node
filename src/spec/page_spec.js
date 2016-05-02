@@ -441,7 +441,6 @@ describe('Page', () => {
         yield page.open('http://localhost:8888/test');
 
         expect(runnedHere).toBe(false);
-
     });
 
     it('#off() can disable an event whose listener is going to run on the phantom process', function*() {
@@ -459,7 +458,40 @@ describe('Page', () => {
         let runnedInPhantomRuntime = yield phantom.windowProperty('runnedInPhantomRuntime');
 
         expect(runnedInPhantomRuntime).toBeFalsy();
+    });
 
+    it('#switchToFrame(framePosition) will switch to frame of framePosition', function*() {
+        let page = yield phantom.createPage();
+        let html = '<html><head><title>Iframe Test</title></head><body><iframe id="testframe" src="http://localhost:8888/test.html"></iframe></body></html>';
+
+        yield page.setContent(html, 'http://localhost:8888/');
+        yield page.switchToFrame(0);
+
+        let inIframe = yield page.evaluate(function () {
+            // are we in the iframe?
+            return window.frameElement && window.frameElement.id === 'testframe';
+        });
+
+        // confirm we are in an iframe
+        expect(inIframe).toBe(true);
+    });
+
+    it('#switchToMainFrame() will switch back to the main frame', function*() {
+        let page = yield phantom.createPage();
+        let html = '<html><head><title>Iframe Test</title></head><body><iframe id="testframe" src="http://localhost:8888/test.html"></iframe></body></html>';
+
+        yield page.setContent(html, 'http://localhost:8888/');
+        // need to switch to child frame here to test switchToMainFrame() works
+        yield page.switchToFrame(0);
+        yield page.switchToMainFrame();
+
+        let inMainFrame = yield page.evaluate(function () {
+            // are we in the main frame?
+            return !window.frameElement;
+        });
+        
+        // confirm we are in the main frame
+        expect(inMainFrame).toBe(true);
     });
 
 });

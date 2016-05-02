@@ -206,6 +206,26 @@ page.evaluateJavaScript('function() { return document.getElementById(\'foo\').in
 });
 ```
 
+### `page#switchToFrame`
+
+Switch to the frame specified by a frame name or a frame position:
+
+```js
+page.switchToFrame(framePositionOrName).then(function() {
+    // now the context of `page` will be the iframe if frame name or position exists
+});
+```
+
+### `page#switchToMainFrame`
+
+Switch to the main frame of the page:
+
+```js
+page.switchToMainFrame().then(function() {
+    // now the context of `page` will the main frame
+});
+```
+
 
 ## Tests
 
