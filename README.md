@@ -248,7 +248,7 @@ $ npm test
 
 ## License
 
-  [ISC](LICENSE)
+  [ISC](LICENSE.md)
 
 [npm-image]: https://img.shields.io/npm/v/phantom.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/phantom
