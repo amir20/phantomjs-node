@@ -180,7 +180,7 @@ The same as in property, you can pass additional params to the function in the s
 
 You cannot use `#property()` and `#on()` at the same time, because it would conflict. Property just sets the function in phantomjs, while `#on()` manages the event in a different way.
 
-### `age#off`
+### `page#off`
 
 `#of(event)` is usefull to remove all the event listeners set by `#on()` for ans specific event.
 
