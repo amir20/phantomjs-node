@@ -6,6 +6,7 @@ phantom - Fast NodeJS API for PhantomJS
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Linux Build][travis-image]][travis-url]
 [![Dependencies][david-image]][david-url]
+[![slack][slack-image]][slack-url]
 
 
 ## Super easy to use
@@ -258,3 +259,5 @@ $ npm test
 [travis-url]: https://travis-ci.org/amir20/phantomjs-node
 [david-image]: https://david-dm.org/amir20/phantomjs-node.svg?style=flat-square
 [david-url]: https://david-dm.org/amir20/phantomjs-node
+[slack-url]: https://phantomjs-node.herokuapp.com
+[slack-image]: https://phantomjs-node.herokuapp.com/badge.svg
