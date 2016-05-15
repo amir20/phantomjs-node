@@ -10,8 +10,6 @@ const objectSpace = {
 
 const events = {};
 
-
-
 /**
  * All methods that have a callback in their signature
  * @type {string[]}
