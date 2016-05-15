@@ -10,23 +10,7 @@ const objectSpace = {
 
 const events = {};
 
-const eventsForEntities = {
-    page: [
-        'onInitialized',
-        'onLoadStarted',
-        'onLoadFinished',
-        'onUrlChanged',
-        'onNavigationRequested',
-        'onRepaintRequested',
-        'onResourceRequested',
-        'onResourceReceived',
-        'onResourceError',
-        'onResourceTimeout',
-        'onAlert',
-        'onConsoleMessage',
-        'onClosing'
-    ]
-};
+
 
 /**
  * All methods that have a callback in their signature
@@ -213,7 +197,7 @@ function executeCommand(command) {
  * @returns {boolean}
  */
 function isEventSupported(type, eventName) {
-    return eventsForEntities[type] && eventsForEntities[type].indexOf(eventName) !== -1;
+    return type === 'page' && eventName.indexOf('on') === 0;
 }
 
 /**
