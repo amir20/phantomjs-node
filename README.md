@@ -6,7 +6,6 @@ phantom - Fast NodeJS API for PhantomJS
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Linux Build][travis-image]][travis-url]
 [![Dependencies][david-image]][david-url]
-[![slack][slack-image]][slack-url]
 
 
 ## Super easy to use
