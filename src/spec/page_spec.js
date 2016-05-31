@@ -305,7 +305,7 @@ describe('Page', () => {
         expect(response).toBe(true);
     });
 
-    it('#on() can register an event in the page and run the code locally', function* () {
+    it('#on() can register an event in the page and run the code locally', function*() {
         let page = yield phantom.createPage();
         let runnedHere = false;
 
@@ -318,7 +318,7 @@ describe('Page', () => {
         expect(runnedHere).toBe(true);
     });
 
-    it('#on() event registered does not run if not triggered', function* () {
+    it('#on() event registered does not run if not triggered', function*() {
         let page = yield phantom.createPage();
         let runnedHere = false;
 
@@ -329,7 +329,7 @@ describe('Page', () => {
         expect(runnedHere).toBe(false);
     });
 
-    it('#on() can register more than one event of the same type', function* () {
+    it('#on() can register more than one event of the same type', function*() {
         let page = yield phantom.createPage();
         let runnedHere = false;
 
@@ -350,7 +350,7 @@ describe('Page', () => {
     });
 
 
-    it('#on() can pass parameters', function* () {
+    it('#on() can pass parameters', function*() {
         let page = yield phantom.createPage();
         let parameterProvided = false;
 
@@ -364,7 +364,7 @@ describe('Page', () => {
     });
 
 
-    it('#on() can register an event in the page which code runs in phantom runtime', function* () {
+    it('#on() can register an event in the page which code runs in phantom runtime', function*() {
         let page = yield phantom.createPage();
         let runnedHere = false;
 
@@ -381,7 +381,7 @@ describe('Page', () => {
         expect(runnedInPhantomRuntime).toBe(true);
     });
 
-    it('#on() can pass parameters to functions to be executed in phantom runtime', function* () {
+    it('#on() can pass parameters to functions to be executed in phantom runtime', function*() {
         let page = yield phantom.createPage();
 
         yield page.on('onResourceReceived', true, function (status, param) {
@@ -395,7 +395,7 @@ describe('Page', () => {
         expect(parameterProvided).toBe('param');
     });
 
-    it('#on() event supposed to run in phantom runtime wont run if not triggered', function* () {
+    it('#on() event supposed to run in phantom runtime wont run if not triggered', function*() {
         let page = yield phantom.createPage();
 
         yield page.on('onResourceReceived', true, function () {
@@ -407,7 +407,7 @@ describe('Page', () => {
         expect(runnedInPhantomRuntime).toBeFalsy();
     });
 
-    it('#on() can register at the same event to run locally or in phantom runtime', function* () {
+    it('#on() can register at the same event to run locally or in phantom runtime', function*() {
         let page = yield phantom.createPage();
         let runnedHere = false;
 
@@ -489,7 +489,7 @@ describe('Page', () => {
             // are we in the main frame?
             return !window.frameElement;
         });
-        
+
         // confirm we are in the main frame
         expect(inMainFrame).toBe(true);
     });
