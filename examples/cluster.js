@@ -9,7 +9,7 @@ if (cluster.isMaster) {
     }
 
     cluster.on('exit', function (worker) {
-        console.log('Worker ' + woker.id + ' died. Forking...');
+        console.log('Worker ' + worker.id + ' died. Forking...');
         cluster.fork();
     });
 
