@@ -182,7 +182,7 @@ You cannot use `#property()` and `#on()` at the same time, because it would conf
 
 ### `page#off`
 
-`#of(event)` is usefull to remove all the event listeners set by `#on()` for ans specific event.
+`#off(event)` is usefull to remove all the event listeners set by `#on()` for ans specific event.
 
 ### `page#evaluate`
 
