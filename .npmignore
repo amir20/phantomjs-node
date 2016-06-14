@@ -2,3 +2,7 @@ node_modules
 .idea
 src/
 lib/spec
+.*
+*.md
+examples
+gulpfile.*
