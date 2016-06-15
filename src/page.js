@@ -49,7 +49,7 @@ export default class Page {
 const methods = [
     'open', 'render', 'close', 'property', 'injectJs', 'includeJs', 'openUrl', 'stop', 'renderBase64',
     'evaluate', 'evaluateJavaScript', 'setting', 'addCookie', 'deleteCookie', 'clearCookies', 'setContent', 'sendEvent',
-    'switchToMainFrame', 'switchToFrame'
+    'switchToMainFrame', 'switchToFrame', 'reload'
 ];
 
 methods.forEach(method => {

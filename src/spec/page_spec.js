@@ -493,6 +493,21 @@ describe('Page', () => {
         // confirm we are in the main frame
         expect(inMainFrame).toBe(true);
     });
+    
+    it('#reload() will reload the current page', function*() {
+        let page = yield phantom.createPage();
+        let reloaded = false;
+        
+        yield page.open('http://localhost:8888/test');
+        yield page.on('onNavigationRequested', function(url, type) {
+            if (type === 'Reload') {
+                reloaded = true;
+            }
+        });
+        yield page.reload();
+        
+        expect(reloaded).toBe(true);
+    });
 
 });
 
