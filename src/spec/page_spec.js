@@ -508,6 +508,45 @@ describe('Page', () => {
         
         expect(reloaded).toBe(true);
     });
+    
+    it('#invokeAsyncMethod(\'includeJs\', \'http://localhost:8888/script.js\') executes correctly', function*() {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/test');
+        yield page.invokeAsyncMethod('includeJs', 'http://localhost:8888/script.js');
+        let response = yield page.evaluate(function () {
+            return fooBar; // eslint-disable-line no-undef
+        });
+        expect(response).toEqual(2);
+    });
+    
+    it('#invokeAsyncMethod(\'open\', \'http://localhost:8888/test\') executes correctly', function*() {
+        let page = yield phantom.createPage();
+        let status = yield page.invokeAsyncMethod('open', 'http://localhost:8888/test');
+        expect(status).toEqual('success');
+    });
+    
+    it('#invokeMethod(\'evaluate\', \'function () { return document.title }\') executes correctly', function*() {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/test.html');
+        let response = yield page.invokeMethod('evaluate', 'function () { return document.title }');
+        expect(response).toEqual('Page Title'); 
+    });
+    
+    it('#invokeMethod(\'renderBase64\') executes correctly', function*() {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/test');
+        let content = yield page.invokeMethod('renderBase64', 'PNG');
+        expect(content).not.toBeNull();
+    });
+    
+    it('#defineMethod(name, implementation) defines a method', function*() {
+        let page = yield phantom.createPage();
+        yield page.defineMethod('getZoomFactor', function() {
+            return this.zoomFactor; // eslint-disable-line no-invalid-this
+        });
+        let zoomFactor = yield page.invokeMethod('getZoomFactor');
+        expect(zoomFactor).toEqual(1);
+    });
 
 });
 
