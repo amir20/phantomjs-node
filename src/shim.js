@@ -176,20 +176,14 @@ function syncOutObjects(objects) {
 }
 
 /**
- * Executes a command by first checking if it is a custom method and then calling the method on the target.
+ * Executes a command.
  * @param command the command to execute
  */
 function executeCommand(command) {
     if (commands[command.name]) {
         return commands[command.name](command);
-    } else if (objectSpace[command.target]) {
-        const target = objectSpace[command.target];
-        const method = target[command.name];
-        command.response = method.apply(target, command.params);
-        completeCommand(command);
-    } else {
-        throw new Error(`Cannot find ${command.name} method to execute on ${command.target} object.`);
     }
+    throw new Error(`'${command.name}' isn't a command.`);
 }
 
 /**

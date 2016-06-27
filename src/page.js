@@ -61,8 +61,8 @@ export default class Page {
     /**
      * Defines a method
      */
-    defineMethod(name, implementation) {
-        return this.phantom.execute(this.target, 'defineMethod', [name, implementation]);
+    defineMethod(name, definition) {
+        return this.phantom.execute(this.target, 'defineMethod', [name, definition]);
     }
     
     /**

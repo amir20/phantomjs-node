@@ -219,7 +219,7 @@ export default class Phantom {
      */
     exit() {
         clearInterval(this.heartBeatId);
-        this.execute('phantom', 'exit');
+        this.execute('phantom', 'invokeMethod', ['exit']);
     }
 
     _heartBeat() {

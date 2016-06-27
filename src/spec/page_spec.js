@@ -248,9 +248,9 @@ describe('Page', () => {
 
     it('#reject(...) works when there is an error', function*() {
         try {
-            yield phantom.execute('phantom', 'doesNotExist');
+            yield phantom.execute('page', 'nonexistentCommand');
         } catch (e) {
-            expect(e.message).toEqual("undefined is not an object (evaluating 'method.apply')");
+            expect(e.message).toEqual("'nonexistentCommand' isn't a command.");
         }
     });
 
@@ -539,7 +539,7 @@ describe('Page', () => {
         expect(content).not.toBeNull();
     });
     
-    it('#defineMethod(name, implementation) defines a method', function*() {
+    it('#defineMethod(name, definition) defines a method', function*() {
         let page = yield phantom.createPage();
         yield page.defineMethod('getZoomFactor', function() {
             return this.zoomFactor; // eslint-disable-line no-invalid-this
