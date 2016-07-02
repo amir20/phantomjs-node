@@ -1,6 +1,5 @@
 import crypto from "crypto";
 
-
 export default class OutObject {
     constructor(phantom) {
         this._phantom = phantom;
