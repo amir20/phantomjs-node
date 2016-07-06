@@ -558,5 +558,13 @@ describe('Page', () => {
         });
     });
     
+    it('#setProxy() sets the proxy', function*() {
+        let page = yield phantom.createPage();
+        yield page.setProxy('http://localhost:8888');
+        yield page.open('http://phantomjs.org/');
+        let text = yield page.property('plainText');
+        expect(text).toEqual('hi, http://phantomjs.org/');
+    });
+    
 });
 

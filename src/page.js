@@ -99,6 +99,7 @@ const methods = [
     'renderBase64',
     'sendEvent',
     'setContent',
+    'setProxy',
     'stop',
     'switchToFrame',
     'switchToMainFrame'
