@@ -547,6 +547,16 @@ describe('Page', () => {
         let zoomFactor = yield page.invokeMethod('getZoomFactor');
         expect(zoomFactor).toEqual(1);
     });
-
+    
+    it('#openUrl() opens a URL', function(done) {
+        phantom.createPage().then(function(page) {
+            page.on('onLoadFinished', false, function(status) {
+                expect(status).toEqual('success');
+                done();
+            });
+            return page.openUrl('http://localhost:8888/test', 'GET', {});
+        });
+    });
+    
 });
 
