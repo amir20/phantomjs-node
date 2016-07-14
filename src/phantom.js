@@ -27,19 +27,26 @@ export default class Phantom {
      * Creates a new instance of Phantom
      *
      * @param args command args to pass to phantom process
+     * @param [config] configuration object
+     * @param [config.phantomPath] path to phantomjs executable
      */
-    constructor(args = []) {
+    constructor(args = [], config = {}) {
         if (!Array.isArray(args)) {
             throw new Error('Unexpected type of parameters. Expecting args to be array.');
         }
+        if (!config || typeof config !== 'object') {
+            throw new Error('Unexpected type of parameters. Expecting config to be object.');
+        }
+
+        let phantomPath = typeof config.phantomPath === 'string' ? config.phantomPath : phantomjs.path;
 
         let pathToShim = path.normalize(__dirname + '/shim.js');
-        logger.debug(`Starting ${phantomjs.path} ${args.concat([pathToShim]).join(' ')}`);
+        logger.debug(`Starting ${phantomPath} ${args.concat([pathToShim]).join(' ')}`);
 
         this.commands = new Map();
         this.events = new Map();
 
-        this.process = spawn(phantomjs.path, args.concat([pathToShim]));
+        this.process = spawn(phantomPath, args.concat([pathToShim]));
         this.process.stdin.setEncoding('utf-8');
 
         this.process.stdout.pipe(new Linerstream()).on('data', data => {
@@ -74,7 +81,7 @@ export default class Phantom {
         this.process.stderr.on('data', data => logger.error(data.toString('utf8')));
         this.process.on('exit', code => logger.debug(`Child exited with code {${code}}`));
         this.process.on('error', error => {
-            logger.error(`Could not spawn [${phantomjs.path}] executable. Please make sure phantomjs is installed correctly.`);
+            logger.error(`Could not spawn [${phantomPath}] executable. Please make sure phantomjs is installed correctly.`);
             logger.error(error);
             this.kill(`Process got an error: ${error}`);
             process.exit(1);
@@ -251,7 +258,7 @@ export default class Phantom {
      */
     _rejectAllCommands(errmsg = 'Phantom exited prematurely') {
         // prevent heartbeat from preventing this from terminating
-        clearInterval(this.heartBeatId); 
+        clearInterval(this.heartBeatId);
         for (const command of this.commands.values()) {
             command.deferred.reject(new Error(errmsg));
         }

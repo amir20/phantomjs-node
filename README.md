@@ -60,12 +60,23 @@ $ npm install phantom --save
 
 ## `phantom` object API
 
-To create a new instance of `phantom` use `phantom.create()` to return a `Promise` which should resolve to a `phantom` object. If you want add parameters to the phantomjs process you can do so by doing:
+### `phantom#create`
+
+To create a new instance of `phantom` use `phantom.create()` which returns a `Promise` which should resolve with a `phantom` object.
+If you want add parameters to the phantomjs process you can do so by doing:
 
 ```js
 var phantom = require('phantom');
 phantom.create(['--ignore-ssl-errors=yes', '--load-images=no']).then(...)
 ```
+You can also explicitly set phantomjs path to use by passing it in cofig object:
+```js
+var phantom = require('phantom');
+phantom.create([], {phantomPath: '/path/to/phantomjs'}).then(...)
+```
+
+### `phantom#createPage`
+
 To create a new `page`, you have to call `createPage()`:
 
 ```js
@@ -78,7 +89,19 @@ phantom.create().then(function(ph) {
 });
 ```
 
-Make sure to call `#exit()` on the phantom instance to kill the phantomjs process. Otherwise, the process will never exit.
+### `phantom#exit`
+
+Sends an exit call to phantomjs process.
+
+Make sure to call it on the phantom instance to kill the phantomjs process. Otherwise, the process will never exit.
+
+### `phantom#kill`
+
+Kills the underlying phantomjs process (by sending `SIGKILL` to it).
+
+It may be a good idea to register handlers to `SIGTERM` and `SIGINT` signals with `#kill()`.
+
+However, be aware that phantomjs process will get detached (and thus won't exit) if node process that spawned it receives `SIGKILL`!
 
 ## `page` object API
 
@@ -108,7 +131,7 @@ page.property('plainText').then(function(content) {
   Page properties can be set using the `#property(key, value)` method.
 
   ```js
-page.property('viewportSize', {width: 800, height: 600}).then(function() {  
+page.property('viewportSize', {width: 800, height: 600}).then(function() {
 });
   ```
 When setting values, using `then()` is optional. But beware that the next method to phantom will block until it is ready to accept a new message.

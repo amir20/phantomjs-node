@@ -22,7 +22,7 @@ describe('Phantom', () => {
         });
     });
 
-    it('#create([]) execute with no parameters', () => {
+    it('#create([], {}) execute with no parameters', () => {
         spyOn(child_process, 'spawn').and.callThrough();
         let ProxyPhantom = proxyquire('../phantom', {
             child_process: child_process
@@ -45,12 +45,28 @@ describe('Phantom', () => {
         pp.exit();
     });
 
+    it('#create([], {phantomPath: \'phantomjs\'}) execute phantomjs from custom path with no parameters', () => {
+        spyOn(child_process, 'spawn').and.callThrough();
+        let ProxyPhantom = proxyquire('../phantom', {
+            child_process: child_process
+        }).default;
+
+        let pp = new ProxyPhantom([], {phantomPath: 'phantomjs'});
+        let pathToShim = path.normalize(__dirname + '/../shim.js');
+        expect(child_process.spawn).toHaveBeenCalledWith('phantomjs', [pathToShim]);
+        pp.exit();
+    });
+
     it('#create("--ignore-ssl-errors=yes") to throw an exception', () => {
         expect(() => new Phantom('--ignore-ssl-errors=yes')).toThrow();
     });
 
     it('#create(true) to throw an exception', () => {
         expect(() => new Phantom(true)).toThrow();
+    });
+
+    it('#create([], "/path/to/phantomjs") to throw an exception', () => {
+        expect(() => new Phantom([], "/path/to/phantomjs")).toThrow();
     });
 
     it('catches errors when stdin closes unexpectedly', (done) => {
