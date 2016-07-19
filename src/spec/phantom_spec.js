@@ -34,6 +34,16 @@ describe('Phantom', () => {
         pp.exit();
     });
 
+    it('#create([], {}) execute with undefined phantomjs-prebuilt to throw exception', () => {
+        let ProxyPhantom = proxyquire('../phantom', {
+            "phantomjs-prebuilt": {
+                path: null
+            }
+        }).default;
+        
+        expect(() => new ProxyPhantom()).toThrow();
+    });
+
     it('#create(["--ignore-ssl-errors=yes"]) adds parameter to process', () => {
         spyOn(child_process, 'spawn').and.callThrough();
         let ProxyPhantom = proxyquire('../phantom', {

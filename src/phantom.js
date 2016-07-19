@@ -40,14 +40,18 @@ export default class Phantom {
 
         let phantomPath = typeof config.phantomPath === 'string' ? config.phantomPath : phantomjs.path;
 
+        if (phantomPath === null) {
+            throw new Error(`PhantomJS binary was not found. This generally means something went wrong when installing phantomjs-prebuilt. Exiting.`);
+        }
+
         let pathToShim = path.normalize(__dirname + '/shim.js');
         logger.debug(`Starting ${phantomPath} ${args.concat([pathToShim]).join(' ')}`);
 
-        this.commands = new Map();
-        this.events = new Map();
-
         this.process = spawn(phantomPath, args.concat([pathToShim]));
         this.process.stdin.setEncoding('utf-8');
+
+        this.commands = new Map();
+        this.events = new Map();
 
         this.process.stdout.pipe(new Linerstream()).on('data', data => {
             const message = data.toString('utf8');
