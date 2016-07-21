@@ -1,0 +1,8 @@
+{
+  "name": "phantomjs-node-examples",
+  "license": "ISC",
+  "dependencies": {
+    "co": "^4.6.0",
+    "phantom": "file:../"
+  }
+}
