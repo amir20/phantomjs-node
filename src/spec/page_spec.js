@@ -124,6 +124,22 @@ describe('Page', () => {
         expect(response).toEqual('test');
     });
 
+    it('#evaluate(function(arg){...}, argument) executes correctly with a non-null argument', function*() {
+        let page = yield phantom.createPage();
+        let response = yield page.evaluate(function (arg) {
+            return 'Value: ' + arg;
+        }, 'test');
+        expect(response).toEqual('Value: test');
+    });
+
+    it('#evaluate(function(arg){...}, argument) executes correctly with a null argument', function*() {
+        let page = yield phantom.createPage();
+        let response = yield page.evaluate(function (arg) {
+            return 'Value is null: ' + (arg === null);
+        }, null);
+        expect(response).toEqual('Value is null: true');
+    });
+
     it('#evaluateJavaScript(\'function(){return document.title}\') executes correctly', function*() {
         let page = yield phantom.createPage();
         yield page.open('http://localhost:8888/test.html');

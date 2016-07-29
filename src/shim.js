@@ -153,7 +153,9 @@ function transform(object) {
     for (let key in object) {
         if (object.hasOwnProperty(key)) {
             let child = object[key];
-            if (child.transform === true) {
+            if (child === null || child === undefined) {
+                return;
+            } else if (child.transform === true) {
                 object[key] = objectSpace[child.parent][child.method](child.target);
             } else if (typeof child === 'object') {
                 transform(child);
