@@ -193,7 +193,7 @@ If you want to register a listener to run in phantomjs runtime (and thus, be abl
 var urls = [];
 
 page.on('onResourceRequested', true, function (requestData, networkRequest) {
-    urls.push(requestData.url); // now this wont work, because this function would exercute in phantom runtime and thus wont have acces to the closure.
+    urls.push(requestData.url); // now this wont work, because this function would execute in phantom runtime and thus wont have access to the closure.
     networkRequest.abort(); // This would work, because you are accessing to the non serialized networkRequest.
 });
 
