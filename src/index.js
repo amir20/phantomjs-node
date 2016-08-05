@@ -6,4 +6,3 @@ import Phantom from "./phantom";
  * @returns {Promise}
  */
 module.exports.create = (args, config) => new Promise(resolve => resolve(new Phantom(args, config)));
-

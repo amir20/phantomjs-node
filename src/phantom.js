@@ -81,7 +81,6 @@ export default class Phantom {
             }
         });
 
-
         this.process.stderr.on('data', data => logger.error(data.toString('utf8')));
         this.process.on('exit', code => logger.debug(`Child exited with code {${code}}`));
         this.process.on('error', error => {
@@ -172,7 +171,6 @@ export default class Phantom {
             return r;
         });
         logger.debug('Sending: %s', json);
-
 
         this.process.stdin.write(json + os.EOL, 'utf8');
         return promise;

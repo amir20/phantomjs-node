@@ -92,7 +92,7 @@ const commands = {
     },
 
     noop: command => completeCommand(command),
-    
+
     invokeAsyncMethod: function (command) {
         let target = objectSpace[command.target];
         target[command.params[0]].apply(target, command.params.slice(1).concat(result => {
@@ -100,14 +100,14 @@ const commands = {
             completeCommand(command);
         }));
     },
-    
+
     invokeMethod: function (command) {
         let target = objectSpace[command.target];
         let method = target[command.params[0]];
         command.response = method.apply(target, command.params.slice(1));
         completeCommand(command);
     },
-    
+
     defineMethod: function (command) {
         let target = objectSpace[command.target];
         target[command.params[0]] = command.params[1];
@@ -260,7 +260,6 @@ function getOutsideListener(eventName, targetId) {
         system.stdout.writeLine('<event>' + JSON.stringify({target: targetId, type: eventName, args}));
     };
 }
-
 
 /**
  * Completes a command by return a response to node and listening again for next command.

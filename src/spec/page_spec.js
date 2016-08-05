@@ -306,7 +306,6 @@ describe('Page', () => {
         expect(response).toEqual(['setContent Title', 'http://localhost:8888/']);
     });
 
-
     it('#sendEvent() sends an event', function*() {
         let page = yield phantom.createPage();
         let html = '<html  onclick="docClicked = true;"><head><title>setContent Title</title></head><body></body></html>';
@@ -365,7 +364,6 @@ describe('Page', () => {
         expect(runnedHereToo).toBe(true);
     });
 
-
     it('#on() can pass parameters', function*() {
         let page = yield phantom.createPage();
         let parameterProvided = false;
@@ -378,7 +376,6 @@ describe('Page', () => {
 
         expect(parameterProvided).toBe('param');
     });
-
 
     it('#on() can register an event in the page which code runs in phantom runtime', function*() {
         let page = yield phantom.createPage();
@@ -509,11 +506,11 @@ describe('Page', () => {
         // confirm we are in the main frame
         expect(inMainFrame).toBe(true);
     });
-    
+
     it('#reload() will reload the current page', function*() {
         let page = yield phantom.createPage();
         let reloaded = false;
-        
+
         yield page.open('http://localhost:8888/test');
         yield page.on('onNavigationRequested', function(url, type) {
             if (type === 'Reload') {
@@ -521,10 +518,10 @@ describe('Page', () => {
             }
         });
         yield page.reload();
-        
+
         expect(reloaded).toBe(true);
     });
-    
+
     it('#invokeAsyncMethod(\'includeJs\', \'http://localhost:8888/script.js\') executes correctly', function*() {
         let page = yield phantom.createPage();
         yield page.open('http://localhost:8888/test');
@@ -534,27 +531,27 @@ describe('Page', () => {
         });
         expect(response).toEqual(2);
     });
-    
+
     it('#invokeAsyncMethod(\'open\', \'http://localhost:8888/test\') executes correctly', function*() {
         let page = yield phantom.createPage();
         let status = yield page.invokeAsyncMethod('open', 'http://localhost:8888/test');
         expect(status).toEqual('success');
     });
-    
+
     it('#invokeMethod(\'evaluate\', \'function () { return document.title }\') executes correctly', function*() {
         let page = yield phantom.createPage();
         yield page.open('http://localhost:8888/test.html');
         let response = yield page.invokeMethod('evaluate', 'function () { return document.title }');
         expect(response).toEqual('Page Title'); 
     });
-    
+
     it('#invokeMethod(\'renderBase64\') executes correctly', function*() {
         let page = yield phantom.createPage();
         yield page.open('http://localhost:8888/test');
         let content = yield page.invokeMethod('renderBase64', 'PNG');
         expect(content).not.toBeNull();
     });
-    
+
     it('#defineMethod(name, definition) defines a method', function*() {
         let page = yield phantom.createPage();
         yield page.defineMethod('getZoomFactor', function() {
@@ -563,7 +560,7 @@ describe('Page', () => {
         let zoomFactor = yield page.invokeMethod('getZoomFactor');
         expect(zoomFactor).toEqual(1);
     });
-    
+
     it('#openUrl() opens a URL', function(done) {
         phantom.createPage().then(function(page) {
             page.on('onLoadFinished', false, function(status) {
@@ -573,7 +570,7 @@ describe('Page', () => {
             return page.openUrl('http://localhost:8888/test', 'GET', {});
         });
     });
-    
+
     it('#setProxy() sets the proxy', function*() {
         let page = yield phantom.createPage();
         yield page.setProxy('http://localhost:8888');
@@ -581,6 +578,5 @@ describe('Page', () => {
         let text = yield page.property('plainText');
         expect(text).toEqual('hi, http://phantomjs.org/');
     });
-    
-});
 
+});

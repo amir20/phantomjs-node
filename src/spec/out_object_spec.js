@@ -60,7 +60,6 @@ describe('Command', () => {
         let page = yield phantom.createPage();
         let outObj = phantom.createOutObject();
 
-
         yield page.property('onResourceReceived', function (response, test, out) {
             out.data = test;
         }, 'test', outObj);

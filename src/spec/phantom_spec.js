@@ -5,7 +5,6 @@ import Phantom from "../phantom";
 import path from "path";
 import Page from "../page";
 
-
 describe('Phantom', () => {
     let instance;
     beforeAll(() => instance = new Phantom());
@@ -40,7 +39,7 @@ describe('Phantom', () => {
                 path: null
             }
         }).default;
-        
+
         expect(() => new ProxyPhantom()).toThrow();
     });
 

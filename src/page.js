@@ -43,35 +43,35 @@ export default class Page {
     off(event) {
         return this.phantom.off(event, this.target);
     }
-    
+
     /**
      * Invokes an asynchronous method
      */
     invokeAsyncMethod() {
         return this.phantom.execute(this.target, 'invokeAsyncMethod', [].slice.call(arguments));
     }
-    
+
     /**
      * Invokes a method
      */
     invokeMethod() {
         return this.phantom.execute(this.target, 'invokeMethod', [].slice.call(arguments));
     }
-    
+
     /**
      * Defines a method
      */
     defineMethod(name, definition) {
         return this.phantom.execute(this.target, 'defineMethod', [name, definition]);
     }
-    
+
     /**
      * Gets or sets a property
      */
     property() {
         return this.phantom.execute(this.target, 'property', [].slice.call(arguments));
     }
-    
+
     /**
      * Gets or sets a setting
      */
@@ -92,7 +92,7 @@ const methods = [
     'deleteCookie',
     'evaluate',
     'evaluateJavaScript',
-    'injectJs', 
+    'injectJs',
     'openUrl',
     'reload',
     'render',
