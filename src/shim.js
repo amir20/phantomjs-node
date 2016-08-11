@@ -1,6 +1,6 @@
 import webpage from "webpage";
 import system from "system";
-import {ensureFunctionBind} from "./shim_support";
+import "./function_bind_polyfill.js";
 
 /**
  * Stores all all pages and single instance of phantom
@@ -272,5 +272,4 @@ function completeCommand(command) {
     setTimeout(read, 0);
 }
 
-ensureFunctionBind();
 read();
