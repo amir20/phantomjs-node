@@ -1,5 +1,6 @@
 import webpage from "webpage";
 import system from "system";
+import "./function_bind_polyfill.js";
 
 /**
  * Stores all all pages and single instance of phantom
