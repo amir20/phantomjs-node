@@ -166,7 +166,12 @@ export default class Phantom {
             if (key[0] === '_') {
                 r = undefined
             } else {
-                r = typeof val === 'function' ? val.toString() : val
+                r = typeof val === 'function' ? val.toString() : val;
+
+                if(typeof val === 'function' && r.includes('=>')) {
+                    logger.warn('Arrow functions such as () => {} are not supported in PhantomJS. Please use function(){} or compile to ES5.');
+                    throw new Error('Arrow functions such as () => {} are not supported in PhantomJS.');
+                }
             }
             return r;
         });

@@ -14,4 +14,4 @@ phantom.create().then(ph => {
     console.log(content);
     _page.close();
     _ph.exit();
-});
+}).catch(e => console.log(e));
