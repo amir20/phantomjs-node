@@ -579,12 +579,18 @@ describe('Page', () => {
         expect(text).toEqual('hi, http://phantomjs.org/');
     });
 
-    it('#goBack()', function*() {
-        let page = yield phantom.createPage();
-        yield page.open('http://localhost:8888/test1');
-        yield page.open('http://localhost:8888/test2');
-        yield page.goBack();
-        let text = yield page.property('plainText');
-        expect(text).toEqual('hi, /test1');
+    it('#goBack()', function(done) {
+        let page;
+        phantom.createPage().then(function(instance) {
+            page = instance;
+            return page.open('http://localhost:8888/test1');
+        }).then(function() {
+            return page.open('http://localhost:8888/test2')
+        }).then(function() {
+            page.on('onNavigationRequested', false, function() {
+                done();
+            });
+            return page.goBack();
+        });
     });
 });
