@@ -152,6 +152,21 @@ export default class Phantom {
      * @returns {Promise}
      */
     executeCommand(command) {
+        this.commands.set(command.id, command);
+
+        let json = JSON.stringify(command, (key, val) => {
+            if (key[0] === '_') {
+                return undefined;
+            } else if (typeof val === 'function') {
+                if (!val.hasOwnProperty('prototype')) {
+                    logger.warn('Arrow functions such as () => {} are not supported in PhantomJS. Please use function(){} or compile to ES5.');
+                    throw new Error('Arrow functions such as () => {} are not supported in PhantomJS.');
+                }
+                return val.toString();
+            }
+            return val;
+        });
+
         command.deferred = {};
 
         let promise = new Promise((res, rej) => {
@@ -159,25 +174,10 @@ export default class Phantom {
             command.deferred.reject = rej;
         });
 
-        this.commands.set(command.id, command);
-
-        let json = JSON.stringify(command, (key, val) => {
-            let r;
-            if (key[0] === '_') {
-                r = undefined
-            } else {
-                r = typeof val === 'function' ? val.toString() : val;
-
-                if(typeof val === 'function' && r.includes('=>')) {
-                    logger.warn('Arrow functions such as () => {} are not supported in PhantomJS. Please use function(){} or compile to ES5.');
-                    throw new Error('Arrow functions such as () => {} are not supported in PhantomJS.');
-                }
-            }
-            return r;
-        });
         logger.debug('Sending: %s', json);
 
         this.process.stdin.write(json + os.EOL, 'utf8');
+
         return promise;
     }
 
