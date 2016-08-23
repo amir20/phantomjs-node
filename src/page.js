@@ -91,6 +91,7 @@ const methods = [
     'close',
     'deleteCookie',
     'evaluate',
+    'evaluateAsync',
     'evaluateJavaScript',
     'injectJs',
     'openUrl',
@@ -109,7 +110,7 @@ const methods = [
 asyncMethods.forEach(method => {
     Page.prototype[method] = function () {
         return this.invokeAsyncMethod.apply(this, [method].concat([].slice.call(arguments)));
-    }; 
+    };
 });
 
 methods.forEach(method => {

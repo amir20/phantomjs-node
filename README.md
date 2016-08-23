@@ -219,6 +219,16 @@ page.evaluate(function() {
 });
 ```
 
+### `page#evaluateAsync`
+
+Same as `#evaluate()`, but function will be executed asynchronously and there is no return value. You can specify delay of execution.
+
+```js
+page.evaluateAsync(function(apiUrl) {
+    $.ajax({url: apiUrl, success: function() {}});
+}, 0, "http://mytestapi.com")
+```
+
 ### `page#evaluateJavaScript`
 
 Evaluate a function contained in a string. It is similar to `#evaluate()`, but the function can't take any arguments. This example does the same thing as the example of `#evaluate()`:

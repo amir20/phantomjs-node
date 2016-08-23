@@ -140,6 +140,26 @@ describe('Page', () => {
         expect(response).toEqual('Value is null: true');
     });
 
+    it('#evaluateAsync(function(){...}) executes correctly', function*() {
+        let page = yield phantom.createPage();
+        yield page.on('onCallback', function(response) {
+            expect(response).toEqual('test');
+        });
+        yield page.evaluateAsync(function () {
+            window.callPhantom('test');
+        });
+    });
+
+    it('#evaluateAsync(function(){...}) executes correctly with a delay and a non-null argument', function*() {
+        let page = yield phantom.createPage();
+        yield page.on('onCallback', function(response) {
+            expect(response).toEqual('testarg');
+        });
+        yield page.evaluateAsync(function (arg) {
+            window.callPhantom('test' + arg);
+        }, 0, 'arg');
+    });
+
     it('#evaluateJavaScript(\'function(){return document.title}\') executes correctly', function*() {
         let page = yield phantom.createPage();
         yield page.open('http://localhost:8888/test.html');
