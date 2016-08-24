@@ -1,18 +1,19 @@
 import phantomjs from "phantomjs-prebuilt";
 import {spawn} from "child_process";
-import winston from "winston";
 import os from "os";
 import path from "path";
 import Linerstream from "linerstream";
+import winston from "winston";
 import Page from "./page";
 import Command from "./command";
 import OutObject from "./out_object";
 import EventEmitter from "events";
 
-const logger = new winston.Logger({
+const defaultLogLevel = process.env.DEBUG === 'true' ? 'debug' : 'info';
+const defaultLogger = new winston.Logger({
     transports: [
         new winston.transports.Console({
-            level: process.env.DEBUG === 'true' ? 'debug' : 'info',
+            level: defaultLogLevel,
             colorize: true
         })
     ]
@@ -27,25 +28,40 @@ export default class Phantom {
      * Creates a new instance of Phantom
      *
      * @param args command args to pass to phantom process
-     * @param [config] configuration object
-     * @param [config.phantomPath] path to phantomjs executable
+     * @param [phantomPath] path to phantomjs executable
+     * @param [logger] object containing functions used for logging
+     * @param [logLevel] log level to apply on the logger (if unset or default)
      */
-    constructor(args = [], config = {}) {
+    constructor(args = [], {phantomPath = phantomjs.path, logger = defaultLogger, logLevel = defaultLogLevel} = {
+        phantomPath: phantomjs.path,
+        logger: defaultLogger,
+        logLevel: defaultLogLevel
+    }) {
         if (!Array.isArray(args)) {
             throw new Error('Unexpected type of parameters. Expecting args to be array.');
         }
-        if (!config || typeof config !== 'object') {
-            throw new Error('Unexpected type of parameters. Expecting config to be object.');
-        }
 
-        let phantomPath = typeof config.phantomPath === 'string' ? config.phantomPath : phantomjs.path;
-
-        if (phantomPath === null) {
+        if (typeof phantomPath !== 'string') {
             throw new Error(`PhantomJS binary was not found. This generally means something went wrong when installing phantomjs-prebuilt. Exiting.`);
         }
 
-        let pathToShim = path.normalize(__dirname + '/shim.js');
-        logger.debug(`Starting ${phantomPath} ${args.concat([pathToShim]).join(' ')}`);
+        if (typeof logger !== 'object') {
+            throw new Error(`logger must be ba valid object.`);
+        }
+
+        ['debug', 'info', 'warn', 'error'].forEach(method => {
+            if (typeof logger[method] !== 'function') {
+                logger[method] = () => undefined;
+            }
+        });
+
+        if(logger === defaultLogger && logLevel !== defaultLogLevel) {
+            logger.transports.console.level = logLevel;
+        }
+
+        const pathToShim = path.normalize(__dirname + '/shim.js');
+        this.logger = logger;
+        this.logger.debug(`Starting ${phantomPath} ${args.concat([pathToShim]).join(' ')}`);
 
         this.process = spawn(phantomPath, args.concat([pathToShim]));
         this.process.stdin.setEncoding('utf-8');
@@ -56,11 +72,11 @@ export default class Phantom {
         this.process.stdout.pipe(new Linerstream()).on('data', data => {
             const message = data.toString('utf8');
             if (message[0] === '>') {
-                let json = message.substr(1);
-                logger.debug('Parsing: %s', json);
+                const json = message.substr(1);
+                this.logger.debug('Parsing: %s', json);
                 const command = JSON.parse(json);
+                const deferred = this.commands.get(command.id).deferred;
 
-                let deferred = this.commands.get(command.id).deferred;
                 if (command.error === undefined) {
                     deferred.resolve(command.response);
                 } else {
@@ -68,35 +84,35 @@ export default class Phantom {
                 }
                 this.commands.delete(command.id);
             } else if (message.indexOf('<event>') === 0) {
-                let json = message.substr(7);
-                logger.debug('Parsing: %s', json);
+                const json = message.substr(7);
+                this.logger.debug('Parsing: %s', json);
                 const event = JSON.parse(json);
 
-                var emitter = this.events[event.target];
+                const emitter = this.events[event.target];
                 if (emitter) {
                     emitter.emit.apply(emitter, [event.type].concat(event.args));
                 }
             } else {
-                logger.info(message);
+                this.logger.info(message);
             }
         });
 
-        this.process.stderr.on('data', data => logger.error(data.toString('utf8')));
-        this.process.on('exit', code => logger.debug(`Child exited with code {${code}}`));
+        this.process.stderr.on('data', data => this.logger.error(data.toString('utf8')));
+        this.process.on('exit', code => this.logger.debug(`Child exited with code {${code}}`));
         this.process.on('error', error => {
-            logger.error(`Could not spawn [${phantomPath}] executable. Please make sure phantomjs is installed correctly.`);
-            logger.error(error);
+            this.logger.error(`Could not spawn [${phantomPath}] executable. Please make sure phantomjs is installed correctly.`);
+            this.logger.error(error);
             this.kill(`Process got an error: ${error}`);
             process.exit(1);
         });
 
         this.process.stdin.on('error', (e) => {
-            logger.debug(`Child process received error ${e}, sending kill signal`);
+            this.logger.debug(`Child process received error ${e}, sending kill signal`);
             this.kill(`Error reading from stdin: ${e}`);
         });
 
         this.process.stdout.on('error', (e) => {
-            logger.debug(`Child process received error ${e}, sending kill signal`);
+            this.logger.debug(`Child process received error ${e}, sending kill signal`);
             this.kill(`Error reading from stdout: ${e}`);
         });
 
@@ -121,7 +137,7 @@ export default class Phantom {
             if (typeof Proxy === 'function') {
                 page = new Proxy(page, {
                     set: function (target, prop) {
-                        logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) instead. See the README file for more examples of page#property.`);
+                        this.logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) instead. See the README file for more examples of page#property.`);
                         return false;
                     }
                 });
@@ -159,7 +175,7 @@ export default class Phantom {
                 return undefined;
             } else if (typeof val === 'function') {
                 if (!val.hasOwnProperty('prototype')) {
-                    logger.warn('Arrow functions such as () => {} are not supported in PhantomJS. Please use function(){} or compile to ES5.');
+                    this.logger.warn('Arrow functions such as () => {} are not supported in PhantomJS. Please use function(){} or compile to ES5.');
                     throw new Error('Arrow functions such as () => {} are not supported in PhantomJS.');
                 }
                 return val.toString();
@@ -174,7 +190,7 @@ export default class Phantom {
             command.deferred.reject = rej;
         });
 
-        logger.debug('Sending: %s', json);
+        this.logger.debug('Sending: %s', json);
 
         this.process.stdin.write(json + os.EOL, 'utf8');
 
@@ -203,13 +219,13 @@ export default class Phantom {
      * @param args an array of args to pass to the callback
      */
     on(event, target, runOnPhantom, callback, args = []) {
-        var eventDescriptor = {type: event};
+        const eventDescriptor = {type: event};
 
         if (runOnPhantom) {
             eventDescriptor.event = callback;
             eventDescriptor.args = args;
         } else {
-            var emitter = this.getEmitterForTarget(target);
+            const emitter = this.getEmitterForTarget(target);
             emitter.on(event, function () {
                 let params = [].slice.call(arguments).concat(args);
                 return callback.apply(null, params);
@@ -225,7 +241,7 @@ export default class Phantom {
      * @param target
      */
     off(event, target) {
-        var emitter = this.getEmitterForTarget(target);
+        const emitter = this.getEmitterForTarget(target);
         emitter.removeAllListeners(event);
         return this.execute(target, 'removeEvent', [{type: event}]);
     }

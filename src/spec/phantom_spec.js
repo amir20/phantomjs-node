@@ -66,16 +66,20 @@ describe('Phantom', () => {
         pp.exit();
     });
 
+    it('#create([], {logger: logger}) to log messages', () => {
+        let logger = jasmine.createSpyObj('logger', ['debug', 'info', 'warn', 'error']);
+
+        let pp = new Phantom([], {logger: logger});
+        expect(logger.debug).toHaveBeenCalledWith(jasmine.any(String));
+        pp.exit();
+    });
+
     it('#create("--ignore-ssl-errors=yes") to throw an exception', () => {
         expect(() => new Phantom('--ignore-ssl-errors=yes')).toThrow();
     });
 
     it('#create(true) to throw an exception', () => {
         expect(() => new Phantom(true)).toThrow();
-    });
-
-    it('#create([], "/path/to/phantomjs") to throw an exception', () => {
-        expect(() => new Phantom([], "/path/to/phantomjs")).toThrow();
     });
 
     it('catches errors when stdin closes unexpectedly', (done) => {

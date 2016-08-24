@@ -69,11 +69,23 @@ If you want add parameters to the phantomjs process you can do so by doing:
 var phantom = require('phantom');
 phantom.create(['--ignore-ssl-errors=yes', '--load-images=no']).then(...)
 ```
-You can also explicitly set phantomjs path to use by passing it in cofig object:
+You can also explicitly set :
+
+- The phantomjs path to use
+- A logger object
+- A log level if no logger was specified
+
+by passing them in config object:
 ```js
 var phantom = require('phantom');
-phantom.create([], {phantomPath: '/path/to/phantomjs'}).then(...)
+phantom.create([], {
+    phantomPath: '/path/to/phantomjs',
+    logger: yourCustomLogger,
+    logLevel: 'debug',
+}).then(...)
 ```
+
+The `logger` parameter should be a `logger` object containing your logging functions. The `logLevel` parameter should be log level like `"warn"` or `"debug"` (It uses the same log levels as `npm`), and will be ignored if `logger` is set. Have a look at the `logger` property below for more information about these two parameters.
 
 ### `phantom#createPage`
 
@@ -102,6 +114,27 @@ Kills the underlying phantomjs process (by sending `SIGKILL` to it).
 It may be a good idea to register handlers to `SIGTERM` and `SIGINT` signals with `#kill()`.
 
 However, be aware that phantomjs process will get detached (and thus won't exit) if node process that spawned it receives `SIGKILL`!
+
+### `phantom#logger`
+
+The property containing the [winston](https://www.npmjs.com/package/winston) `logger` used by a `phantom` instance. You may change parameters like verbosity or redirect messages to a file with it. Note that a single `logger` instance is used for all `phantom` instances, so any change on this object will have an impact on all `phantom` objects.
+
+You can also use your own logger here but you should consider providing it to the `create` method since logs are written inside the `phantom` constructor too. The `logger` object can contain four functions : `debug`, `info`, `warn` and `error`. If one of them is empty, its output will be discarded.
+
+Here are two ways of handling it :
+```js
+/* Set the log level to 'error' at creation, and use the default logger  */
+phantom.create([], { logLevel: 'error' }).then(function(ph) {
+    // use ph
+});
+
+/* Set a custom logger object directly in the create call. Note that `info` is not provided here and so its output will be discarded */
+var log = console.log;
+var nolog = function() {};
+phantom.create([], { warn: log, debug: nolog, error: log }).then(function(ph) {
+    // use ph
+});
+```
 
 ## `page` object API
 
