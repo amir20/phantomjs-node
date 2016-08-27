@@ -74,6 +74,14 @@ describe('Phantom', () => {
         pp.exit();
     });
 
+    it('#create([], {logLevel: \'debug\'}) change logLevel', () => {
+        const logLevel = 'error';
+
+        let pp = new Phantom([], {logLevel});
+        expect(pp.logger.transports.console.level).toEqual(logLevel);
+        pp.exit();
+    });
+
     it('#create("--ignore-ssl-errors=yes") to throw an exception', () => {
         expect(() => new Phantom('--ignore-ssl-errors=yes')).toThrow();
     });
