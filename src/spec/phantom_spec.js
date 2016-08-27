@@ -69,7 +69,7 @@ describe('Phantom', () => {
     it('#create([], {logger: logger}) to log messages', () => {
         let logger = jasmine.createSpyObj('logger', ['debug', 'info', 'warn', 'error']);
 
-        let pp = new Phantom([], {logger: logger});
+        let pp = new Phantom([], {logger});
         expect(logger.debug).toHaveBeenCalledWith(jasmine.any(String));
         pp.exit();
     });

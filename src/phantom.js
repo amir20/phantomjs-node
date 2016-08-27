@@ -132,12 +132,13 @@ export default class Phantom {
      * @returns {Promise.<Page>}
      */
     createPage() {
+        const logger = this.logger;
         return this.execute('phantom', 'createPage').then(response => {
             let page = new Page(this, response.pageId);
             if (typeof Proxy === 'function') {
                 page = new Proxy(page, {
                     set: function (target, prop) {
-                        this.logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) instead. See the README file for more examples of page#property.`);
+                        logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) instead. See the README file for more examples of page#property.`);
                         return false;
                     }
                 });

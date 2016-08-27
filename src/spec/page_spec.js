@@ -142,7 +142,7 @@ describe('Page', () => {
 
     it('#evaluateAsync(function(){...}) executes correctly', function*() {
         let page = yield phantom.createPage();
-        yield page.on('onCallback', function(response) {
+        yield page.on('onCallback', function (response) {
             expect(response).toEqual('test');
         });
         yield page.evaluateAsync(function () {
@@ -152,7 +152,7 @@ describe('Page', () => {
 
     it('#evaluateAsync(function(){...}) executes correctly with a delay and a non-null argument', function*() {
         let page = yield phantom.createPage();
-        yield page.on('onCallback', function(response) {
+        yield page.on('onCallback', function (response) {
             expect(response).toEqual('testarg');
         });
         yield page.evaluateAsync(function (arg) {
@@ -532,7 +532,7 @@ describe('Page', () => {
         let reloaded = false;
 
         yield page.open('http://localhost:8888/test');
-        yield page.on('onNavigationRequested', function(url, type) {
+        yield page.on('onNavigationRequested', function (url, type) {
             if (type === 'Reload') {
                 reloaded = true;
             }
@@ -574,16 +574,16 @@ describe('Page', () => {
 
     it('#defineMethod(name, definition) defines a method', function*() {
         let page = yield phantom.createPage();
-        yield page.defineMethod('getZoomFactor', function() {
+        yield page.defineMethod('getZoomFactor', function () {
             return this.zoomFactor; // eslint-disable-line no-invalid-this
         });
         let zoomFactor = yield page.invokeMethod('getZoomFactor');
         expect(zoomFactor).toEqual(1);
     });
 
-    it('#openUrl() opens a URL', function(done) {
-        phantom.createPage().then(function(page) {
-            page.on('onLoadFinished', false, function(status) {
+    it('#openUrl() opens a URL', function (done) {
+        phantom.createPage().then(function (page) {
+            page.on('onLoadFinished', false, function (status) {
                 expect(status).toEqual('success');
                 done();
             });
@@ -599,15 +599,31 @@ describe('Page', () => {
         expect(text).toEqual('hi, http://phantomjs.org/');
     });
 
-    it('#goBack()', function(done) {
+    it('this.property = something shows a warning', function*() {
+        let logger = jasmine.createSpyObj('logger', ['debug', 'info', 'warn', 'error']);
+
+        let pp = new Phantom([], {logger});
+        let page = yield pp.createPage();
+
+        try {
+            page.foo = 'test';
+        } catch (e) {
+            expect(e).toEqual(jasmine.any(TypeError));
+        } finally {
+            expect(logger.warn).toHaveBeenCalledWith(jasmine.any(String));
+            pp.exit();
+        }
+    });
+
+    it('#goBack()', function (done) {
         let page;
-        phantom.createPage().then(function(instance) {
+        phantom.createPage().then(function (instance) {
             page = instance;
             return page.open('http://localhost:8888/test1');
-        }).then(function() {
+        }).then(function () {
             return page.open('http://localhost:8888/test2')
-        }).then(function() {
-            page.on('onNavigationRequested', false, function() {
+        }).then(function () {
+            page.on('onNavigationRequested', false, function () {
                 done();
             });
             return page.goBack();
