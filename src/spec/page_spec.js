@@ -600,18 +600,20 @@ describe('Page', () => {
     });
 
     it('this.property = something shows a warning', function*() {
-        let logger = jasmine.createSpyObj('logger', ['debug', 'info', 'warn', 'error']);
+        if (typeof Proxy === 'function') {
+            let logger = jasmine.createSpyObj('logger', ['debug', 'info', 'warn', 'error']);
 
-        let pp = new Phantom([], {logger});
-        let page = yield pp.createPage();
+            let pp = new Phantom([], {logger});
+            let page = yield pp.createPage();
 
-        try {
-            page.foo = 'test';
-        } catch (e) {
-            expect(e).toEqual(jasmine.any(TypeError));
-        } finally {
-            expect(logger.warn).toHaveBeenCalledWith(jasmine.any(String));
-            pp.exit();
+            try {
+                page.foo = 'test';
+            } catch (e) {
+                expect(e).toEqual(jasmine.any(TypeError));
+            } finally {
+                expect(logger.warn).toHaveBeenCalledWith(jasmine.any(String));
+                pp.exit();
+            }
         }
     });
 
