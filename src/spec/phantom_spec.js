@@ -82,6 +82,16 @@ describe('Phantom', () => {
         pp.exit();
     });
 
+    it('#create([], {logLevel: \'debug\'}) should not change other log levels', () => {
+        const logLevel = 'error';
+        let p1 = new Phantom([], {logLevel});
+        p1.exit();
+
+        let p2 = new Phantom();
+        expect(p2.logger.transports.console.level).toEqual('info');
+        p2.exit();
+    });
+
     it('#create("--ignore-ssl-errors=yes") to throw an exception', () => {
         expect(() => new Phantom('--ignore-ssl-errors=yes')).toThrow();
     });

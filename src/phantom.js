@@ -10,14 +10,22 @@ import OutObject from "./out_object";
 import EventEmitter from "events";
 
 const defaultLogLevel = process.env.DEBUG === 'true' ? 'debug' : 'info';
-const defaultLogger = new winston.Logger({
-    transports: [
-        new winston.transports.Console({
-            level: defaultLogLevel,
-            colorize: true
-        })
-    ]
-});
+
+/**
+ * Creates a logger using winston
+ */
+function createLogger() {
+    return new winston.Logger({
+        transports: [
+            new winston.transports.Console({
+                level: defaultLogLevel,
+                colorize: true
+            })
+        ]
+    });
+}
+
+const defaultLogger = createLogger();
 
 /**
  * A phantom instance that communicates with phantomjs
@@ -55,12 +63,14 @@ export default class Phantom {
             }
         });
 
-        if(logger === defaultLogger && logLevel !== defaultLogLevel) {
-            logger.transports.console.level = logLevel;
+        this.logger = logger;
+
+        if (logLevel !== defaultLogLevel) {
+            this.logger = createLogger();
+            this.logger.transports.console.level = logLevel;
         }
 
         const pathToShim = path.normalize(__dirname + '/shim.js');
-        this.logger = logger;
         this.logger.debug(`Starting ${phantomPath} ${args.concat([pathToShim]).join(' ')}`);
 
         this.process = spawn(phantomPath, args.concat([pathToShim]));
