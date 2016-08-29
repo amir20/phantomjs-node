@@ -6,6 +6,7 @@ node_js:
 - 5.10.1
 - '5.5'
 - '5.0'
+- 4.5.0
 deploy:
   provider: npm
   email: findamir@gmail.com
