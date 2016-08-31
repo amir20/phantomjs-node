@@ -332,6 +332,16 @@ page.invokeMethod('evaluate', function(selector) {
 });
 ```
 
+### `page#uploadFile`
+
+A file can be inserted into file input fields using the `#uploadFile(selector, file)` method.
+
+```js
+page.uploadFile('#selector', '/path/to/file').then(function() {
+
+});
+```
+
 
 ## Tests
 

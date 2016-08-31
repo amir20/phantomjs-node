@@ -14,6 +14,8 @@ describe('Page', () => {
                 response.end('window.fooBar = 2;');
             } else if (request.url === '/test.html') {
                 response.end('<html><head><title>Page Title</title></head><body>Test</body></html>');
+            } else if (request.url === '/upload.html') {
+                response.end('<html><head><title>Page Title</title></head><body><input type="file" id="upload" /></body></html>');
             } else {
                 response.end('hi, ' + request.url);
             }
@@ -631,4 +633,15 @@ describe('Page', () => {
             return page.goBack();
         });
     });
+
+    it('#uploadFile() inserts file into file input field', function*() {
+        let page = yield phantom.createPage();
+        yield page.open('http://localhost:8888/upload.html');
+        yield page.uploadFile('#upload', process.env.PWD + '/package.json');
+        let response = yield page.evaluate(function () {
+            return document.querySelector("#upload").files[0].name;
+        });
+        expect(response).toEqual('package.json');
+    });
+
 });

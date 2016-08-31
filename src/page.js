@@ -104,7 +104,8 @@ const methods = [
     'stop',
     'switchToFrame',
     'switchToMainFrame',
-    'goBack'
+    'goBack',
+    'uploadFile'
 ];
 
 asyncMethods.forEach(method => {
