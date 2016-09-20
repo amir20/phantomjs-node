@@ -92,13 +92,20 @@ The `logger` parameter should be a `logger` object containing your logging funct
 To create a new `page`, you have to call `createPage()`:
 
 ```js
-var phantom = require('phantom');
-phantom.create().then(function(ph) {
-    ph.createPage().then(function(page) {
-        // use page
-        ph.exit();
+var sitepage = null;
+var phInstance = null;
+phantom.create()
+    .then(instance => {
+        phInstance = instance;
+        return instance.createPage();
+    })
+    .then(page => {
+	// use page
+    })
+    .catch(error => {
+        console.log(error);
+        phInstance.exit();
     });
-});
 ```
 
 ### `phantom#exit`
