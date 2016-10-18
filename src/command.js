@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from 'crypto';
 
 /**
  * A simple command class that gets deserialized when it is sent to phantom

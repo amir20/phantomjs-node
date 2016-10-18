@@ -17,7 +17,8 @@ if (!Function.prototype.bind) {
         function NoopFunction() {}
 
         function boundFunction() {
-            return self.apply((this instanceof NoopFunction ? this : oThis), aArgs.concat(Array.prototype.slice.call(arguments)));
+            return self.apply((this instanceof NoopFunction ? this : oThis),
+                aArgs.concat(Array.prototype.slice.call(arguments)));
         }
 
         if (this.prototype) {

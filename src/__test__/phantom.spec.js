@@ -1,76 +1,84 @@
-import proxyquire from "proxyquire";
-import child_process from "child_process";
-import phantomjs from "phantomjs-prebuilt";
-import Phantom from "../phantom";
-import path from "path";
-import Page from "../page";
+import phantomjs from 'phantomjs-prebuilt';
+import path from 'path';
+import Phantom from '../phantom';
+import Page from '../page';
 
 describe('Phantom', () => {
     let instance;
+    beforeAll(() => jest.resetModules());
     beforeAll(() => instance = new Phantom());
     afterAll(() => instance.exit());
 
     it('#createPage() returns a Promise', () => {
-        expect(instance.createPage()).toEqual(jasmine.any(Promise));
+        expect(instance.createPage()).toBeInstanceOf(Promise);
     });
 
     it('#createPage() resolves to a Page', (done) => {
         instance.createPage().then((page) => {
-            expect(page).toEqual(jasmine.any(Page));
+            expect(page).toBeInstanceOf(Page);
             done();
         });
     });
 
     it('#create([], {}) execute with no parameters', () => {
-        spyOn(child_process, 'spawn').and.callThrough();
-        let ProxyPhantom = proxyquire('../phantom', {
-            child_process: child_process
-        }).default;
+        jest.mock('child_process');
 
-        let pp = new ProxyPhantom();
-        let pathToShim = path.normalize(__dirname + '/../shim.js');
-        expect(child_process.spawn).toHaveBeenCalledWith(phantomjs.path, [pathToShim]);
+        const actual_spawn = require.requireActual('child_process').spawn;
+        let mockedSpawn = jest.fn((...args) => actual_spawn(...args));
+        require('child_process').setMockedSpawn(mockedSpawn);
+
+        const MockedProcess = require('../phantom').default;
+
+        let pp = new MockedProcess();
         pp.exit();
+
+        let pathToShim = path.normalize(__dirname + '/../shim/index.js');
+        expect(mockedSpawn).toHaveBeenCalledWith(phantomjs.path, [pathToShim]);
     });
 
-    it('#create([], {}) execute with undefined phantomjs-prebuilt to throw exception', () => {
-        let ProxyPhantom = proxyquire('../phantom', {
-            "phantomjs-prebuilt": {
-                path: null
-            }
-        }).default;
 
-        expect(() => new ProxyPhantom()).toThrow();
+    it('#create([], {}) execute with undefined phantomjs-prebuilt to throw exception', () => {
+        expect(() => new Phantom([], {phantomPath: null})).toThrow();
     });
 
     it('#create(["--ignore-ssl-errors=yes"]) adds parameter to process', () => {
-        spyOn(child_process, 'spawn').and.callThrough();
-        let ProxyPhantom = proxyquire('../phantom', {
-            child_process: child_process
-        }).default;
-        let pp = new ProxyPhantom(['--ignore-ssl-errors=yes']);
-        let pathToShim = path.normalize(__dirname + '/../shim.js');
-        expect(child_process.spawn).toHaveBeenCalledWith(phantomjs.path, ['--ignore-ssl-errors=yes', pathToShim]);
+        jest.mock('child_process');
+
+        const actual_spawn = require.requireActual('child_process').spawn;
+        let mockedSpawn = jest.fn((...args) => actual_spawn(...args));
+        require('child_process').setMockedSpawn(mockedSpawn);
+
+        const MockedProcess = require('../phantom').default;
+
+        let pp = new MockedProcess(['--ignore-ssl-errors=yes']);
         pp.exit();
+
+        let pathToShim = path.normalize(__dirname + '/../shim/index.js');
+        expect(mockedSpawn).toHaveBeenCalledWith(phantomjs.path, ['--ignore-ssl-errors=yes', pathToShim]);
     });
 
     it('#create([], {phantomPath: \'phantomjs\'}) execute phantomjs from custom path with no parameters', () => {
-        spyOn(child_process, 'spawn').and.callThrough();
-        let ProxyPhantom = proxyquire('../phantom', {
-            child_process: child_process
-        }).default;
+        jest.mock('child_process');
 
-        let pp = new ProxyPhantom([], {phantomPath: 'phantomjs'});
-        let pathToShim = path.normalize(__dirname + '/../shim.js');
-        expect(child_process.spawn).toHaveBeenCalledWith('phantomjs', [pathToShim]);
+        const actual_spawn = require.requireActual('child_process').spawn;
+        let mockedSpawn = jest.fn((...args) => actual_spawn(...args));
+        require('child_process').setMockedSpawn(mockedSpawn);
+
+        const MockedProcess = require('../phantom').default;
+
+        let pp = new MockedProcess([], {phantomPath: 'phantomjs'});
+        pp.exit();
+
+        let pathToShim = path.normalize(__dirname + '/../shim/index.js');
+        expect(mockedSpawn).toHaveBeenCalledWith('phantomjs', [pathToShim]);
         pp.exit();
     });
 
     it('#create([], {logger: logger}) to log messages', () => {
-        let logger = jasmine.createSpyObj('logger', ['debug', 'info', 'warn', 'error']);
+        let logger = {debug: jest.fn()};
 
         let pp = new Phantom([], {logger});
-        expect(logger.debug).toHaveBeenCalledWith(jasmine.any(String));
+        expect(logger.debug).toHaveBeenCalled();
         pp.exit();
     });
 

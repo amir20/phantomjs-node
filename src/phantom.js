@@ -1,13 +1,13 @@
-import phantomjs from "phantomjs-prebuilt";
-import {spawn} from "child_process";
-import os from "os";
-import path from "path";
-import Linerstream from "linerstream";
-import winston from "winston";
-import Page from "./page";
-import Command from "./command";
-import OutObject from "./out_object";
-import EventEmitter from "events";
+import phantomjs from 'phantomjs-prebuilt';
+import {spawn} from 'child_process';
+import os from 'os';
+import path from 'path';
+import Linerstream from 'linerstream';
+import winston from 'winston';
+import Page from './page';
+import Command from './command';
+import OutObject from './out_object';
+import EventEmitter from 'events';
 
 const defaultLogLevel = process.env.DEBUG === 'true' ? 'debug' : 'info';
 
@@ -19,9 +19,9 @@ function createLogger() {
         transports: [
             new winston.transports.Console({
                 level: defaultLogLevel,
-                colorize: true
-            })
-        ]
+                colorize: true,
+            }),
+        ],
     });
 }
 
@@ -43,18 +43,19 @@ export default class Phantom {
     constructor(args = [], {phantomPath = phantomjs.path, logger = defaultLogger, logLevel = defaultLogLevel} = {
         phantomPath: phantomjs.path,
         logger: defaultLogger,
-        logLevel: defaultLogLevel
+        logLevel: defaultLogLevel,
     }) {
         if (!Array.isArray(args)) {
             throw new Error('Unexpected type of parameters. Expecting args to be array.');
         }
 
         if (typeof phantomPath !== 'string') {
-            throw new Error(`PhantomJS binary was not found. This generally means something went wrong when installing phantomjs-prebuilt. Exiting.`);
+            throw new Error('PhantomJS binary was not found. ' +
+                'This generally means something went wrong when installing phantomjs-prebuilt. Exiting.');
         }
 
         if (typeof logger !== 'object') {
-            throw new Error(`logger must be ba valid object.`);
+            throw new Error('logger must be ba valid object.');
         }
 
         ['debug', 'info', 'warn', 'error'].forEach(method => {
@@ -70,7 +71,7 @@ export default class Phantom {
             this.logger.transports.console.level = logLevel;
         }
 
-        const pathToShim = path.normalize(__dirname + '/shim.js');
+        const pathToShim = path.normalize(__dirname + '/shim/index.js');
         this.logger.debug(`Starting ${phantomPath} ${args.concat([pathToShim]).join(' ')}`);
 
         this.process = spawn(phantomPath, args.concat([pathToShim]));
@@ -110,7 +111,8 @@ export default class Phantom {
         this.process.stderr.on('data', data => this.logger.error(data.toString('utf8')));
         this.process.on('exit', code => this.logger.debug(`Child exited with code {${code}}`));
         this.process.on('error', error => {
-            this.logger.error(`Could not spawn [${phantomPath}] executable. Please make sure phantomjs is installed correctly.`);
+            this.logger.error(`Could not spawn [${phantomPath}] executable. ` +
+                'Please make sure phantomjs is installed correctly.');
             this.logger.error(error);
             this.kill(`Process got an error: ${error}`);
             process.exit(1);
@@ -147,10 +149,11 @@ export default class Phantom {
             let page = new Page(this, response.pageId);
             if (typeof Proxy === 'function') {
                 page = new Proxy(page, {
-                    set: function (target, prop) {
-                        logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) instead. See the README file for more examples of page#property.`);
+                    set: function(target, prop) {
+                        logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) ` +
+                        'instead. See the README file for more examples of page#property.');
                         return false;
-                    }
+                    },
                 });
             }
             return page;
@@ -186,7 +189,8 @@ export default class Phantom {
                 return undefined;
             } else if (typeof val === 'function') {
                 if (!val.hasOwnProperty('prototype')) {
-                    this.logger.warn('Arrow functions such as () => {} are not supported in PhantomJS. Please use function(){} or compile to ES5.');
+                    this.logger.warn('Arrow functions such as () => {} are not supported in PhantomJS. ' +
+                        'Please use function(){} or compile to ES5.');
                     throw new Error('Arrow functions such as () => {} are not supported in PhantomJS.');
                 }
                 return val.toString();
@@ -237,7 +241,7 @@ export default class Phantom {
             eventDescriptor.args = args;
         } else {
             const emitter = this.getEmitterForTarget(target);
-            emitter.on(event, function () {
+            emitter.on(event, function() {
                 let params = [].slice.call(arguments).concat(args);
                 return callback.apply(null, params);
             });

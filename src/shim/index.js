@@ -1,12 +1,12 @@
-import webpage from "webpage";
-import system from "system";
-import "./function_bind_polyfill.js";
+import webpage from 'webpage';
+import system from 'system';
+import './function_bind_polyfill.js';
 
 /**
  * Stores all all pages and single instance of phantom
  */
 const objectSpace = {
-    phantom: phantom
+    phantom: phantom,
 };
 
 const events = {};
@@ -31,7 +31,7 @@ const commands = {
                 let callback = command.params[1];
                 let args = command.params.slice(2);
                 syncOutObjects(args);
-                objectSpace[command.target][command.params[0]] = function () {
+                objectSpace[command.target][command.params[0]] = function() {
                     let params = [].slice.call(arguments).concat(args);
                     return callback.apply(objectSpace[command.target], params);
                 };
@@ -71,7 +71,7 @@ const commands = {
             let listeners = getEventListeners(command.target, command.params[0].type);
 
             if (typeof command.params[0].event === 'function') {
-                listeners.otherListeners.push(function () {
+                listeners.otherListeners.push(function() {
                     let params = [].slice.call(arguments).concat(command.params[0].args);
                     return command.params[0].event.apply(objectSpace[command.target], params);
                 });
@@ -81,7 +81,7 @@ const commands = {
         completeCommand(command);
     },
 
-    removeEvent: function (command) {
+    removeEvent: function(command) {
         let type = getTargetType(command.target);
 
         if (isEventSupported(type, command.params[0].type)) {
@@ -94,7 +94,7 @@ const commands = {
 
     noop: command => completeCommand(command),
 
-    invokeAsyncMethod: function (command) {
+    invokeAsyncMethod: function(command) {
         let target = objectSpace[command.target];
         target[command.params[0]].apply(target, command.params.slice(1).concat(result => {
             command.response = result;
@@ -102,18 +102,18 @@ const commands = {
         }));
     },
 
-    invokeMethod: function (command) {
+    invokeMethod: function(command) {
         let target = objectSpace[command.target];
         let method = target[command.params[0]];
         command.response = method.apply(target, command.params.slice(1));
         completeCommand(command);
     },
 
-    defineMethod: function (command) {
+    defineMethod: function(command) {
         let target = objectSpace[command.target];
         target[command.params[0]] = command.params[1];
         completeCommand(command);
-    }
+    },
 };
 
 /**
@@ -122,12 +122,17 @@ const commands = {
 function read() {
     let line = system.stdin.readLine();
     if (line) {
-        let command = JSON.parse(line, function (key, value) {
-            if (value && typeof value === 'string' && value.substr(0, 8) === 'function' && value.indexOf('[native code]') === -1) {
-                var startBody = value.indexOf('{') + 1;
-                var endBody = value.lastIndexOf('}');
-                var startArgs = value.indexOf('(') + 1;
-                var endArgs = value.indexOf(')');
+        let command = JSON.parse(line, function(key, value) {
+            if (value
+                && typeof value === 'string'
+                && value.substr(0, 8) === 'function'
+                && value.indexOf('[native code]') === -1) {
+                const startBody = value.indexOf('{') + 1;
+                const endBody = value.lastIndexOf('}');
+                const startArgs = value.indexOf('(') + 1;
+                const endArgs = value.indexOf(')');
+
+                // eslint-disable-next-line no-new-func
                 return new Function(value.substring(startArgs, endArgs), value.substring(startBody, endBody));
             }
             return value;
@@ -214,7 +219,7 @@ function getEventListeners(target, eventName) {
     if (!events[target][eventName]) {
         events[target][eventName] = {
             outsideListener: getOutsideListener(eventName, target),
-            otherListeners: []
+            otherListeners: [],
         };
 
         objectSpace[target][eventName] = triggerEvent.bind(null, target, eventName);
@@ -243,7 +248,7 @@ function triggerEvent(target, eventName) {
     let args = [].slice.call(arguments, 2);
     let listeners = events[target][eventName];
     listeners.outsideListener.apply(null, args);
-    listeners.otherListeners.forEach(function (listener) {
+    listeners.otherListeners.forEach(function(listener) {
         listener.apply(objectSpace[target], args);
     });
 }
@@ -256,8 +261,8 @@ function triggerEvent(target, eventName) {
  * @returns {Function}
  */
 function getOutsideListener(eventName, targetId) {
-    return function () {
-        var args = [].slice.call(arguments, 0);
+    return function() {
+        const args = [].slice.call(arguments, 0);
         system.stdout.writeLine('<event>' + JSON.stringify({target: targetId, type: eventName, args}));
     };
 }

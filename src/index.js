@@ -1,4 +1,4 @@
-import Phantom from "./phantom";
+import Phantom from './phantom';
 
 
 /**

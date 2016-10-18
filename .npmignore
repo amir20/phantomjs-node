@@ -1,8 +1,9 @@
 node_modules
 .idea
 src/
-lib/spec
+lib/__test__
 .*
 *.md
 examples
 gulpfile.*
+coverage
