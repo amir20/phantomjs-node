@@ -10,10 +10,10 @@ phantom - Fast NodeJS API for PhantomJS
 
 ## Super easy to use
 ```js
-var phantom = require('phantom');
+import phantom from 'phantom';
 
-var sitepage = null;
-var phInstance = null;
+let sitepage;
+let phInstance;
 phantom.create()
     .then(instance => {
         phInstance = instance;
@@ -36,14 +36,22 @@ phantom.create()
         console.log(error);
         phInstance.exit();
     });
+
 ```
 
 See [examples](examples) folder for more ways to use this module.
 
 ## Installation
 
+To use version 3.x you need to have at least Node v5+. You can install it using:
 ```bash
 $ npm install phantom --save
+```
+
+For versions _older_ than 5.x, install with
+
+```bash
+$ npm install phantom@2 --save
 ```
 
 ## How does it work?
@@ -51,6 +59,10 @@ $ npm install phantom --save
   [v1.0.x](//github.com/amir20/phantomjs-node/tree/v1) used to use `dnode` to communicate between nodejs and phantomjs. This approach raised a lot of security restrictions and did not work well when using `cluster` or `pm2`.
 
   v2.0.x has been completely rewritten to use `sysin` and `sysout` pipes to communicate with the phantomjs process. It works out of the box with `cluster` and `pm2`. If you want to see the messages that are sent try adding `DEBUG=true` to your execution, ie. `DEBUG=true node path/to/test.js`. The new code is much cleaner and simpler. PhantomJS is started with `shim.js` which proxies all messages to the `page` or `phantom` object.
+
+## Migrating from 2.x
+
+Going forward, version phantom@3 will Node v5 and above. This adds the extra benefit of less code and faster performance. 
 
 ## Migrating from 1.0.x
 
