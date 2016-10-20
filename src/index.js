@@ -1,5 +1,6 @@
-import Phantom from './phantom';
+// @flow
 
+import Phantom from './phantom';
 
 /**
  * Retuns a Promise of a new Phantom class instance
@@ -10,4 +11,10 @@ import Phantom from './phantom';
  * @param [config.logLevel] log level to apply on the logger (if unset or default)
  * @returns {Promise}
  */
-module.exports.create = (args, config) => new Promise(resolve => resolve(new Phantom(args, config)));
+function create(args?: string[], config?: Config): Promise<Phantom> {
+    return new Promise(resolve => resolve(new Phantom(args, config)));
+}
+
+export default {create};
+
+module.exports.create = create;

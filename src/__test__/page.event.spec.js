@@ -5,20 +5,15 @@ import 'babel-polyfill';
 describe('Page', () => {
     let server;
     let phantom;
+    let port;
     beforeAll(done => {
         server = http.createServer((request, response) => {
-            if (request.url === '/script.js') {
-                response.end('window.fooBar = 2;');
-            } else if (request.url === '/test.html') {
-                response.end('<html><head><title>Page Title</title></head><body>Test</body></html>');
-            } else if (request.url === '/upload.html') {
-                response.end('<html><head><title>Page Title</title></head>' +
-                    '<body><input type="file" id="upload" /></body></html>');
-            } else {
-                response.end('hi, ' + request.url);
-            }
+            response.end('hi, ' + request.url);
         });
-        server.listen(8908, done);
+        server.listen(0, () => {
+            port = server.address().port;
+            done();
+        });
     });
 
     afterAll(() => server.close());
@@ -34,7 +29,7 @@ describe('Page', () => {
             runnedHere = true;
         });
 
-        await page.open('http://localhost:8908/test');
+        await page.open(`http://localhost:${port}/test`);
 
         expect(runnedHere).toBe(true);
     });
@@ -64,7 +59,7 @@ describe('Page', () => {
             runnedHereToo = true;
         });
 
-        await page.open('http://localhost:8908/test');
+        await page.open(`http://localhost:${port}/test`);
 
         expect(runnedHere).toBe(true);
         expect(runnedHereToo).toBe(true);
@@ -78,7 +73,7 @@ describe('Page', () => {
             parameterProvided = param;
         }, 'param');
 
-        await page.open('http://localhost:8908/test');
+        await page.open(`http://localhost:${port}/test`);
 
         expect(parameterProvided).toBe('param');
     });
@@ -92,7 +87,7 @@ describe('Page', () => {
             runnedInPhantomRuntime = true;
         });
 
-        await page.open('http://localhost:8908/test');
+        await page.open(`http://localhost:${port}/test`);
 
         let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
 
@@ -107,7 +102,7 @@ describe('Page', () => {
             parameterProvided = param;
         }, 'param');
 
-        await page.open('http://localhost:8908/test');
+        await page.open(`http://localhost:${port}/test`);
 
         let parameterProvided = await phantom.windowProperty('parameterProvided');
 
@@ -138,7 +133,7 @@ describe('Page', () => {
             runnedHere = true;
         });
 
-        await page.open('http://localhost:8908/test');
+        await page.open(`http://localhost:${port}/test`);
 
         let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
 
@@ -157,7 +152,7 @@ describe('Page', () => {
 
         await page.off('onResourceReceived');
 
-        await page.open('http://localhost:8908/test');
+        await page.open(`http://localhost:${port}/test`);
 
         expect(runnedHere).toBe(false);
     });
@@ -172,7 +167,7 @@ describe('Page', () => {
 
         await page.off('onResourceReceived');
 
-        await page.open('http://localhost:8908/test');
+        await page.open(`http://localhost:${port}/test`);
 
         let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
 

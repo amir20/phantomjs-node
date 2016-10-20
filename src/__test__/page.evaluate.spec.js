@@ -1,24 +1,20 @@
 import http from 'http';
-import Phantom from '../phantom';
 import 'babel-polyfill';
+import Phantom from '../phantom';
 
 describe('Page', () => {
     let server;
     let phantom;
+    let port;
     beforeAll(done => {
         server = http.createServer((request, response) => {
-            if (request.url === '/script.js') {
-                response.end('window.fooBar = 2;');
-            } else if (request.url === '/test.html') {
-                response.end('<html><head><title>Page Title</title></head><body>Test</body></html>');
-            } else if (request.url === '/upload.html') {
-                response.end('<html><head><title>Page Title</title></head>' +
-                    '<body><input type="file" id="upload" /></body></html>');
-            } else {
-                response.end('hi, ' + request.url);
-            }
+            response.end('<html><head><title>Page Title</title></head><body>Test</body></html>');
         });
-        server.listen(8918, done);
+
+        server.listen(0, () => {
+            port = server.address().port;
+            done();
+        });
     });
 
     afterAll(() => server.close());
@@ -27,7 +23,7 @@ describe('Page', () => {
     
     it('#evaluate(function(){return document.title}) executes correctly', async () => {
         let page = await phantom.createPage();
-        await page.open('http://localhost:8918/test.html');
+        await page.open(`http://localhost:${port}/test.html`);
         let response = await page.evaluate(function() {
             return document.title;
         });
@@ -80,7 +76,7 @@ describe('Page', () => {
 
     it('#evaluateJavaScript(\'function(){return document.title}\') executes correctly', async () => {
         let page = await phantom.createPage();
-        await page.open('http://localhost:8918/test.html');
+        await page.open(`http://localhost:${port}/test.html`);
         let response = await page.evaluate('function () { return document.title }');
         expect(response).toEqual('Page Title');
     });

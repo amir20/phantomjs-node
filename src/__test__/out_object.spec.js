@@ -6,9 +6,13 @@ import OutObject from '../out_object';
 describe('Command', () => {
     let server;
     let phantom;
+    let port;
     beforeAll(done => {
         server = http.createServer((request, response) => response.end('hi, ' + request.url));
-        server.listen(8898, done);
+        server.listen(0, () => {
+            port = server.address().port;
+            done();
+        });
     });
 
     afterAll(() => server.close());
@@ -32,11 +36,11 @@ describe('Command', () => {
             out.lastResponse = response;
         }, outObj);
 
-        await page.open('http://localhost:8898/test');
+        await page.open(`http://localhost:${port}/test`);
 
         let lastResponse = await outObj.property('lastResponse');
 
-        expect(lastResponse.url).toEqual('http://localhost:8898/test');
+        expect(lastResponse.url).toEqual(`http://localhost:${port}/test`);
     });
 
     it('#property() returns a value set by phantom and node', async () => {
@@ -49,9 +53,9 @@ describe('Command', () => {
             out.data = out.test + response.url;
         }, outObj);
 
-        await page.open('http://localhost:8898/test2');
+        await page.open(`http://localhost:${port}/test2`);
         let data = await outObj.property('data');
-        expect(data).toEqual('fooBar$http://localhost:8898/test2');
+        expect(data).toEqual(`fooBar$http://localhost:${port}/test2`);
     });
 
     it('#property() works with input params', async () => {
@@ -62,7 +66,7 @@ describe('Command', () => {
             out.data = test;
         }, 'test', outObj);
 
-        await page.open('http://localhost:8898/test2');
+        await page.open(`http://localhost:${port}/test2`);
         let data = await outObj.property('data');
         expect(data).toEqual('test');
     });

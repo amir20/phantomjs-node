@@ -1,0 +1,6 @@
+[libs]
+decls/
+
+
+[options]
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe

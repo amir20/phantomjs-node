@@ -1,8 +1,15 @@
+// @flow
+
+import Phantom from './phantom';
+
 /**
  * Page class that proxies everything to phantomjs
  */
 export default class Page {
-    constructor(phantom, pageId) {
+    phantom: Phantom;
+    target: string;
+
+    constructor(phantom:Phantom, pageId:string) {
         this.target = 'page$' + pageId;
         this.phantom = phantom;
     }
@@ -16,7 +23,7 @@ export default class Page {
      * all the closure info wont work
      * @returns {*}
      */
-    on(event, runOnPhantom, listener) {
+    on(event:string, runOnPhantom:boolean, listener:Function) {
         let mustRunOnPhantom;
         let callback;
         let args;
@@ -40,7 +47,7 @@ export default class Page {
      * @param event the event name
      * @returns {*}
      */
-    off(event) {
+    off(event:string) {
         return this.phantom.off(event, this.target);
     }
 
@@ -61,21 +68,21 @@ export default class Page {
     /**
      * Defines a method
      */
-    defineMethod(name, definition) {
+    defineMethod(name:string, definition:Function) {
         return this.phantom.execute(this.target, 'defineMethod', [name, definition]);
     }
 
     /**
      * Gets or sets a property
      */
-    property() {
+    property():Promise<*> {
         return this.phantom.execute(this.target, 'property', [].slice.call(arguments));
     }
 
     /**
      * Gets or sets a setting
      */
-    setting() {
+    setting():Promise<*> {
         return this.phantom.execute(this.target, 'setting', [].slice.call(arguments));
     }
 }
@@ -109,12 +116,14 @@ const methods = [
 ];
 
 asyncMethods.forEach(method => {
+    // $FlowFixMe: no way to provide dynamic functions
     Page.prototype[method] = function() {
         return this.invokeAsyncMethod.apply(this, [method].concat([].slice.call(arguments)));
     };
 });
 
 methods.forEach(method => {
+    // $FlowFixMe: no way to provide dynamic functions
     Page.prototype[method] = function() {
         return this.invokeMethod.apply(this, [method].concat([].slice.call(arguments)));
     };
