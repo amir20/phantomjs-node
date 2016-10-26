@@ -225,7 +225,7 @@ outObj.property('urls').then(function(urls){
 
 ### `page#on`
 
-By using `on(event, [runOnPhantom=false],listener, args*)`, you can listen to the events the events the page emits.
+By using `on(event, [runOnPhantom=false],listener, args*)`, you can listen to the events the page emits.
 
 ```js
 var urls = [];
