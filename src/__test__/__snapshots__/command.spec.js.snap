@@ -1,0 +1,1 @@
+exports[`Command JSON.stringify(command) to be valid json 1`] = `"{\"id\":\"1\",\"target\":\"target\",\"name\":\"name\",\"params\":[],\"deferred\":null}"`;

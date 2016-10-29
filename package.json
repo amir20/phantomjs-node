@@ -45,6 +45,7 @@
     "flow-bin": "^0.33.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
+    "gulp-copy": "^0.0.2",
     "gulp-eslint": "^3.0.0",
     "gulp-newer": "^1.3.0",
     "gulp-watch": "^4.3.5",

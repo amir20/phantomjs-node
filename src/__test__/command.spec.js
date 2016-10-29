@@ -10,8 +10,6 @@ describe('Command', () => {
     });
 
     it('JSON.stringify(command) to be valid json', () => {
-        expect(JSON.stringify(new Command('1', 'target', 'name'))).toEqual(
-            '{"id":"1","target":"target","name":"name","params":[],"deferred":null}'
-        );
+        expect(JSON.stringify(new Command('1', 'target', 'name'))).toMatchSnapshot();
     });
 });
