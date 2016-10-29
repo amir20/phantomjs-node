@@ -7,7 +7,7 @@
         "jest":true,
         "phantomjs": true
     },
-    "extends": "fbjs",
+    "extends": "fbjs/strict",
     "parserOptions": {
         "sourceType": "module"
     },
