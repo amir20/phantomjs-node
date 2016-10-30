@@ -56,13 +56,13 @@ $ npm install phantom@2 --save
 
 ## How does it work?
 
-  [v1.0.x](//github.com/amir20/phantomjs-node/tree/v1) used to use `dnode` to communicate between nodejs and phantomjs. This approach raised a lot of security restrictions and did not work well when using `cluster` or `pm2`.
+  [v1.0.x](//github.com/amir20/phantomjs-node/tree/v1) used to leverage `dnode` to communicate between nodejs and phantomjs. This approach raised a lot of security restrictions and did not work well when using `cluster` or `pm2`.
 
-  v2.0.x has been completely rewritten to use `sysin` and `sysout` pipes to communicate with the phantomjs process. It works out of the box with `cluster` and `pm2`. If you want to see the messages that are sent try adding `DEBUG=true` to your execution, ie. `DEBUG=true node path/to/test.js`. The new code is much cleaner and simpler. PhantomJS is started with `shim.js` which proxies all messages to the `page` or `phantom` object.
+  v2.0.x has been completely rewritten to use `sysin` and `sysout` pipes to communicate with the phantomjs process. It works out of the box with `cluster` and `pm2`. If you want to see the messages that are sent try adding `DEBUG=true` to your execution, ie. `DEBUG=true node path/to/test.js`. The new code is much cleaner and simpler. PhantomJS is started with a shim which proxies all messages to the `page` or `phantom` object.
 
 ## Migrating from 2.x
 
-Going forward, version phantom@3 will Node v5 and above. This adds the extra benefit of less code and faster performance. 
+Going forward, version phantom@3 will only support Node v5 and above. This adds the extra benefit of less code and faster performance.
 
 ## Migrating from 1.0.x
 
@@ -136,9 +136,9 @@ However, be aware that phantomjs process will get detached (and thus won't exit)
 
 ### `phantom#logger`
 
-The property containing the [winston](https://www.npmjs.com/package/winston) `logger` used by a `phantom` instance. You may change parameters like verbosity or redirect messages to a file with it. Note that a single `logger` instance is used for all `phantom` instances, so any change on this object will have an impact on all `phantom` objects.
+The property containing the [winston](https://www.npmjs.com/package/winston) `logger` used by a `phantom` instance. You may change parameters like verbosity or redirect messages to a file with it.
 
-You can also use your own logger here but you should consider providing it to the `create` method since logs are written inside the `phantom` constructor too. The `logger` object can contain four functions : `debug`, `info`, `warn` and `error`. If one of them is empty, its output will be discarded.
+You can also use your own logger by providing it to the `create` method. The `logger` object can contain four functions : `debug`, `info`, `warn` and `error`. If one of them is empty, its output will be discarded.
 
 Here are two ways of handling it :
 ```js
@@ -150,7 +150,7 @@ phantom.create([], { logLevel: 'error' }).then(function(ph) {
 /* Set a custom logger object directly in the create call. Note that `info` is not provided here and so its output will be discarded */
 var log = console.log;
 var nolog = function() {};
-phantom.create([], { warn: log, debug: nolog, error: log }).then(function(ph) {
+phantom.create([], { logger: { warn: log, debug: nolog, error: log } }).then(function(ph) {
     // use ph
 });
 ```
