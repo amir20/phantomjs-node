@@ -1516,9 +1516,9 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
-flow-bin@^0.33.0:
-  version "0.33.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.33.0.tgz#ef011eace7a6100f1ae08b852db78279032b8750"
+flow-bin@^0.34.0:
+  version "0.34.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.34.0.tgz#093ed36981e8fafc39d16f0b0878d0968aa80fad"
 
 for-in@^0.1.5:
   version "0.1.6"
@@ -3763,8 +3763,8 @@ sntp@1.x.x:
     hoek "2.x.x"
 
 source-map-support@^0.4.2:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.5.tgz#4438df4219e1b3c7feb674614b4c67f9722db1e4"
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.6.tgz#32552aa64b458392a85eab3b0b5ee61527167aeb"
   dependencies:
     source-map "^0.5.3"
 
