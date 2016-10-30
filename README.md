@@ -311,6 +311,19 @@ page.switchToMainFrame().then(function() {
 });
 ```
 
+### `page#uploadFile`
+
+A file can be inserted into file input fields using the `#uploadFile(selector, file)` method.
+
+```js
+page.uploadFile('#selector', '/path/to/file').then(function() {
+
+});
+```
+
+## Advanced
+Methods below are for advanced users. Most people won't need these methods.
+
 ### `page#defineMethod`
 
 A method can be defined using the `#defineMethod(name, definition)` method.
@@ -350,17 +363,6 @@ page.invokeMethod('evaluate', function(selector) {
 	console.log(exists);
 });
 ```
-
-### `page#uploadFile`
-
-A file can be inserted into file input fields using the `#uploadFile(selector, file)` method.
-
-```js
-page.uploadFile('#selector', '/path/to/file').then(function() {
-
-});
-```
-
 
 ## Tests
 
