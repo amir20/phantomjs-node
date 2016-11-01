@@ -61,6 +61,11 @@
     "testPathDirs": [
       "<rootDir>/lib"
     ],
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "node_modules/",
+      "jest-modules/"
+    ],
     "testEnvironment": "node"
   }
 }
