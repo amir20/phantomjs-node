@@ -9,7 +9,7 @@ export default class Page {
     phantom: Phantom;
     target: string;
 
-    constructor(phantom:Phantom, pageId:string) {
+    constructor(phantom: Phantom, pageId: string) {
         this.target = 'page$' + pageId;
         this.phantom = phantom;
     }
@@ -23,7 +23,7 @@ export default class Page {
      * all the closure info wont work
      * @returns {*}
      */
-    on(event:string, runOnPhantom:boolean, listener:Function) {
+    on(event: string, runOnPhantom: boolean, listener: Function) {
         let mustRunOnPhantom;
         let callback;
         let args;
@@ -47,7 +47,7 @@ export default class Page {
      * @param event the event name
      * @returns {*}
      */
-    off(event:string) {
+    off(event: string) {
         return this.phantom.off(event, this.target);
     }
 
@@ -68,21 +68,21 @@ export default class Page {
     /**
      * Defines a method
      */
-    defineMethod(name:string, definition:Function) {
+    defineMethod(name: string, definition: Function) {
         return this.phantom.execute(this.target, 'defineMethod', [name, definition]);
     }
 
     /**
      * Gets or sets a property
      */
-    property():Promise<*> {
+    property(): Promise<*> {
         return this.phantom.execute(this.target, 'property', [].slice.call(arguments));
     }
 
     /**
      * Gets or sets a setting
      */
-    setting():Promise<*> {
+    setting(): Promise<*> {
         return this.phantom.execute(this.target, 'setting', [].slice.call(arguments));
     }
 }

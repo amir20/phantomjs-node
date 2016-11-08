@@ -14,7 +14,8 @@ if (!Function.prototype.bind) {
         let self = this;
         let aArgs = Array.prototype.slice.call(arguments, 1);
 
-        function NoopFunction() {}
+        function NoopFunction() {
+        }
 
         function boundFunction() {
             return self.apply((this instanceof NoopFunction ? this : oThis),

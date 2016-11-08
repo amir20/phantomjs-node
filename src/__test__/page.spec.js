@@ -30,20 +30,20 @@ describe('Page', () => {
     beforeEach(() => phantom = new Phantom());
     afterEach(() => phantom.exit());
 
-    it('#open() a valid page', async () => {
+    it('#open() a valid page', async() => {
         let page = await phantom.createPage();
         let status = await page.open(`http://localhost:${port}/test`);
         expect(status).toEqual('success');
     });
 
-    it('#property(\'plainText\') returns valid content', async () => {
+    it('#property(\'plainText\') returns valid content', async() => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test`);
         let content = await page.property('plainText');
         expect(content).toEqual('hi, /test');
     });
 
-    it('#property(\'onResourceRequested\', function(){}) sets property', async () => {
+    it('#property(\'onResourceRequested\', function(){}) sets property', async() => {
         let page = await phantom.createPage();
         const url = `http://localhost:${port}/foo-bar-xyz`;
         await page.property('onResourceRequested', function(requestData, networkRequest, url) {
@@ -54,7 +54,7 @@ describe('Page', () => {
         expect(content).toEqual('hi, /foo-bar-xyz'); // should have been changed to /foo-bar-xyz
     });
 
-    it('#property(\'onResourceRequested\', function(){}, params...) passes parameters', async () => {
+    it('#property(\'onResourceRequested\', function(){}, params...) passes parameters', async() => {
         let page = await phantom.createPage();
         page.property('onResourceRequested', function(requestData, networkRequest, foo, a, b) {
             RESULT = [foo, a, b];
@@ -65,14 +65,14 @@ describe('Page', () => {
         expect(RESULT).toEqual(['foobar', 1, -100]);
     });
 
-    it('#property(\'key\', value) sets property', async () => {
+    it('#property(\'key\', value) sets property', async() => {
         let page = await phantom.createPage();
         await page.property('viewportSize', {width: 800, height: 600});
         let value = await page.property('viewportSize');
         expect(value).toEqual({width: 800, height: 600});
     });
 
-    it('#property(\'paperSize\', value) sets value properly with phantom.paperSize', async () => {
+    it('#property(\'paperSize\', value) sets value properly with phantom.paperSize', async() => {
         let page = await phantom.createPage();
         page.property('paperSize', {
             width: '8.5in',
@@ -100,13 +100,13 @@ describe('Page', () => {
         fs.unlinkSync(file);
     });
 
-    it('#setting(\'javascriptEnabled\') returns true', async () => {
+    it('#setting(\'javascriptEnabled\') returns true', async() => {
         let page = await phantom.createPage();
         let value = await page.setting('javascriptEnabled');
         expect(value).toBe(true);
     });
 
-    it('#setting(\'key\', value) sets setting', async () => {
+    it('#setting(\'key\', value) sets setting', async() => {
         let page = await phantom.createPage();
         await page.setting('javascriptEnabled', false);
         let value = await page.setting('javascriptEnabled');
@@ -114,7 +114,7 @@ describe('Page', () => {
     });
 
 
-    it('#injectJs() properly injects a js file', async () => {
+    it('#injectJs() properly injects a js file', async() => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test`);
         // inject_example.js: window.foo = 1;
@@ -127,7 +127,7 @@ describe('Page', () => {
         expect(response).toEqual(1);
     });
 
-    it('#includeJs() properly injects a js file', async () => {
+    it('#includeJs() properly injects a js file', async() => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test`);
         await page.includeJs(`http://localhost:${port}/script.js`);
@@ -137,7 +137,7 @@ describe('Page', () => {
         expect(response).toEqual(2);
     });
 
-    it('#render() creates a file', async () => {
+    it('#render() creates a file', async() => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test`);
         let file = 'test.png';
@@ -148,14 +148,14 @@ describe('Page', () => {
         fs.unlinkSync(file);
     });
 
-    it('#renderBase64() returns encoded PNG', async () => {
+    it('#renderBase64() returns encoded PNG', async() => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test`);
         let content = await  page.renderBase64('PNG');
         expect(content).not.toBeNull();
     });
 
-    it('#addCookie() adds a cookie to the page', async () => {
+    it('#addCookie() adds a cookie to the page', async() => {
         let page = await phantom.createPage();
         await page.addCookie({
             'name': 'Valid-Cookie-Name',
@@ -170,7 +170,7 @@ describe('Page', () => {
         expect(cookies[0].name).toEqual('Valid-Cookie-Name');
     });
 
-    it('#clearCookies() removes all cookies', async () => {
+    it('#clearCookies() removes all cookies', async() => {
         let page = await phantom.createPage();
 
         // Probably not the best test if this method doesn't work
@@ -189,7 +189,7 @@ describe('Page', () => {
         expect(cookies).toEqual([]);
     });
 
-    it('#deleteCookie() removes one cookie', async () => {
+    it('#deleteCookie() removes one cookie', async() => {
         let page = await phantom.createPage();
 
         // Probably not the best test if this method doesn't work
@@ -223,7 +223,7 @@ describe('Page', () => {
         expect(cookies[0].name).toEqual('cookie-2');
     });
 
-    it('#reject(...) works when there is an error', async () => {
+    it('#reject(...) works when there is an error', async() => {
         try {
             await phantom.execute('page', 'nonexistentCommand');
         } catch (e) {
@@ -231,7 +231,7 @@ describe('Page', () => {
         }
     });
 
-    it('#open opens multiple pages', async () => {
+    it('#open opens multiple pages', async() => {
         let page1 = await phantom.createPage();
         await page1.open(`http://localhost:${port}/test1`);
         page1.close();
@@ -243,7 +243,7 @@ describe('Page', () => {
         page2.close();
     });
 
-    it('#windowProperty() returns a window value', async () => {
+    it('#windowProperty() returns a window value', async() => {
         let page = await phantom.createPage();
 
         await page.property('onResourceReceived', function(response) {
@@ -254,7 +254,7 @@ describe('Page', () => {
         expect(lastResponse.url).toEqual(`http://localhost:${port}/test`);
     });
 
-    it('#setContent() works with custom url', async () => {
+    it('#setContent() works with custom url', async() => {
         let page = await phantom.createPage();
         let html = '<html><head><title>setContent Title</title></head><body></body></html>';
 
@@ -267,7 +267,7 @@ describe('Page', () => {
         expect(response).toEqual(['setContent Title', `http://localhost:${port}/`]);
     });
 
-    it('#sendEvent() sends an event', async () => {
+    it('#sendEvent() sends an event', async() => {
         let page = await phantom.createPage();
         let html = '<html  onclick="docClicked = true;"><head><title>setContent Title</title>' +
             '</head><body></body></html>';
@@ -283,7 +283,7 @@ describe('Page', () => {
     });
 
 
-    it('#switchToFrame(framePosition) will switch to frame of framePosition', async () => {
+    it('#switchToFrame(framePosition) will switch to frame of framePosition', async() => {
         let page = await phantom.createPage();
         let html = '<html><head><title>Iframe Test</title></head><body>' +
             `<iframe id="testframe" src="http://localhost:${port}/test.html"></iframe></body></html>`;
@@ -300,7 +300,7 @@ describe('Page', () => {
         expect(inIframe).toBe(true);
     });
 
-    it('#switchToMainFrame() will switch back to the main frame', async () => {
+    it('#switchToMainFrame() will switch back to the main frame', async() => {
         let page = await phantom.createPage();
         let html = '<html><head><title>Iframe Test</title></head><body>' +
             `<iframe id="testframe" src="http://localhost:${port}/test.html"></iframe></body></html>`;
@@ -319,7 +319,7 @@ describe('Page', () => {
         expect(inMainFrame).toBe(true);
     });
 
-    it('#reload() will reload the current page', async () => {
+    it('#reload() will reload the current page', async() => {
         let page = await phantom.createPage();
         let reloaded = false;
 
@@ -334,7 +334,7 @@ describe('Page', () => {
         expect(reloaded).toBe(true);
     });
 
-    it('#invokeAsyncMethod(\'includeJs\', \'http://localhost:port/script.js\') executes correctly', async () => {
+    it('#invokeAsyncMethod(\'includeJs\', \'http://localhost:port/script.js\') executes correctly', async() => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test`);
         await page.invokeAsyncMethod('includeJs', `http://localhost:${port}/script.js`);
@@ -344,27 +344,27 @@ describe('Page', () => {
         expect(response).toEqual(2);
     });
 
-    it('#invokeAsyncMethod(\'open\', \'http://localhost:port/test\') executes correctly', async () => {
+    it('#invokeAsyncMethod(\'open\', \'http://localhost:port/test\') executes correctly', async() => {
         let page = await phantom.createPage();
         let status = await page.invokeAsyncMethod('open', `http://localhost:${port}/test`);
         expect(status).toEqual('success');
     });
 
-    it('#invokeMethod(\'evaluate\', \'function () { return document.title }\') executes correctly', async () => {
+    it('#invokeMethod(\'evaluate\', \'function () { return document.title }\') executes correctly', async() => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test.html`);
         let response = await page.invokeMethod('evaluate', 'function () { return document.title }');
         expect(response).toEqual('Page Title');
     });
 
-    it('#invokeMethod(\'renderBase64\') executes correctly', async () => {
+    it('#invokeMethod(\'renderBase64\') executes correctly', async() => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test`);
         let content = await page.invokeMethod('renderBase64', 'PNG');
         expect(content).not.toBeNull();
     });
 
-    it('#defineMethod(name, definition) defines a method', async () => {
+    it('#defineMethod(name, definition) defines a method', async() => {
         let page = await phantom.createPage();
         await page.defineMethod('getZoomFactor', function() {
             return this.zoomFactor; // eslint-disable-line no-invalid-this
@@ -383,7 +383,7 @@ describe('Page', () => {
         });
     });
 
-    it('#setProxy() sets the proxy', async () => {
+    it('#setProxy() sets the proxy', async() => {
         let page = await phantom.createPage();
         await page.setProxy(`http://localhost:${port}/`);
         await page.open('http://phantomjs.org/');
@@ -391,7 +391,7 @@ describe('Page', () => {
         expect(text).toEqual('hi, http://phantomjs.org/');
     });
 
-    it('#property = something shows a warning', async () => {
+    it('#property = something shows a warning', async() => {
         if (typeof Proxy === 'function') {
             let logger = {warn: jest.fn()};
 
@@ -424,7 +424,7 @@ describe('Page', () => {
         });
     });
 
-    it('#uploadFile() inserts file into file input field', async () => {
+    it('#uploadFile() inserts file into file input field', async() => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/upload.html`);
         await page.uploadFile('#upload', process.env.PWD + '/package.json');

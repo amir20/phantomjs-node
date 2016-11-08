@@ -6,7 +6,7 @@ export default class OutObject {
     _phantom: Phantom;
     target: string;
 
-    constructor(phantom:Phantom) {
+    constructor(phantom: Phantom) {
         this._phantom = phantom;
         this.target = 'OutObject$' + randId(16);
     }

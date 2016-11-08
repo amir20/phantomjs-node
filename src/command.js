@@ -11,7 +11,7 @@ export default class Command {
     params: mixed[];
     deferred: ?{resolve: Function, reject: Function};
 
-    constructor(id: ?string, target: string, name: string, params:mixed[] = []) {
+    constructor(id: ?string, target: string, name: string, params: mixed[] = []) {
         this.id = id || randId(16);
         this.target = target;
         this.name = name;

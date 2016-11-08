@@ -108,7 +108,7 @@ describe('Phantom', () => {
         expect(() => new Phantom(true)).toThrow();
     });
 
-    it('catches errors when stdin closes unexpectedly', async () => {
+    it('catches errors when stdin closes unexpectedly', async() => {
         instance.process.stdin.end();
         try {
             await instance.createPage();
@@ -117,7 +117,7 @@ describe('Phantom', () => {
         }
     });
 
-    xit('catches errors when stdout closes unexpectedly', async () => {
+    xit('catches errors when stdout closes unexpectedly', async() => {
         instance.process.stdout.end();
         try {
             await instance.createPage();

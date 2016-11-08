@@ -50,8 +50,7 @@ export default class Phantom {
      * @param [logger] object containing functions used for logging
      * @param [logLevel] log level to apply on the logger (if unset or default)
      */
-    constructor(
-        args?: string[] = [],
+    constructor(args?: string[] = [],
         {phantomPath = phantomjs.path, logger = defaultLogger, logLevel = defaultLogLevel}: Config =
             {
                 phantomPath: phantomjs.path,
@@ -120,7 +119,6 @@ export default class Phantom {
                 }
 
 
-
             } else if (message.indexOf('<event>') === 0) {
                 const json = message.substr(7);
                 this.logger.debug('Parsing: %s', json);
@@ -178,7 +176,7 @@ export default class Phantom {
                 page = new Proxy(page, {
                     set: function(target, prop) {
                         logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) ` +
-                        'instead. See the README file for more examples of page#property.');
+                            'instead. See the README file for more examples of page#property.');
                         return false;
                     },
                 });
@@ -245,7 +243,7 @@ export default class Phantom {
      * @param args an array of args to pass to the method
      * @returns {Promise}
      */
-    execute(target: string, name:string, args:mixed[] = []): Promise<Response> {
+    execute(target: string, name: string, args: mixed[] = []): Promise<Response> {
         return this.executeCommand(new Command(null, target, name, args));
     }
 
@@ -259,7 +257,7 @@ export default class Phantom {
      * @param args an array of args to pass to the callback
      */
     on(event: string, target: string, runOnPhantom: boolean, callback: Function, args: mixed[] = []) {
-        const eventDescriptor:{type: string, args?: mixed[], event?: Function} = {type: event};
+        const eventDescriptor: {type: string, args?: mixed[], event?: Function} = {type: event};
 
         if (runOnPhantom) {
             eventDescriptor.event = callback;
@@ -308,12 +306,12 @@ export default class Phantom {
     /**
      * Clean up and force kill this process
      */
-    kill(errmsg:string = 'Phantom process was killed'): void {
+    kill(errmsg: string = 'Phantom process was killed'): void {
         this._rejectAllCommands(errmsg);
         this.process.kill('SIGKILL');
     }
 
-    _heartBeat():void {
+    _heartBeat(): void {
         if (this.commands.size === 0) {
             this.execute('phantom', 'noop');
         }
@@ -322,7 +320,7 @@ export default class Phantom {
     /**
      * rejects all commands in this.commands
      */
-    _rejectAllCommands(errmsg:string = 'Phantom exited prematurely'): void {
+    _rejectAllCommands(errmsg: string = 'Phantom exited prematurely'): void {
         // prevent heartbeat from preventing this from terminating
         clearInterval(this.heartBeatId);
         for (const command of this.commands.values()) {

@@ -19,9 +19,9 @@ describe('Page', () => {
     afterAll(() => server.close());
     beforeEach(() => phantom = new Phantom());
     afterEach(() => phantom.exit());
-    
 
-    it('#on() can register an event in the page and run the code locally', async () => {
+
+    it('#on() can register an event in the page and run the code locally', async() => {
         let page = await phantom.createPage();
         let runnedHere = false;
 
@@ -34,7 +34,7 @@ describe('Page', () => {
         expect(runnedHere).toBe(true);
     });
 
-    it('#on() event registered does not run if not triggered', async () => {
+    it('#on() event registered does not run if not triggered', async() => {
         let page = await phantom.createPage();
         let runnedHere = false;
 
@@ -45,7 +45,7 @@ describe('Page', () => {
         expect(runnedHere).toBe(false);
     });
 
-    it('#on() can register more than one event of the same type', async () => {
+    it('#on() can register more than one event of the same type', async() => {
         let page = await phantom.createPage();
         let runnedHere = false;
 
@@ -65,7 +65,7 @@ describe('Page', () => {
         expect(runnedHereToo).toBe(true);
     });
 
-    it('#on() can pass parameters', async () => {
+    it('#on() can pass parameters', async() => {
         let page = await phantom.createPage();
         let parameterProvided = false;
 
@@ -78,7 +78,7 @@ describe('Page', () => {
         expect(parameterProvided).toBe('param');
     });
 
-    it('#on() can register an event in the page which code runs in phantom runtime', async () => {
+    it('#on() can register an event in the page which code runs in phantom runtime', async() => {
         let page = await phantom.createPage();
         let runnedHere = false;
 
@@ -95,7 +95,7 @@ describe('Page', () => {
         expect(runnedInPhantomRuntime).toBe(true);
     });
 
-    it('#on() can pass parameters to functions to be executed in phantom runtime', async () => {
+    it('#on() can pass parameters to functions to be executed in phantom runtime', async() => {
         let page = await phantom.createPage();
 
         await page.on('onResourceReceived', true, function(status, param) {
@@ -109,7 +109,7 @@ describe('Page', () => {
         expect(parameterProvided).toBe('param');
     });
 
-    it('#on() event supposed to run in phantom runtime wont run if not triggered', async () => {
+    it('#on() event supposed to run in phantom runtime wont run if not triggered', async() => {
         let page = await phantom.createPage();
 
         await page.on('onResourceReceived', true, function() {
@@ -121,7 +121,7 @@ describe('Page', () => {
         expect(runnedInPhantomRuntime).toBeFalsy();
     });
 
-    it('#on() can register at the same event to run locally or in phantom runtime', async () => {
+    it('#on() can register at the same event to run locally or in phantom runtime', async() => {
         let page = await phantom.createPage();
         let runnedHere = false;
 
@@ -141,7 +141,7 @@ describe('Page', () => {
         expect(runnedInPhantomRuntime).toBe(true);
     });
 
-    it('#off() can disable an event whose listener is going to run locally', async () => {
+    it('#off() can disable an event whose listener is going to run locally', async() => {
 
         let page = await phantom.createPage();
         let runnedHere = false;
@@ -157,7 +157,7 @@ describe('Page', () => {
         expect(runnedHere).toBe(false);
     });
 
-    it('#off() can disable an event whose listener is going to run on the phantom process', async () => {
+    it('#off() can disable an event whose listener is going to run on the phantom process', async() => {
 
         let page = await phantom.createPage();
 

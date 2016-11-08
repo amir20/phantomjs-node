@@ -28,7 +28,7 @@ describe('Command', () => {
         expect(outObj).toBeInstanceOf(OutObject);
     });
 
-    it('#property() returns a value set by phantom', async () => {
+    it('#property() returns a value set by phantom', async() => {
         let page = await phantom.createPage();
         let outObj = phantom.createOutObject();
 
@@ -43,7 +43,7 @@ describe('Command', () => {
         expect(lastResponse.url).toEqual(`http://localhost:${port}/test`);
     });
 
-    it('#property() returns a value set by phantom and node', async () => {
+    it('#property() returns a value set by phantom and node', async() => {
         let page = await phantom.createPage();
         let outObj = phantom.createOutObject();
 
@@ -58,7 +58,7 @@ describe('Command', () => {
         expect(data).toEqual(`fooBar$http://localhost:${port}/test2`);
     });
 
-    it('#property() works with input params', async () => {
+    it('#property() works with input params', async() => {
         let page = await phantom.createPage();
         let outObj = phantom.createOutObject();
 

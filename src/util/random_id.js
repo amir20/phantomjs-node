@@ -7,9 +7,9 @@
  */
 export default function randId(minBytes: number) {
     const ret = [];
-    for ( ; minBytes > 0; minBytes -= 4 ) {
+    for (; minBytes > 0; minBytes -= 4) {
         // Make a unique string of pow(2, 32) entropy.
-        ret.push((Math.random() * (-1 >>> 0)).toString(36) ); // eslint-disable-line no-bitwise
+        ret.push((Math.random() * (-1 >>> 0)).toString(36)); // eslint-disable-line no-bitwise
     }
     return ret.join('');
 }
