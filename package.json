@@ -37,7 +37,7 @@
     "babel-preset-node5": "^11.1.0",
     "del": "^2.2.0",
     "eslint": "^3.8.1",
-    "eslint-config-fb-strict": "^15.0.0",
+    "eslint-config-fb-strict": "^17.0.0",
     "eslint-config-fbjs": "^1.1.1",
     "eslint-plugin-babel": "^3.3.0",
     "eslint-plugin-flowtype": "^2.20.0",
@@ -49,7 +49,7 @@
     "gulp-eslint": "^3.0.0",
     "gulp-newer": "^1.3.0",
     "gulp-watch": "^4.3.5",
-    "jest": "^16.0.1"
+    "jest": "^17.0.0"
   },
   "license": "ISC",
   "scripts": {
