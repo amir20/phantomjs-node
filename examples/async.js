@@ -1,10 +1,10 @@
-const phantom_node = require('phantom');
+const phantom = require('phantom');
 
 (async function() {
-    const phantom = await phantom_node.create(["--ignore-ssl-errors=true", "--local-to-remote-url-access=true"]);
-    const page = await phantom.createPage();
+    const instance = await phantom.create();
+    const page = await instance.createPage();
     await page.on("onResourceRequested", function(requestData) {
-        console.info('Requesting', requestData.url)
+        console.info('Requesting', data.url)
     });
 
     const status = await page.open('https://stackoverflow.com/');
@@ -13,7 +13,7 @@ const phantom_node = require('phantom');
     const content = await page.property('content');
     console.log(content);
 
-    await phantom.exit();
+    await instance.exit();
 }());
 
-// node--harmony - async - await async.js
+// node --harmony-async-await async.js
