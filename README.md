@@ -10,34 +10,26 @@ phantom - Fast NodeJS API for PhantomJS
 
 ## Super easy to use
 ```js
-import phantom from 'phantom';
+const phantom_node = require('phantom');
 
-let sitepage;
-let phInstance;
-phantom.create()
-    .then(instance => {
-        phInstance = instance;
-        return instance.createPage();
-    })
-    .then(page => {
-        sitepage = page;
-        return page.open('https://stackoverflow.com/');
-    })
-    .then(status => {
-        console.log(status);
-        return sitepage.property('content');
-    })
-    .then(content => {
-        console.log(content);
-        sitepage.close();
-        phInstance.exit();
-    })
-    .catch(error => {
-        console.log(error);
-        phInstance.exit();
+(async function() {
+    const phantom = await phantom_node.create(["--ignore-ssl-errors=true", "--local-to-remote-url-access=true"]);
+    const page = await phantom.createPage();
+    await page.on("onResourceRequested", function(requestData) {
+        console.info('Requesting', requestData.url)
     });
 
+    const status = await page.open('https://stackoverflow.com/');
+    console.log(status);
+
+    const content = await page.property('content');
+    console.log(content);
+
+    await phantom.exit();
+}());
 ```
+
+Using Mode v7+ you can run the above example with `node --harmony-async-await file.js`
 
 See [examples](examples) folder for more ways to use this module.
 

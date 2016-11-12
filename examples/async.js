@@ -1,20 +1,19 @@
-import {
-    create
-} from "phantom";
+const phantom_node = require('phantom');
 
 (async function() {
-    const phantom = await create(["--ignore-ssl-errors=true", "--local-to-remote-url-access=true"]);
+    const phantom = await phantom_node.create(["--ignore-ssl-errors=true", "--local-to-remote-url-access=true"]);
     const page = await phantom.createPage();
-    await page.property("onResourceRequested", requestData => console.log('requesting', requestData.url));
+    await page.on("onResourceRequested", function(requestData) {
+        console.info('Requesting', requestData.url)
+    });
 
-    let status  = await page.open('https://stackoverflow.com/');
+    const status = await page.open('https://stackoverflow.com/');
     console.log(status);
 
-    let content = await page.property('content');
+    const content = await page.property('content');
     console.log(content);
 
     await phantom.exit();
 }());
 
-// npm install babel-cli
-// babel-node async.js
+// node--harmony - async - await async.js
