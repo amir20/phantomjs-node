@@ -29,7 +29,7 @@ const phantom = require('phantom');
 }());
 ```
 
-Using Mode v7+ you can run the above example with `node --harmony-async-await file.js`
+Using Node v7+ you can run the above example with `node --harmony-async-await file.js`
 
 See [examples](examples) folder for more ways to use this module.
 
