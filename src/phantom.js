@@ -94,6 +94,12 @@ export default class Phantom {
         this.process.stdout.pipe(new Linerstream()).on('data', data => {
             const message = data.toString('utf8');
             if (message[0] === '>') {
+                //Server end has finished NOOP,
+                //lets allow NOOP again..
+                if (message === '>NOOP') {
+                  this.doing_NOOP = false;
+                  return;
+                }
                 const json = message.substr(1);
                 this.logger.debug('Parsing: %s', json);
 
@@ -315,9 +321,11 @@ export default class Phantom {
     }
 
     _heartBeat(): void {
-        if (this.commands.size === 0) {
-            this.execute('phantom', 'noop');
-        }
+      if (this.commands.size === 0 && !this.doing_NOOP) {
+        this.doing_NOOP = true;
+        this.process.stdin.write('NOOP' + _os2.default.EOL, 'utf8');
+        //this.execute('phantom', 'noop');
+      }
     }
 
     /**
