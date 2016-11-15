@@ -37,6 +37,7 @@ const defaultLogger = createLogger();
  */
 export default class Phantom {
     logger: Logger;
+    doing_NOOP: boolean;
     commands: Map<string, Command>;
     events: Map<string, EventEmitter>;
     heartBeatId: number;
