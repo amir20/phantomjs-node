@@ -15,6 +15,7 @@ import OutObject from './out_object';
 type Response = {pageId: string}
 
 const defaultLogLevel = process.env.DEBUG === 'true' ? 'debug' : 'info';
+const NOOP = 'NOOP';
 
 /**
  * Creates a logger using winston
@@ -37,7 +38,7 @@ const defaultLogger = createLogger();
  */
 export default class Phantom {
     logger: Logger;
-    doing_NOOP: boolean;
+    isNoOpInProgress: boolean;
     commands: Map<string, Command>;
     events: Map<string, EventEmitter>;
     heartBeatId: number;
@@ -95,10 +96,9 @@ export default class Phantom {
         this.process.stdout.pipe(new Linerstream()).on('data', data => {
             const message = data.toString('utf8');
             if (message[0] === '>') {
-                //Server end has finished NOOP,
-                //lets allow NOOP again..
-                if (message === '>NOOP') {
-                    this.doing_NOOP = false;
+                // Server end has finished NOOP, lets allow NOOP again..
+                if (message === '>' + NOOP) {
+                    this.isNoOpInProgress = false;
                     return;
                 }
                 const json = message.substr(1);
@@ -322,10 +322,9 @@ export default class Phantom {
     }
 
     _heartBeat(): void {
-        if (this.commands.size === 0 && !this.doing_NOOP) {
-            this.doing_NOOP = true;
-            this.process.stdin.write('NOOP' + os.EOL, 'utf8');
-            //this.execute('phantom', 'noop');
+        if (this.commands.size === 0 && !this.isNoOpInProgress) {
+            this.isNoOpInProgress = true;
+            this.process.stdin.write(NOOP + os.EOL, 'utf8');
         }
     }
 

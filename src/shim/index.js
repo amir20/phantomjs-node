@@ -10,6 +10,7 @@ const objectSpace = {
 };
 
 const events = {};
+const NOOP = 'NOOP';
 
 /**
  * All commands that have a custom implementation
@@ -122,14 +123,11 @@ const commands = {
 function read() {
     let line = system.stdin.readLine();
     if (line) {
-        if (line === 'NOOP') {
-            //if sender has done a noop,
-            //it means sender is not busy
-            //so lets give phantom more time
+        if (line === NOOP) {
+            // If sender has done a noop, it means sender is not busy so lets give phantom more time
             setTimeout(function() {
-                //this will reset doing_NOOP at sender,
-                //so if it wants to NOOP again it can..
-                system.stdout.writeLine('>NOOP');
+                // This will reset isNoOpInProgress at sender, so if it wants to NOOP again it can.
+                system.stdout.writeLine('>' + NOOP);
                 read();
             }, 100);
             return;
