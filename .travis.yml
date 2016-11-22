@@ -8,8 +8,9 @@ node_js:
   - "5"
 
 cache:
+  yarn: true
   directories:
-  - node_modules
+    - node_modules
 
 deploy:
   provider: npm

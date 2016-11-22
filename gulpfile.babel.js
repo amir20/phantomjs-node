@@ -22,10 +22,7 @@ gulp.task('copy-snapshots', () => {
         .pipe(copy(lib, {prefix: 1}));
 });
 
-gulp.task('test', ['build', 'copy-snapshots'], done => {
-    const cmd = spawn('jest', {stdio: 'inherit'});
-    cmd.on('close', code => done(code));
-});
+gulp.task('build:test', ['build', 'copy-snapshots']);
 
 gulp.task('watch', ['build'], () => {
     gulp.watch('src/**/*.js', ['build']);

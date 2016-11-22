@@ -11,7 +11,8 @@
   "contributors": [
     {
       "name": "Amir Raminfar",
-      "email": "findamir@gmail.com"
+      "email": "findamir@gmail.com",
+      "web": "http://amirraminfar.com/"
     }
   ],
   "keywords": [
@@ -51,11 +52,6 @@
     "jest": "^17.0.0"
   },
   "license": "ISC",
-  "scripts": {
-    "lint": "eslint . && flow check",
-    "test": "npm run lint && gulp test",
-    "prepublish": "gulp build"
-  },
   "jest": {
     "testPathDirs": [
       "<rootDir>/lib"
@@ -66,5 +62,11 @@
       "jest-modules/"
     ],
     "testEnvironment": "node"
+  },
+  "scripts": {
+    "lint": "eslint . && flow check",
+    "test": "npm run lint && jest",
+    "pretest": "gulp build:test",
+    "prepublish": "gulp build"
   }
 }

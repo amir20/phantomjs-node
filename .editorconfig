@@ -10,4 +10,9 @@ end_of_line = lf
 [*.{js,json}]
 indent_style = space
 indent_size = 4
+insert_final_newline = true
 
+
+[{package.json, *.yml}]
+indent_style = space
+indent_size = 2
