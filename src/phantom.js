@@ -308,9 +308,9 @@ export default class Phantom {
     /**
      * Cleans up and end the phantom process
      */
-    exit(): void {
+    exit(): Promise<Response> {
         clearInterval(this.heartBeatId);
-        this.execute('phantom', 'invokeMethod', ['exit']);
+        return this.execute('phantom', 'invokeMethod', ['exit']);
     }
 
     /**
