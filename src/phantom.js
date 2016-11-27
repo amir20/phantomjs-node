@@ -4,7 +4,7 @@ import phantomjs from 'phantomjs-prebuilt';
 import {spawn} from 'child_process';
 import os from 'os';
 import path from 'path';
-import Linerstream from 'linerstream';
+import split from 'split';
 import winston from 'winston';
 import EventEmitter from 'events';
 import Page from './page';
@@ -93,7 +93,7 @@ export default class Phantom {
         this.commands = new Map();
         this.events = new Map();
 
-        this.process.stdout.pipe(new Linerstream()).on('data', data => {
+        this.process.stdout.pipe(split()).on('data', data => {
             const message = data.toString('utf8');
             if (message[0] === '>') {
                 // Server end has finished NOOP, lets allow NOOP again..
@@ -135,7 +135,7 @@ export default class Phantom {
                 if (emitter) {
                     emitter.emit.apply(emitter, [event.type].concat(event.args));
                 }
-            } else {
+            } else if (message && message.length > 0) {
                 this.logger.info(message);
             }
         });
