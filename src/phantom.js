@@ -254,7 +254,7 @@ export default class Phantom {
      * @returns {Promise}
      */
     execute(target: string, name: string, args: mixed[] = []): Promise<Response> {
-        return this.executeCommand(new Command(null, target, name, args));
+        return this.executeCommand(new Command(target, name, args));
     }
 
     /**

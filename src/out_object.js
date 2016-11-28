@@ -1,14 +1,14 @@
 // @flow
 import Phantom from './phantom';
-import randId from './util/random_id';
+import crypto from 'crypto';
 
 export default class OutObject {
     _phantom: Phantom;
     target: string;
 
-    constructor(phantom: Phantom) {
+    constructor(phantom:Phantom) {
         this._phantom = phantom;
-        this.target = 'OutObject$' + randId(16);
+        this.target = 'OutObject$' + crypto.randomBytes(16).toString('hex');
     }
 
     property(name: string) {

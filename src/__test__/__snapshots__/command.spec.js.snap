@@ -1,1 +1,1 @@
-exports[`Command JSON.stringify(command) to be valid json 1`] = `"{\"id\":\"1\",\"target\":\"target\",\"name\":\"name\",\"params\":[],\"deferred\":null}"`;
+exports[`Command JSON.stringify(command) to be valid json 1`] = `"{\"target\":\"target\",\"name\":\"name\",\"params\":[],\"deferred\":null,\"id\":\"6c7826bdd79d36539e6dc9c358b222bb\"}"`;
