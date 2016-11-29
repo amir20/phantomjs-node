@@ -356,6 +356,16 @@ page.invokeMethod('evaluate', function(selector) {
 });
 ```
 
+## Pooling
+
+Creating new phantom instances with `phantom.create()` can be slow. If
+you are frequently creating new instances and destroying them, as a
+result of HTTP requests for example, it might be worth creating a pool
+of instances that are re-used.
+
+See the [phantom-pool](https://github.com/blockai/phantom-pool) module
+for more info.
+
 ## Tests
 
   To run the test suite, first install the dependencies, then run `npm test`:
