@@ -1,6 +1,10 @@
 {
   "presets": [
-    "node5"
+    ["env", {
+      "targets": {
+        "node": 6.9
+      }
+    }]
   ],
   "plugins": [
     "transform-flow-strip-types"
