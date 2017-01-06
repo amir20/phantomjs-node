@@ -54,11 +54,11 @@ export default class Phantom {
      */
     constructor(args?: string[] = [],
         {phantomPath = phantomjs.path, logger = defaultLogger, logLevel = defaultLogLevel}: Config =
-            {
-                phantomPath: phantomjs.path,
-                logger: defaultLogger,
-                logLevel: defaultLogLevel,
-            }) {
+        {
+            phantomPath: phantomjs.path,
+            logger: defaultLogger,
+            logLevel: defaultLogLevel,
+        }) {
         if (!Array.isArray(args)) {
             throw new Error('Unexpected type of parameters. Expecting args to be array.');
         }
