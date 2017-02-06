@@ -36,12 +36,20 @@ See [examples](examples) folder for more ways to use this module.
 
 ## Installation
 
-To use version 3.x you need to have at least Node v5+. You can install it using:
+### Node v6.x and later
+Latest version of phnatom does **require Node v6.x and later**. You can install with
 ```bash
 $ npm install phantom --save
 ```
 
-For versions _older_ than 5.x, install with
+### Node v5.x
+To use version 3.x you need to have at least Node v5+. You can install it using
+
+```bash
+$ npm install phantom@3 --save
+```
+
+### Versions _older_ than 5.x, install with
 
 ```bash
 $ npm install phantom@2 --save
