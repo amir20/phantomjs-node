@@ -37,7 +37,7 @@ See [examples](examples) folder for more ways to use this module.
 ## Installation
 
 ### Node v6.x and later
-Latest version of phnatom does **require Node v6.x and later**. You can install with
+Latest version of phantom does **require Node v6.x and later**. You can install with
 ```bash
 $ npm install phantom --save
 ```
