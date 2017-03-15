@@ -33,7 +33,7 @@ describe('Phantom', () => {
         pp.exit();
 
         let pathToShim = path.normalize(__dirname + '/../shim/index.js');
-        expect(mockedSpawn).toHaveBeenCalledWith(phantomjs.path, [pathToShim]);
+        expect(mockedSpawn).toHaveBeenCalledWith(phantomjs.path, [pathToShim], {env: process.env});
     });
 
 
@@ -54,7 +54,8 @@ describe('Phantom', () => {
         pp.exit();
 
         let pathToShim = path.normalize(__dirname + '/../shim/index.js');
-        expect(mockedSpawn).toHaveBeenCalledWith(phantomjs.path, ['--ignore-ssl-errors=yes', pathToShim]);
+        const {env} = process;
+        expect(mockedSpawn).toHaveBeenCalledWith(phantomjs.path, ['--ignore-ssl-errors=yes', pathToShim], {env});
     });
 
     it('#create([], {phantomPath: \'phantomjs\'}) execute phantomjs from custom path with no parameters', () => {
@@ -70,7 +71,7 @@ describe('Phantom', () => {
         pp.exit();
 
         let pathToShim = path.normalize(__dirname + '/../shim/index.js');
-        expect(mockedSpawn).toHaveBeenCalledWith('phantomjs', [pathToShim]);
+        expect(mockedSpawn).toHaveBeenCalledWith('phantomjs', [pathToShim], {env: process.env});
         pp.exit();
     });
 

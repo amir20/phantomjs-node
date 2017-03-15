@@ -87,7 +87,7 @@ export default class Phantom {
         const pathToShim = path.normalize(__dirname + '/shim/index.js');
         this.logger.debug(`Starting ${phantomPath} ${args.concat([pathToShim]).join(' ')}`);
 
-        this.process = spawn(phantomPath, args.concat([pathToShim]));
+        this.process = spawn(phantomPath, args.concat([pathToShim]), {env: process.env});
         this.process.stdin.setDefaultEncoding('utf-8');
 
         this.commands = new Map();
