@@ -16,3 +16,9 @@ deploy:
     secure: L7fEIv/FiVl+cHY3qOdQihEIyYYR+NeyRCgqCOliigmznTrys7x7sAhSl9/+OgtI1LNteU7KM9hblM1r+butPnrJyq96vAMdG2eEbpgCq19MT0iYz3dBI1Az/4MZEl0KONRNGxm6p23lyMAD/ml/Iy1wfCRWbVphlEsaOTsi0tk=
   on:
     tags: true
+
+before_insta:
+  - npm install -g codecov
+
+after_sucess:
+  - codecov
