@@ -17,8 +17,8 @@ deploy:
   on:
     tags: true
 
-before_insta:
+before_install:
   - npm install -g codecov
 
-after_sucess:
+after_success:
   - codecov
