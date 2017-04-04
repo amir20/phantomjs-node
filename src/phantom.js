@@ -311,6 +311,10 @@ export default class Phantom {
      */
     exit(): Promise<Response> {
         clearInterval(this.heartBeatId);
+        if (this.commands.size > 0) {
+            this.logger.warn('exit() was called before waiting for commands to finish. ' +
+                'Make sure you are not calling exit() too soon.');
+        }
         return this.execute('phantom', 'invokeMethod', ['exit']);
     }
 
