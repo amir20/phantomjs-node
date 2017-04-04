@@ -5,6 +5,7 @@ phantom - Fast NodeJS API for PhantomJS
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Linux Build][travis-image]][travis-url]
+[![Code Coverage][codecov-image]][codecov-url]
 [![Dependencies][david-image]][david-url]
 [![Node Version][node-image]][node-url]
 
@@ -408,3 +409,5 @@ $ npm test
 [david-url]: https://david-dm.org/amir20/phantomjs-node
 [node-image]: https://img.shields.io/node/v/phantom.svg?style=flat-square
 [node-url]: https://nodejs.org/en/download/
+[codecov-image]: https://codecov.io/gh/amir20/phantomjs-node/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/amir20/phantomjs-node
