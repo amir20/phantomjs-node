@@ -77,13 +77,13 @@ describe('Page', () => {
     it('#evaluateJavaScript(\'function(){return document.title}\') executes correctly', async() => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test.html`);
-        let response = await page.evaluate('function () { return document.title }');
+        let response = await page.evaluateJavaScript('function () { return document.title }');
         expect(response).toEqual('Page Title');
     });
 
     it('#evaluateJavaScript(\'function(){...}\') executes correctly', async() => {
         let page = await phantom.createPage();
-        let response = await page.evaluate('function () { return \'test\' }');
+        let response = await page.evaluateJavaScript('function () { return \'test\' }');
         expect(response).toEqual('test');
     });
 });
