@@ -306,6 +306,10 @@ export default class Phantom {
         return emitter;
     }
 
+    cookies():Promise<*> {
+        return this.execute('phantom', 'property', ['cookies']);
+    }
+
     /**
      * Cleans up and end the phantom process
      */

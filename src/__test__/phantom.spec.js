@@ -5,9 +5,9 @@ import Page from '../page';
 
 describe('Phantom', () => {
     let instance;
-    beforeAll(() => jest.resetModules());
-    beforeAll(() => instance = new Phantom());
-    afterAll(() => instance.exit());
+    beforeEach(() => jest.resetModules());
+    beforeEach(() => instance = new Phantom());
+    afterEach(() => instance.exit());
 
     it('#createPage() returns a Promise', () => {
         expect(instance.createPage()).toBeInstanceOf(Promise);
@@ -109,21 +109,24 @@ describe('Phantom', () => {
         expect(() => new Phantom(true)).toThrow();
     });
 
-    it('catches errors when stdin closes unexpectedly', async() => {
+    xit('catches errors when stdin closes unexpectedly', async() => {
         instance.process.stdin.end();
-        try {
-            await instance.createPage();
-        } catch (e) {
-            expect(e).toEqual(new Error('Error reading from stdin: Error: write after end'));
-        }
+        await expect(instance.createPage()).rejects.toEqual({
+            error: 'Error reading from stdin: Error: write after end',
+        });       
     });
 
     xit('catches errors when stdout closes unexpectedly', async() => {
         instance.process.stdout.end();
         try {
-            await instance.createPage();
+            await expect(instance.createPage()).rejects.toEqual();
         } catch (e) {
             expect(e).toEqual(new Error('Error reading from stdout: Error: shutdown ENOTCONN'));
         }
+    });
+
+    it('.cookies() should return an empty cookies array', async() => {
+        let cookies = await instance.cookies();
+        expect(cookies).toEqual([]);
     });
 });

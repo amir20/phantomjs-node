@@ -166,7 +166,7 @@ describe('Page', () => {
             'secure': false,
             'expires': (new Date()).getTime() + (1000 * 60 * 60),
         });
-        let cookies = await page.property('cookies');
+        let cookies = await page.cookies();
         expect(cookies[0].name).toEqual('Valid-Cookie-Name');
     });
 
@@ -185,7 +185,7 @@ describe('Page', () => {
         });
 
         await page.clearCookies();
-        let cookies = await page.property('cookies');
+        let cookies = await page.cookies();
         expect(cookies).toEqual([]);
     });
 
@@ -213,11 +213,11 @@ describe('Page', () => {
             'expires': (new Date()).getTime() + (1000 * 60 * 60),
         });
 
-        let cookies = await page.property('cookies');
+        let cookies = await page.cookies();
         expect(cookies.length).toBe(2);
 
         await page.deleteCookie('cookie-1');
-        cookies = await page.property('cookies');
+        cookies = await page.cookies();
 
         expect(cookies.length).toBe(1);
         expect(cookies[0].name).toEqual('cookie-2');

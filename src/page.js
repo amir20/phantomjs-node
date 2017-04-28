@@ -85,6 +85,10 @@ export default class Page {
     setting(): Promise<*> {
         return this.phantom.execute(this.target, 'setting', [].slice.call(arguments));
     }
+
+    cookies():Promise<*> {
+        return this.property('cookies');   
+    }
 }
 
 const asyncMethods = [
