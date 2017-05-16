@@ -6,7 +6,7 @@ phantom - Fast NodeJS API for PhantomJS
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Linux Build][travis-image]][travis-url]
 [![Code Coverage][codecov-image]][codecov-url]
-[![Dependencies][david-image]][david-url]
+[![Dependencies][dependencies-image]][dependencies-url]
 [![Node Version][node-image]][node-url]
 
 
@@ -405,9 +405,9 @@ $ npm test
 [downloads-url]: https://npmjs.org/package/phantom
 [travis-image]: https://img.shields.io/travis/amir20/phantomjs-node.svg?style=flat-square
 [travis-url]: https://travis-ci.org/amir20/phantomjs-node
-[david-image]: https://david-dm.org/amir20/phantomjs-node.svg?style=flat-square
-[david-url]: https://david-dm.org/amir20/phantomjs-node
+[dependencies-image]: https://dependencyci.com/github/amir20/phantomjs-node/badge?style=flat-square
+[dependencies-url]: https://dependencyci.com/github/amir20/phantomjs-node
 [node-image]: https://img.shields.io/node/v/phantom.svg?style=flat-square
 [node-url]: https://nodejs.org/en/download/
-[codecov-image]: https://codecov.io/gh/amir20/phantomjs-node/branch/master/graph/badge.svg
+[codecov-image]: https://codecov.io/gh/amir20/phantomjs-node/branch/master/graph/badge.svg?style=flat-square
 [codecov-url]: https://codecov.io/gh/amir20/phantomjs-node
