@@ -31,7 +31,7 @@ const phantom = require('phantom');
 }());
 ```
 
-Using Node v7+ you can run the above example with `node --harmony-async-await file.js`
+Using Node v7.9.0+ you can run the above example with `node file.js`
 
 See [examples](examples) folder for more ways to use this module.
 
