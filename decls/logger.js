@@ -1,6 +1,6 @@
 declare class Logger {
-    info(s: string): void;
-    debug(s: string): void;
-    error(s: string): void;
-    warn(s: string): void;
+    info(s: string, ...params: any[]): void;
+    debug(s: string, ...params: any[]): void;
+    error(s: string, ...params: any[]): void;
+    warn(s: string, ...params: any[]): void;
 }

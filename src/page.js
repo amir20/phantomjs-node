@@ -75,8 +75,8 @@ export default class Page {
     /**
      * Gets or sets a property
      */
-    property(): Promise<*> {
-        return this.phantom.execute(this.target, 'property', [].slice.call(arguments));
+    property(...args: any[]): Promise<*> {
+        return this.phantom.execute(this.target, 'property', args);
     }
 
     /**
@@ -87,7 +87,7 @@ export default class Page {
     }
 
     cookies():Promise<*> {
-        return this.property('cookies');   
+        return this.property('cookies');
     }
 }
 
