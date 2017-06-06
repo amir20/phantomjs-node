@@ -14,4 +14,4 @@ const phantom = require('phantom');
     await instance.exit();
 }());
 
-// node --harmony-async-await async.js http://stackoverflow.com
+// node async.js http://stackoverflow.com
