@@ -21,7 +21,7 @@ describe('Page', () => {
     beforeEach(() => phantom = new Phantom());
     afterEach(() => phantom.exit());
 
-    it('#evaluate(function(){return document.title}) executes correctly', async() => {
+    it('#evaluate(function(){return document.title}) executes correctly', async () => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test.html`);
         let response = await page.evaluate(function() {
@@ -30,7 +30,7 @@ describe('Page', () => {
         expect(response).toEqual('Page Title');
     });
 
-    it('#evaluate(function(){...}) executes correctly', async() => {
+    it('#evaluate(function(){...}) executes correctly', async () => {
         let page = await phantom.createPage();
         let response = await page.evaluate(function() {
             return 'test';
@@ -38,7 +38,7 @@ describe('Page', () => {
         expect(response).toEqual('test');
     });
 
-    it('#evaluate(function(arg){...}, argument) executes correctly with a non-null argument', async() => {
+    it('#evaluate(function(arg){...}, argument) executes correctly with a non-null argument', async () => {
         let page = await phantom.createPage();
         let response = await page.evaluate(function(arg) {
             return 'Value: ' + arg;
@@ -46,7 +46,7 @@ describe('Page', () => {
         expect(response).toEqual('Value: test');
     });
 
-    it('#evaluate(function(arg){...}, argument) executes correctly with a null argument', async() => {
+    it('#evaluate(function(arg){...}, argument) executes correctly with a null argument', async () => {
         let page = await phantom.createPage();
         let response = await page.evaluate(function(arg) {
             return 'Value is null: ' + (arg === null);
@@ -54,7 +54,7 @@ describe('Page', () => {
         expect(response).toEqual('Value is null: true');
     });
 
-    it('#evaluateAsync(function(){...}) executes correctly', async() => {
+    it('#evaluateAsync(function(){...}) executes correctly', async () => {
         let page = await phantom.createPage();
         await page.on('onCallback', function(response) {
             expect(response).toEqual('test');
@@ -64,7 +64,7 @@ describe('Page', () => {
         });
     });
 
-    it('#evaluateAsync(function(){...}) executes correctly with a delay and a non-null argument', async() => {
+    it('#evaluateAsync(function(){...}) executes correctly with a delay and a non-null argument', async () => {
         let page = await phantom.createPage();
         await page.on('onCallback', function(response) {
             expect(response).toEqual('testarg');
@@ -74,14 +74,14 @@ describe('Page', () => {
         }, 0, 'arg');
     });
 
-    it('#evaluateJavaScript(\'function(){return document.title}\') executes correctly', async() => {
+    it('#evaluateJavaScript(\'function(){return document.title}\') executes correctly', async () => {
         let page = await phantom.createPage();
         await page.open(`http://localhost:${port}/test.html`);
         let response = await page.evaluateJavaScript('function () { return document.title }');
         expect(response).toEqual('Page Title');
     });
 
-    it('#evaluateJavaScript(\'function(){...}\') executes correctly', async() => {
+    it('#evaluateJavaScript(\'function(){...}\') executes correctly', async () => {
         let page = await phantom.createPage();
         let response = await page.evaluateJavaScript('function () { return \'test\' }');
         expect(response).toEqual('test');

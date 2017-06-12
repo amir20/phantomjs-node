@@ -109,14 +109,14 @@ describe('Phantom', () => {
         expect(() => new Phantom(true)).toThrow();
     });
 
-    xit('catches errors when stdin closes unexpectedly', async() => {
+    xit('catches errors when stdin closes unexpectedly', async () => {
         instance.process.stdin.end();
         await expect(instance.createPage()).rejects.toEqual({
             error: 'Error reading from stdin: Error: write after end',
         });       
     });
 
-    xit('catches errors when stdout closes unexpectedly', async() => {
+    xit('catches errors when stdout closes unexpectedly', async () => {
         instance.process.stdout.end();
         try {
             await expect(instance.createPage()).rejects.toEqual();
@@ -125,7 +125,7 @@ describe('Phantom', () => {
         }
     });
 
-    it('.cookies() should return an empty cookies array', async() => {
+    it('.cookies() should return an empty cookies array', async () => {
         let cookies = await instance.cookies();
         expect(cookies).toEqual([]);
     });
