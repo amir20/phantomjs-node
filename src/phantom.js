@@ -183,15 +183,16 @@ export default class Phantom {
         const logger = this.logger;
         return this.execute('phantom', 'createPage').then((response: Response) => {
             let page = new Page(this, response.pageId);
-            if (typeof Proxy === 'function') {
-                page = new Proxy(page, {
-                    set: function(target, prop) {
-                        logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) ` +
-                            'instead. See the README file for more examples of page#property.');
-                        return false;
-                    },
-                });
+            if (typeof Proxy !== 'function') {
+                throw new Error('Expected object Proxy to be defined. Make sure you are using Node 6+.');
             }
+            page = new Proxy(page, {
+                set: function(target, prop) {
+                    logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) ` +
+                        'instead. See the README file for more examples of page#property.');
+                    return false;
+                },
+            });
             return page;
         });
     }
@@ -317,7 +318,7 @@ export default class Phantom {
         clearInterval(this.heartBeatId);
         if (this.commands.size > 0) {
             this.logger.warn('exit() was called before waiting for commands to finish. ' +
-                'Make sure you are not calling exit() too soon.');
+                'Make sure you are not calling exit() prematurely.');
         }
         return this.execute('phantom', 'invokeMethod', ['exit']);
     }

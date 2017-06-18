@@ -14,4 +14,21 @@ describe('index.js', () => {
         expect(promise).toBeInstanceOf(Promise);
         return promise.then(ph => ph.exit());
     });
+
+    it('#create([], {}) errors with undefined phantomjs-prebuilt to throw exception', async () => {
+        await expect(phantom.create([], {phantomPath: null})).rejects
+            .toEqual(new Error('PhantomJS binary was not found. ' +
+                'This generally means something went wrong when installing phantomjs-prebuilt. Exiting.'));
+    });
+
+    it('#create([], {}) errors with string for logger', async () => {
+        await expect(phantom.create([], {logger: 'log'})).rejects
+            .toEqual(new Error('logger must be ba valid object.'));
+    });
+
+    it('#create([], {}) errors with string for logger', async () => {
+        await expect(phantom.create('str')).rejects
+            .toEqual(new Error('Unexpected type of parameters. Expecting args to be array.'));
+    });
+
 });

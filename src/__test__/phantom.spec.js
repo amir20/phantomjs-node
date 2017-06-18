@@ -37,10 +37,6 @@ describe('Phantom', () => {
     });
 
 
-    it('#create([], {}) execute with undefined phantomjs-prebuilt to throw exception', () => {
-        expect(() => new Phantom([], {phantomPath: null})).toThrow();
-    });
-
     it('#create(["--ignore-ssl-errors=yes"]) adds parameter to process', () => {
         jest.mock('child_process');
 
@@ -113,7 +109,7 @@ describe('Phantom', () => {
         instance.process.stdin.end();
         await expect(instance.createPage()).rejects.toEqual({
             error: 'Error reading from stdin: Error: write after end',
-        });       
+        });
     });
 
     xit('catches errors when stdout closes unexpectedly', async () => {
