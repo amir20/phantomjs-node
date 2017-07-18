@@ -20,18 +20,16 @@ const NOOP = 'NOOP';
 /**
  * Creates a logger using winston
  */
-function createLogger() {
+function createLogger({logLevel = defaultLogLevel} = {}) {
     return new winston.Logger({
         transports: [
             new winston.transports.Console({
-                level: defaultLogLevel,
+                level: logLevel,
                 colorize: true,
             }),
         ],
     });
 }
-
-const defaultLogger = createLogger();
 
 /**
  * A phantom instance that communicates with phantomjs
@@ -52,13 +50,11 @@ export default class Phantom {
      * @param [logger] object containing functions used for logging
      * @param [logLevel] log level to apply on the logger (if unset or default)
      */
-    constructor(args?: string[] = [],
-        {phantomPath = phantomjs.path, logger = defaultLogger, logLevel = defaultLogLevel}: Config =
-        {
-            phantomPath: phantomjs.path,
-            logger: defaultLogger,
-            logLevel: defaultLogLevel,
-        }) {
+    constructor(args?: string[] = [], {
+        phantomPath = phantomjs.path,
+        logLevel = defaultLogLevel,
+        logger = createLogger({logLevel}),
+        }: Config = {}) {
         if (!Array.isArray(args)) {
             throw new Error('Unexpected type of parameters. Expecting args to be array.');
         }
@@ -68,21 +64,16 @@ export default class Phantom {
                 'This generally means something went wrong when installing phantomjs-prebuilt. Exiting.');
         }
 
-        if (typeof logger !== 'object') {
-            throw new Error('logger must be ba valid object.');
+        if (!logger.info && !logger.debug && !logger.error && !logger.warn) {
+            throw new Error('logger must be a valid object.');
         }
 
-        logger.debug = logger.debug || (() => undefined);
-        logger.info = logger.info || (() => undefined);
-        logger.warn = logger.warn || (() => undefined);
-        logger.error = logger.error || (() => undefined);
-
-        this.logger = logger;
-
-        if (logLevel !== defaultLogLevel) {
-            this.logger = createLogger();
-            this.logger.transports.console.level = logLevel;
-        }
+        this.logger = {
+            info: logger.info ? (...msg) => logger.info(...msg) : () => undefined,
+            debug: logger.debug ? (...msg) => logger.debug(...msg) : () => undefined,
+            error: logger.error ? (...msg) => logger.error(...msg) : () => undefined,
+            warn: logger.warn ? (...msg) => logger.warn(...msg) : () => undefined,
+        };
 
         const pathToShim = path.normalize(__dirname + '/shim/index.js');
         this.logger.debug(`Starting ${phantomPath} ${args.concat([pathToShim]).join(' ')}`);

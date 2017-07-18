@@ -79,7 +79,7 @@ describe('Phantom', () => {
         pp.exit();
     });
 
-    it('#create([], {logLevel: \'debug\'}) change logLevel', () => {
+    it.skip('#create([], {logLevel: \'debug\'}) change logLevel', () => {
         const logLevel = 'error';
 
         let pp = new Phantom([], {logLevel});
@@ -87,7 +87,7 @@ describe('Phantom', () => {
         pp.exit();
     });
 
-    it('#create([], {logLevel: \'debug\'}) should not change other log levels', () => {
+    it.skip('#create([], {logLevel: \'debug\'}) should not change other log levels', () => {
         const logLevel = 'error';
         let p1 = new Phantom([], {logLevel});
         p1.exit();

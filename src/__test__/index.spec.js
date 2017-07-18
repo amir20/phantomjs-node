@@ -23,7 +23,7 @@ describe('index.js', () => {
 
     it('#create([], {}) errors with string for logger', async () => {
         await expect(phantom.create([], {logger: 'log'})).rejects
-            .toEqual(new Error('logger must be ba valid object.'));
+            .toEqual(new Error('logger must be a valid object.'));
     });
 
     it('#create([], {}) errors with string for logger', async () => {
