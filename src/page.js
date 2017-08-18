@@ -10,8 +10,8 @@ export default class Page {
     target: string;
 
     constructor(phantom: Phantom, pageId: string) {
-        this.target = 'page$' + pageId;
-        this.phantom = phantom;
+      this.target = `page$${pageId}`;
+      this.phantom = phantom;
     }
 
     /**
@@ -24,21 +24,21 @@ export default class Page {
      * @returns {*}
      */
     on(event: string, runOnPhantom: boolean, listener: Function) {
-        let mustRunOnPhantom;
-        let callback;
-        let args;
+      let mustRunOnPhantom;
+      let callback;
+      let args;
 
-        if (typeof runOnPhantom === 'function') {
-            args = [].slice.call(arguments, 2);
-            mustRunOnPhantom = false;
-            callback = runOnPhantom.bind(this);
-        } else {
-            args = [].slice.call(arguments, 3);
-            mustRunOnPhantom = runOnPhantom;
-            callback = mustRunOnPhantom ? listener : listener.bind(this);
-        }
+      if (typeof runOnPhantom === 'function') {
+        args = [].slice.call(arguments, 2);
+        mustRunOnPhantom = false;
+        callback = runOnPhantom.bind(this);
+      } else {
+        args = [].slice.call(arguments, 3);
+        mustRunOnPhantom = runOnPhantom;
+        callback = mustRunOnPhantom ? listener : listener.bind(this);
+      }
 
-        return this.phantom.on(event, this.target, mustRunOnPhantom, callback, args);
+      return this.phantom.on(event, this.target, mustRunOnPhantom, callback, args);
     }
 
     /**
@@ -48,87 +48,87 @@ export default class Page {
      * @returns {*}
      */
     off(event: string) {
-        return this.phantom.off(event, this.target);
+      return this.phantom.off(event, this.target);
     }
 
     /**
      * Invokes an asynchronous method
      */
     invokeAsyncMethod() {
-        return this.phantom.execute(this.target, 'invokeAsyncMethod', [].slice.call(arguments));
+      return this.phantom.execute(this.target, 'invokeAsyncMethod', [].slice.call(arguments));
     }
 
     /**
      * Invokes a method
      */
     invokeMethod() {
-        return this.phantom.execute(this.target, 'invokeMethod', [].slice.call(arguments));
+      return this.phantom.execute(this.target, 'invokeMethod', [].slice.call(arguments));
     }
 
     /**
      * Defines a method
      */
     defineMethod(name: string, definition: Function) {
-        return this.phantom.execute(this.target, 'defineMethod', [name, definition]);
+      return this.phantom.execute(this.target, 'defineMethod', [name, definition]);
     }
 
     /**
      * Gets or sets a property
      */
     property(...args: any[]): Promise<*> {
-        return this.phantom.execute(this.target, 'property', args);
+      return this.phantom.execute(this.target, 'property', args);
     }
 
     /**
      * Gets or sets a setting
      */
     setting(): Promise<*> {
-        return this.phantom.execute(this.target, 'setting', [].slice.call(arguments));
+      return this.phantom.execute(this.target, 'setting', [].slice.call(arguments));
     }
 
     cookies():Promise<*> {
-        return this.property('cookies');
+      return this.property('cookies');
     }
 }
 
 const asyncMethods = [
-    'includeJs',
-    'open',
+  'includeJs',
+  'open',
 ];
 
 const methods = [
-    'addCookie',
-    'clearCookies',
-    'close',
-    'deleteCookie',
-    'evaluate',
-    'evaluateAsync',
-    'evaluateJavaScript',
-    'injectJs',
-    'openUrl',
-    'reload',
-    'render',
-    'renderBase64',
-    'sendEvent',
-    'setContent',
-    'setProxy',
-    'stop',
-    'switchToFrame',
-    'switchToMainFrame',
-    'goBack',
-    'uploadFile',
+  'addCookie',
+  'clearCookies',
+  'close',
+  'deleteCookie',
+  'evaluate',
+  'evaluateAsync',
+  'evaluateJavaScript',
+  'injectJs',
+  'openUrl',
+  'reload',
+  'render',
+  'renderBase64',
+  'sendEvent',
+  'setContent',
+  'setProxy',
+  'stop',
+  'switchToFrame',
+  'switchToMainFrame',
+  'goBack',
+  'uploadFile',
 ];
 
-asyncMethods.forEach(method => {
-    // $FlowFixMe: no way to provide dynamic functions
-    Page.prototype[method] = function() {
-        return this.invokeAsyncMethod.apply(this, [method].concat([].slice.call(arguments)));
-    };
+asyncMethods.forEach((method) => {
+  // $FlowFixMe: no way to provide dynamic functions
+  Page.prototype[method] = function () {
+    return this.invokeAsyncMethod.apply(this, [method].concat([].slice.call(arguments)));
+  };
 });
 
-methods.forEach(method => {
-    // $FlowFixMe: no way to provide dynamic functions
-    Page.prototype[method] = function() {
-        return this.invokeMethod.apply(this, [method].concat([].slice.call(arguments)));
-    };
+methods.forEach((method) => {
+  // $FlowFixMe: no way to provide dynamic functions
+  Page.prototype[method] = function () {
+    return this.invokeMethod.apply(this, [method].concat([].slice.call(arguments)));
+  };
 });

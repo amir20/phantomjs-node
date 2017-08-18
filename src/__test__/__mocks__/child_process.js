@@ -1,10 +1,8 @@
 let mockedSpawn;
 function setMockedSpawn(mock) {
-    mockedSpawn = mock;
+  mockedSpawn = mock;
 }
 
-const spawn = (...args) => {
-    return mockedSpawn(...args);
-};
+const spawn = (...args) => mockedSpawn(...args);
 
-export {spawn, setMockedSpawn};
+export { spawn, setMockedSpawn };

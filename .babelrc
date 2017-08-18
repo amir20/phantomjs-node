@@ -1,12 +1,6 @@
 {
   "presets": [
-    ["env", {
-      "targets": {
-        "node": "6.9"
-      }
-    }]
+    "flow"
   ],
-  "plugins": [
-    "transform-flow-strip-types"
-  ]
+  "retainLines": true
 }

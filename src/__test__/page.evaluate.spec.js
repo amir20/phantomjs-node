@@ -3,87 +3,85 @@ import 'babel-polyfill';
 import Phantom from '../phantom';
 
 describe('Page', () => {
-    let server;
-    let phantom;
-    let port;
-    beforeAll(done => {
-        server = http.createServer((request, response) => {
-            response.end('<html><head><title>Page Title</title></head><body>Test</body></html>');
-        });
-
-        server.listen(0, () => {
-            port = server.address().port;
-            done();
-        });
+  let server;
+  let phantom;
+  let port;
+  beforeAll((done) => {
+    server = http.createServer((request, response) => {
+      response.end('<html><head><title>Page Title</title></head><body>Test</body></html>');
     });
 
-    afterAll(() => server.close());
-    beforeEach(() => phantom = new Phantom());
-    afterEach(() => phantom.exit());
-
-    it('#evaluate(function(){return document.title}) executes correctly', async () => {
-        let page = await phantom.createPage();
-        await page.open(`http://localhost:${port}/test.html`);
-        let response = await page.evaluate(function() {
-            return document.title;
-        });
-        expect(response).toEqual('Page Title');
+    server.listen(0, () => {
+      port = server.address().port;
+      done();
     });
+  });
 
-    it('#evaluate(function(){...}) executes correctly', async () => {
-        let page = await phantom.createPage();
-        let response = await page.evaluate(function() {
-            return 'test';
-        });
-        expect(response).toEqual('test');
-    });
+  afterAll(() => server.close());
+  beforeEach(() => {
+    phantom = new Phantom();
+  });
+  afterEach(() => phantom.exit());
 
-    it('#evaluate(function(arg){...}, argument) executes correctly with a non-null argument', async () => {
-        let page = await phantom.createPage();
-        let response = await page.evaluate(function(arg) {
-            return 'Value: ' + arg;
-        }, 'test');
-        expect(response).toEqual('Value: test');
-    });
+  it('#evaluate(function(){return document.title}) executes correctly', async () => {
+    const page = await phantom.createPage();
+    await page.open(`http://localhost:${port}/test.html`);
+    const response = await page.evaluate(() => document.title);
+    expect(response).toEqual('Page Title');
+  });
 
-    it('#evaluate(function(arg){...}, argument) executes correctly with a null argument', async () => {
-        let page = await phantom.createPage();
-        let response = await page.evaluate(function(arg) {
-            return 'Value is null: ' + (arg === null);
-        }, null);
-        expect(response).toEqual('Value is null: true');
-    });
+  it('#evaluate(function(){...}) executes correctly', async () => {
+    const page = await phantom.createPage();
+    const response = await page.evaluate(() => 'test');
+    expect(response).toEqual('test');
+  });
 
-    it('#evaluateAsync(function(){...}) executes correctly', async () => {
-        let page = await phantom.createPage();
-        await page.on('onCallback', function(response) {
-            expect(response).toEqual('test');
-        });
-        await page.evaluateAsync(function() {
-            window.callPhantom('test');
-        });
-    });
+  it('#evaluate(function(arg){...}, argument) executes correctly with a non-null argument', async () => {
+    const page = await phantom.createPage();
+    const response = await page.evaluate(arg => `Value: ${arg}`, 'test');
+    expect(response).toEqual('Value: test');
+  });
 
-    it('#evaluateAsync(function(){...}) executes correctly with a delay and a non-null argument', async () => {
-        let page = await phantom.createPage();
-        await page.on('onCallback', function(response) {
-            expect(response).toEqual('testarg');
-        });
-        await page.evaluateAsync(function(arg) {
-            window.callPhantom('test' + arg);
-        }, 0, 'arg');
-    });
+  it('#evaluate(function(arg){...}, argument) executes correctly with a null argument', async () => {
+    const page = await phantom.createPage();
+    const response = await page.evaluate(arg => `Value is null: ${arg === null}`, null);
+    expect(response).toEqual('Value is null: true');
+  });
 
-    it('#evaluateJavaScript(\'function(){return document.title}\') executes correctly', async () => {
-        let page = await phantom.createPage();
-        await page.open(`http://localhost:${port}/test.html`);
-        let response = await page.evaluateJavaScript('function () { return document.title }');
-        expect(response).toEqual('Page Title');
+  it('#evaluateAsync(function(){...}) executes correctly', async () => {
+    const page = await phantom.createPage();
+    await page.on('onCallback', (response) => {
+      expect(response).toEqual('test');
     });
+    await page.evaluateAsync(() => {
+      window.callPhantom('test');
+    });
+  });
 
-    it('#evaluateJavaScript(\'function(){...}\') executes correctly', async () => {
-        let page = await phantom.createPage();
-        let response = await page.evaluateJavaScript('function () { return \'test\' }');
-        expect(response).toEqual('test');
+  it('#evaluateAsync(function(){...}) executes correctly with a delay and a non-null argument', async () => {
+    const page = await phantom.createPage();
+    await page.on('onCallback', (response) => {
+      expect(response).toEqual('testarg');
     });
+    await page.evaluateAsync(
+      (arg) => {
+        window.callPhantom(`test${arg}`);
+      },
+      0,
+      'arg',
+    );
+  });
+
+  it("#evaluateJavaScript('function(){return document.title}') executes correctly", async () => {
+    const page = await phantom.createPage();
+    await page.open(`http://localhost:${port}/test.html`);
+    const response = await page.evaluateJavaScript('function () { return document.title }');
+    expect(response).toEqual('Page Title');
+  });
+
+  it("#evaluateJavaScript('function(){...}') executes correctly", async () => {
+    const page = await phantom.createPage();
+    const response = await page.evaluateJavaScript("function () { return 'test' }");
+    expect(response).toEqual('test');
+  });
 });

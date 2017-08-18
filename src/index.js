@@ -12,9 +12,9 @@ import Phantom from './phantom';
  * @returns {Promise}
  */
 function create(args?: string[], config?: Config): Promise<Phantom> {
-    return new Promise(resolve => resolve(new Phantom(args, config)));
+  return new Promise(resolve => resolve(new Phantom(args, config)));
 }
 
-export default {create};
+export default { create };
 
 module.exports.create = create;

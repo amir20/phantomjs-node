@@ -6,29 +6,29 @@
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Polyfill}
  */
 if (!Function.prototype.bind) {
-    Function.prototype.bind = function(oThis) {
-        if (typeof this !== 'function') {
-            throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
-        }
+  Function.prototype.bind = function (oThis) {
+    if (typeof this !== 'function') {
+      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+    }
 
-        let self = this;
-        let aArgs = Array.prototype.slice.call(arguments, 1);
+    const self = this;
+    const aArgs = Array.prototype.slice.call(arguments, 1);
 
-        function NoopFunction() {
-        }
+    function NoopFunction() {
+    }
 
-        function boundFunction() {
-            return self.apply((this instanceof NoopFunction ? this : oThis),
-                aArgs.concat(Array.prototype.slice.call(arguments)));
-        }
+    function boundFunction() {
+      return self.apply((this instanceof NoopFunction ? this : oThis),
+        aArgs.concat(Array.prototype.slice.call(arguments)));
+    }
 
-        if (this.prototype) {
-            NoopFunction.prototype = this.prototype;
-        }
-        boundFunction.prototype = new NoopFunction();
+    if (this.prototype) {
+      NoopFunction.prototype = this.prototype;
+    }
+    boundFunction.prototype = new NoopFunction();
 
-        return boundFunction;
-    };
+    return boundFunction;
+  };
 }
 
 /* eslint-enable no-extend-native, consistent-this, require-jsdoc, no-empty-function, no-invalid-this */

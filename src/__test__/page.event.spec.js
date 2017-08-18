@@ -1,176 +1,184 @@
+import 'babel-polyfill';
 import http from 'http';
 import Phantom from '../phantom';
-import 'babel-polyfill';
 
 describe('Page', () => {
-    let server;
-    let phantom;
-    let port;
-    beforeAll(done => {
-        server = http.createServer((request, response) => {
-            response.end('hi, ' + request.url);
-        });
-        server.listen(0, () => {
-            port = server.address().port;
-            done();
-        });
+  let server;
+  let phantom;
+  let port;
+  beforeAll((done) => {
+    server = http.createServer((request, response) => {
+      response.end(`hi, ${request.url}`);
+    });
+    server.listen(0, () => {
+      port = server.address().port;
+      done();
+    });
+  });
+
+  afterAll(() => server.close());
+  beforeEach(() => {
+    phantom = new Phantom();
+  });
+  afterEach(() => phantom.exit());
+
+  it('#on() can register an event in the page and run the code locally', async () => {
+    const page = await phantom.createPage();
+    let runnedHere = false;
+
+    await page.on('onResourceReceived', () => {
+      runnedHere = true;
     });
 
-    afterAll(() => server.close());
-    beforeEach(() => phantom = new Phantom());
-    afterEach(() => phantom.exit());
+    await page.open(`http://localhost:${port}/test`);
 
+    expect(runnedHere).toBe(true);
+  });
 
-    it('#on() can register an event in the page and run the code locally', async () => {
-        let page = await phantom.createPage();
-        let runnedHere = false;
+  it('#on() event registered does not run if not triggered', async () => {
+    const page = await phantom.createPage();
+    let runnedHere = false;
 
-        await page.on('onResourceReceived', function() {
-            runnedHere = true;
-        });
-
-        await page.open(`http://localhost:${port}/test`);
-
-        expect(runnedHere).toBe(true);
+    await page.on('onResourceReceived', () => {
+      runnedHere = true;
     });
 
-    it('#on() event registered does not run if not triggered', async () => {
-        let page = await phantom.createPage();
-        let runnedHere = false;
+    expect(runnedHere).toBe(false);
+  });
 
-        await page.on('onResourceReceived', function() {
-            runnedHere = true;
-        });
+  it('#on() can register more than one event of the same type', async () => {
+    const page = await phantom.createPage();
+    let runnedHere = false;
 
-        expect(runnedHere).toBe(false);
+    await page.on('onResourceReceived', () => {
+      runnedHere = true;
     });
 
-    it('#on() can register more than one event of the same type', async () => {
-        let page = await phantom.createPage();
-        let runnedHere = false;
+    let runnedHereToo = false;
 
-        await page.on('onResourceReceived', function() {
-            runnedHere = true;
-        });
-
-        let runnedHereToo = false;
-
-        await page.on('onResourceReceived', function() {
-            runnedHereToo = true;
-        });
-
-        await page.open(`http://localhost:${port}/test`);
-
-        expect(runnedHere).toBe(true);
-        expect(runnedHereToo).toBe(true);
+    await page.on('onResourceReceived', () => {
+      runnedHereToo = true;
     });
 
-    it('#on() can pass parameters', async () => {
-        let page = await phantom.createPage();
-        let parameterProvided = false;
+    await page.open(`http://localhost:${port}/test`);
 
-        await page.on('onResourceReceived', function(status, param) {
-            parameterProvided = param;
-        }, 'param');
+    expect(runnedHere).toBe(true);
+    expect(runnedHereToo).toBe(true);
+  });
 
-        await page.open(`http://localhost:${port}/test`);
+  it('#on() can pass parameters', async () => {
+    const page = await phantom.createPage();
+    let parameterProvided = false;
 
-        expect(parameterProvided).toBe('param');
+    await page.on(
+      'onResourceReceived',
+      (status, param) => {
+        parameterProvided = param;
+      },
+      'param',
+    );
+
+    await page.open(`http://localhost:${port}/test`);
+
+    expect(parameterProvided).toBe('param');
+  });
+
+  it('#on() can register an event in the page which code runs in phantom runtime', async () => {
+    const page = await phantom.createPage();
+    let runnedHere = false;
+
+    await page.on('onLoadFinished', true, () => {
+      runnedHere = true;
+      runnedInPhantomRuntime = true;
     });
 
-    it('#on() can register an event in the page which code runs in phantom runtime', async () => {
-        let page = await phantom.createPage();
-        let runnedHere = false;
+    await page.open(`http://localhost:${port}/test`);
 
-        await page.on('onLoadFinished', true, function() {
-            runnedHere = true;
-            runnedInPhantomRuntime = true;
-        });
+    let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
 
-        await page.open(`http://localhost:${port}/test`);
+    expect(runnedHere).toBe(false);
+    expect(runnedInPhantomRuntime).toBe(true);
+  });
 
-        let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
+  it('#on() can pass parameters to functions to be executed in phantom runtime', async () => {
+    const page = await phantom.createPage();
 
-        expect(runnedHere).toBe(false);
-        expect(runnedInPhantomRuntime).toBe(true);
+    await page.on(
+      'onResourceReceived',
+      true,
+      (status, param) => {
+        parameterProvided = param;
+      },
+      'param',
+    );
+
+    await page.open(`http://localhost:${port}/test`);
+
+    let parameterProvided = await phantom.windowProperty('parameterProvided');
+
+    expect(parameterProvided).toBe('param');
+  });
+
+  it('#on() event supposed to run in phantom runtime wont run if not triggered', async () => {
+    const page = await phantom.createPage();
+
+    await page.on('onResourceReceived', true, () => {
+      runnedInPhantomRuntime = true;
     });
 
-    it('#on() can pass parameters to functions to be executed in phantom runtime', async () => {
-        let page = await phantom.createPage();
+    let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
 
-        await page.on('onResourceReceived', true, function(status, param) {
-            parameterProvided = param;
-        }, 'param');
+    expect(runnedInPhantomRuntime).toBeFalsy();
+  });
 
-        await page.open(`http://localhost:${port}/test`);
+  it('#on() can register at the same event to run locally or in phantom runtime', async () => {
+    const page = await phantom.createPage();
+    let runnedHere = false;
 
-        let parameterProvided = await phantom.windowProperty('parameterProvided');
-
-        expect(parameterProvided).toBe('param');
+    await page.on('onResourceReceived', true, () => {
+      runnedInPhantomRuntime = true;
     });
 
-    it('#on() event supposed to run in phantom runtime wont run if not triggered', async () => {
-        let page = await phantom.createPage();
-
-        await page.on('onResourceReceived', true, function() {
-            runnedInPhantomRuntime = true;
-        });
-
-        let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
-
-        expect(runnedInPhantomRuntime).toBeFalsy();
+    await page.on('onResourceReceived', () => {
+      runnedHere = true;
     });
 
-    it('#on() can register at the same event to run locally or in phantom runtime', async () => {
-        let page = await phantom.createPage();
-        let runnedHere = false;
+    await page.open(`http://localhost:${port}/test`);
 
-        await page.on('onResourceReceived', true, function() {
-            runnedInPhantomRuntime = true;
-        });
+    let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
 
-        await page.on('onResourceReceived', function() {
-            runnedHere = true;
-        });
+    expect(runnedHere).toBe(true);
+    expect(runnedInPhantomRuntime).toBe(true);
+  });
 
-        await page.open(`http://localhost:${port}/test`);
+  it('#off() can disable an event whose listener is going to run locally', async () => {
+    const page = await phantom.createPage();
+    let runnedHere = false;
 
-        let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
-
-        expect(runnedHere).toBe(true);
-        expect(runnedInPhantomRuntime).toBe(true);
+    await page.on('onResourceReceived', () => {
+      runnedHere = true;
     });
 
-    it('#off() can disable an event whose listener is going to run locally', async () => {
+    await page.off('onResourceReceived');
 
-        let page = await phantom.createPage();
-        let runnedHere = false;
+    await page.open(`http://localhost:${port}/test`);
 
-        await page.on('onResourceReceived', function() {
-            runnedHere = true;
-        });
+    expect(runnedHere).toBe(false);
+  });
 
-        await page.off('onResourceReceived');
+  it('#off() can disable an event whose listener is going to run on the phantom process', async () => {
+    const page = await phantom.createPage();
 
-        await page.open(`http://localhost:${port}/test`);
-
-        expect(runnedHere).toBe(false);
+    await page.on('onResourceReceived', true, () => {
+      runnedInPhantomRuntime = true;
     });
 
-    it('#off() can disable an event whose listener is going to run on the phantom process', async () => {
+    await page.off('onResourceReceived');
 
-        let page = await phantom.createPage();
+    await page.open(`http://localhost:${port}/test`);
 
-        await page.on('onResourceReceived', true, function() {
-            runnedInPhantomRuntime = true;
-        });
+    let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
 
-        await page.off('onResourceReceived');
-
-        await page.open(`http://localhost:${port}/test`);
-
-        let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
-
-        expect(runnedInPhantomRuntime).toBeFalsy();
-    });
+    expect(runnedInPhantomRuntime).toBeFalsy();
+  });
 });
