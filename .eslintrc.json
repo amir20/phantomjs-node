@@ -7,7 +7,7 @@
     "jest": true,
     "phantomjs": true
   },
-  "extends": "airbnb-base",
+  "extends": ["airbnb-base", "plugin:flowtype/recommended"],
   "parser": "babel-eslint",
-  "plugins": ["import"]
+  "plugins": ["import", "flowtype"]
 }

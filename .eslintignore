@@ -5,4 +5,4 @@ flow-typed
 coverage
 gulpfile.babel.js
 decls
-
+src/shim

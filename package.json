@@ -40,6 +40,7 @@
     "del": "^3.0.0",
     "eslint": "^4.4.1",
     "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-plugin-flowtype": "^2.35.0",
     "eslint-plugin-import": "^2.7.0",
     "flow-bin": "^0.49.1",
     "gulp": "^3.9.1",
