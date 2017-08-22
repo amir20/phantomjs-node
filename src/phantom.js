@@ -205,7 +205,9 @@ export default class Phantom {
      * Used for creating a callback in phantomjs for content header and footer
      * @param obj
      */
-  static callback(obj: Function): { transform: true, target: Function, method: 'callback', parent: 'phantom' } {
+  static callback(
+    obj: Function,
+  ): { transform: true, target: Function, method: 'callback', parent: 'phantom' } {
     return { transform: true, target: obj, method: 'callback', parent: 'phantom' };
   }
 
@@ -221,7 +223,7 @@ export default class Phantom {
       if (key[0] === '_') {
         return undefined;
       } else if (typeof val === 'function') {
-        if (!val.hasOwnProperty('prototype')) {
+        if (!Object.prototype.hasOwnProperty.call(val, 'prototype')) {
           this.logger.warn(
             'Arrow functions such as () => {} are not supported in PhantomJS. ' +
               'Please use function(){} or compile to ES5.',
@@ -234,7 +236,7 @@ export default class Phantom {
     });
 
     const promise = new Promise((res, rej) => {
-      command.deferred = { resolve: res, reject: rej };
+      command.deferred = { resolve: res, reject: rej }; // eslint-disable-line no-param-reassign
     });
 
     this.logger.debug('Sending: %s', json);

@@ -6,3 +6,4 @@ coverage
 gulpfile.babel.js
 decls
 src/shim
+src/__test__
