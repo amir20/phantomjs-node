@@ -1,3 +1,5 @@
+/* eslint-env phantomjs */
+
 import webpage from 'webpage';
 import system from 'system';
 import './function_bind_polyfill.js';

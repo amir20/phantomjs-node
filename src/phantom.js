@@ -220,7 +220,7 @@ export default class Phantom {
     this.commands.set(command.id, command);
 
     const json = JSON.stringify(command, (key, val) => {
-      if (key[0] === '_') {
+      if (key[0] === '$') { // if key starts with $ then ignore because it's private
         return undefined;
       } else if (typeof val === 'function') {
         if (!Object.prototype.hasOwnProperty.call(val, 'prototype')) {

@@ -6,12 +6,12 @@ import Phantom from './phantom';
  * Page class that proxies everything to phantomjs
  */
 export default class Page {
-  phantom: Phantom;
+  $phantom: Phantom;
   target: string;
 
   constructor(phantom: Phantom, pageId: string) {
     this.target = `page$${pageId}`;
-    this.phantom = phantom;
+    this.$phantom = phantom;
   }
 
   /**
@@ -23,22 +23,22 @@ export default class Page {
      * run on phantom, and thus, all the closure info wont work
      * @returns {*}
      */
-  on(event: string, runOnPhantom: boolean, listener: Function) {
+  on(event: string, runOnPhantom: boolean = false, listener: Function, ...args: any[]) {
     let mustRunOnPhantom;
     let callback;
-    let args;
+    let params;
 
     if (typeof runOnPhantom === 'function') {
-      args = [].slice.call(arguments, 2);
       mustRunOnPhantom = false;
+      params = [listener, ...args];
       callback = runOnPhantom.bind(this);
     } else {
-      args = [].slice.call(arguments, 3);
+      params = args;
       mustRunOnPhantom = runOnPhantom;
       callback = mustRunOnPhantom ? listener : listener.bind(this);
     }
 
-    return this.phantom.on(event, this.target, mustRunOnPhantom, callback, args);
+    return this.$phantom.on(event, this.target, mustRunOnPhantom, callback, params);
   }
 
   /**
@@ -48,42 +48,42 @@ export default class Page {
      * @returns {*}
      */
   off(event: string) {
-    return this.phantom.off(event, this.target);
+    return this.$phantom.off(event, this.target);
   }
 
   /**
      * Invokes an asynchronous method
      */
-  invokeAsyncMethod() {
-    return this.phantom.execute(this.target, 'invokeAsyncMethod', [].slice.call(arguments));
+  invokeAsyncMethod(...args: any[]) {
+    return this.$phantom.execute(this.target, 'invokeAsyncMethod', args);
   }
 
   /**
      * Invokes a method
      */
-  invokeMethod() {
-    return this.phantom.execute(this.target, 'invokeMethod', [].slice.call(arguments));
+  invokeMethod(...args: any[]) {
+    return this.$phantom.execute(this.target, 'invokeMethod', args);
   }
 
   /**
      * Defines a method
      */
   defineMethod(name: string, definition: Function) {
-    return this.phantom.execute(this.target, 'defineMethod', [name, definition]);
+    return this.$phantom.execute(this.target, 'defineMethod', [name, definition]);
   }
 
   /**
      * Gets or sets a property
      */
   property(...args: any[]): Promise<*> {
-    return this.phantom.execute(this.target, 'property', args);
+    return this.$phantom.execute(this.target, 'property', args);
   }
 
   /**
      * Gets or sets a setting
      */
   setting(...args: any[]): Promise<*> {
-    return this.phantom.execute(this.target, 'setting', args);
+    return this.$phantom.execute(this.target, 'setting', args);
   }
 
   cookies(): Promise<*> {
