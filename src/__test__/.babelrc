@@ -1,7 +1,9 @@
 {
-  "presets": [
-    "flow"
+  "presets": ["flow"],
+  "plugins": [
+    "transform-es2015-modules-commonjs",
+    "transform-es2015-arrow-functions",
+    "transform-es2015-template-literals"
   ],
-  "plugins": ["transform-es2015-modules-commonjs", "transform-es2015-arrow-functions"],
   "retainLines": true
 }

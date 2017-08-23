@@ -33,6 +33,7 @@
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
+    "babel-plugin-transform-es2015-template-literals": "^6.22.0",
     "babel-plugin-transform-flow-strip-types": "^6.14.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",

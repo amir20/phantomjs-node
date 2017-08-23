@@ -2,4 +2,3 @@ node_modules
 lib/
 .idea
 coverage/
-.vscode
