@@ -3,6 +3,5 @@ examples
 node_modules
 flow-typed
 coverage
-gulpfile.babel.js
 decls
-src/__test__
+

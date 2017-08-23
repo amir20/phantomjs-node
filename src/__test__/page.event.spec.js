@@ -1,3 +1,5 @@
+/* eslint-disable no-use-before-define */
+
 import 'babel-polyfill';
 import http from 'http';
 import Phantom from '../phantom';

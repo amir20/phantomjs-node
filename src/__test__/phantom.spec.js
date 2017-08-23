@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 import phantomjs from 'phantomjs-prebuilt';
 import path from 'path';
 import Phantom from '../phantom';
@@ -6,7 +8,9 @@ import Page from '../page';
 describe('Phantom', () => {
   let instance;
   beforeEach(() => jest.resetModules());
-  beforeEach(() => instance = new Phantom());
+  beforeEach(() => {
+    instance = new Phantom();
+  });
   afterEach(() => instance.exit());
 
   it('#createPage() returns a Promise', () => {
@@ -23,8 +27,8 @@ describe('Phantom', () => {
   it('#create([], {}) execute with no parameters', () => {
     jest.mock('child_process');
 
-    const actual_spawn = require.requireActual('child_process').spawn;
-    const mockedSpawn = jest.fn((...args) => actual_spawn(...args));
+    const actualSpawn = require.requireActual('child_process').spawn;
+    const mockedSpawn = jest.fn((...args) => actualSpawn(...args));
     require('child_process').setMockedSpawn(mockedSpawn);
 
     const MockedProcess = require('../phantom').default;
@@ -36,12 +40,11 @@ describe('Phantom', () => {
     expect(mockedSpawn).toHaveBeenCalledWith(phantomjs.path, [pathToShim], { env: process.env });
   });
 
-
   it('#create(["--ignore-ssl-errors=yes"]) adds parameter to process', () => {
     jest.mock('child_process');
 
-    const actual_spawn = require.requireActual('child_process').spawn;
-    const mockedSpawn = jest.fn((...args) => actual_spawn(...args));
+    const actualSpawn = require.requireActual('child_process').spawn;
+    const mockedSpawn = jest.fn((...args) => actualSpawn(...args));
     require('child_process').setMockedSpawn(mockedSpawn);
 
     const MockedProcess = require('../phantom').default;
@@ -51,14 +54,18 @@ describe('Phantom', () => {
 
     const pathToShim = path.normalize(`${__dirname}/../shim/index.js`);
     const { env } = process;
-    expect(mockedSpawn).toHaveBeenCalledWith(phantomjs.path, ['--ignore-ssl-errors=yes', pathToShim], { env });
+    expect(mockedSpawn).toHaveBeenCalledWith(
+      phantomjs.path,
+      ['--ignore-ssl-errors=yes', pathToShim],
+      { env },
+    );
   });
 
-  it('#create([], {phantomPath: \'phantomjs\'}) execute phantomjs from custom path with no parameters', () => {
+  it("#create([], {phantomPath: 'phantomjs'}) execute phantomjs from custom path with no parameters", () => {
     jest.mock('child_process');
 
-    const actual_spawn = require.requireActual('child_process').spawn;
-    const mockedSpawn = jest.fn((...args) => actual_spawn(...args));
+    const actualSpawn = require.requireActual('child_process').spawn;
+    const mockedSpawn = jest.fn((...args) => actualSpawn(...args));
     require('child_process').setMockedSpawn(mockedSpawn);
 
     const MockedProcess = require('../phantom').default;
@@ -79,7 +86,7 @@ describe('Phantom', () => {
     pp.exit();
   });
 
-  it.skip('#create([], {logLevel: \'debug\'}) change logLevel', () => {
+  it.skip("#create([], {logLevel: 'debug'}) change logLevel", () => {
     const logLevel = 'error';
 
     const pp = new Phantom([], { logLevel });
@@ -87,7 +94,7 @@ describe('Phantom', () => {
     pp.exit();
   });
 
-  it.skip('#create([], {logLevel: \'debug\'}) should not change other log levels', () => {
+  it.skip("#create([], {logLevel: 'debug'}) should not change other log levels", () => {
     const logLevel = 'error';
     const p1 = new Phantom([], { logLevel });
     p1.exit();
