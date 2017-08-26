@@ -3,7 +3,7 @@
 import Phantom from './phantom';
 
 /**
- * Retuns a Promise of a new Phantom class instance
+ * Returns a Promise of a new Phantom class instance
  * @param args command args to pass to phantom process
  * @param [config] configuration object
  * @param [config.phantomPath] path to phantomjs executable

@@ -26,34 +26,34 @@ describe('Page', () => {
 
   it('#on() can register an event in the page and run the code locally', async () => {
     const page = await phantom.createPage();
-    let runnedHere = false;
+    let ranHere = false;
 
     await page.on('onResourceReceived', () => {
-      runnedHere = true;
+      ranHere = true;
     });
 
     await page.open(`http://localhost:${port}/test`);
 
-    expect(runnedHere).toBe(true);
+    expect(ranHere).toBe(true);
   });
 
   it('#on() event registered does not run if not triggered', async () => {
     const page = await phantom.createPage();
-    let runnedHere = false;
+    let ranHere = false;
 
     await page.on('onResourceReceived', () => {
-      runnedHere = true;
+      ranHere = true;
     });
 
-    expect(runnedHere).toBe(false);
+    expect(ranHere).toBe(false);
   });
 
   it('#on() can register more than one event of the same type', async () => {
     const page = await phantom.createPage();
-    let runnedHere = false;
+    let ranHere = false;
 
     await page.on('onResourceReceived', () => {
-      runnedHere = true;
+      ranHere = true;
     });
 
     let runnedHereToo = false;
@@ -64,7 +64,7 @@ describe('Page', () => {
 
     await page.open(`http://localhost:${port}/test`);
 
-    expect(runnedHere).toBe(true);
+    expect(ranHere).toBe(true);
     expect(runnedHereToo).toBe(true);
   });
 
@@ -87,19 +87,19 @@ describe('Page', () => {
 
   it('#on() can register an event in the page which code runs in phantom runtime', async () => {
     const page = await phantom.createPage();
-    let runnedHere = false;
+    let ranHere = false;
 
     await page.on('onLoadFinished', true, () => {
-      runnedHere = true;
-      runnedInPhantomRuntime = true;
+      ranHere = true;
+      ranInPhantomRuntime = true;
     });
 
     await page.open(`http://localhost:${port}/test`);
 
-    let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
+    let ranInPhantomRuntime = await phantom.windowProperty('ranInPhantomRuntime');
 
-    expect(runnedHere).toBe(false);
-    expect(runnedInPhantomRuntime).toBe(true);
+    expect(ranHere).toBe(false);
+    expect(ranInPhantomRuntime).toBe(true);
   });
 
   it('#on() can pass parameters to functions to be executed in phantom runtime', async () => {
@@ -125,12 +125,12 @@ describe('Page', () => {
     const page = await phantom.createPage();
 
     await page.on('onResourceReceived', true, () => {
-      runnedInPhantomRuntime = true;
+      ranInPhantomRuntime = true;
     });
 
-    let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
+    let ranInPhantomRuntime = await phantom.windowProperty('ranInPhantomRuntime');
 
-    expect(runnedInPhantomRuntime).toBeFalsy();
+    expect(ranInPhantomRuntime).toBeFalsy();
   });
 
   it('#on() can register at the same event to run locally or in phantom runtime', async () => {
