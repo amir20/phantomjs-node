@@ -21,7 +21,7 @@ const phantom = require('phantom');
     console.info('Requesting', requestData.url);
   });
 
-  const status = await page.open(process.argv[2]);
+  const status = await page.open('https://stackoverflow.com/');
   const content = await page.property('content');
   console.log(content);
 

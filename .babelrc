@@ -1,11 +1,5 @@
 {
-  "presets": [
-    "flow"
-  ],
-  "env": {
-    "test": {
-      "plugins": ["transform-es2015-modules-commonjs"]
-    }
-  },
+  "presets": ["flow"],
+  "plugins": ["transform-es2015-modules-commonjs"],
   "retainLines": true
 }
