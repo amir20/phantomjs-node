@@ -193,9 +193,8 @@ export default class Phantom {
      * Used for creating a callback in phantomjs for content header and footer
      * @param obj
      */
-  //eslint-disable-next-line
-  callback(
-    obj: Function): { transform: true, target: Function, method: 'callback', parent: 'phantom' } {
+  // eslint-disable-next-line class-methods-use-this
+  callback(obj: Function): { transform: true, target: Function, method: 'callback', parent: 'phantom' } {
     return {
       transform: true,
       target: obj,
