@@ -11,7 +11,7 @@ describe('Phantom', () => {
   beforeEach(() => {
     instance = new Phantom();
   });
-  afterEach(() => instance.exit());
+  afterEach(async () => instance.exit());
 
   it('#createPage() returns a Promise', () => {
     expect(instance.createPage()).toBeInstanceOf(Promise);

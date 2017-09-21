@@ -14,16 +14,14 @@ describe('Page', () => {
       } else if (request.url === '/test.html') {
         response.end('<html><head><title>Page Title</title></head><body>Test</body></html>');
       } else if (request.url === '/upload.html') {
-        response.end(
-          '<html><head><title>Page Title</title></head><body>' +
-            '<input type="file" id="upload" /></body></html>',
-        );
+        response.end('<html><head><title>Page Title</title></head><body>' +
+            '<input type="file" id="upload" /></body></html>');
       } else {
         response.end(`hi, ${request.url}`);
       }
     });
     server.listen(0, () => {
-      port = server.address().port;
+      port = server.address().port; // eslint-disable-line
       done();
     });
   });
@@ -92,17 +90,13 @@ describe('Page', () => {
       height: '11in',
       header: {
         height: '1cm',
-        contents: phantom.callback(
-          (pageNum, numPages) =>
-            `<h1>Header <span style='float:right'>${pageNum} / ${numPages}</span></h1>`,
-        ),
+        contents: phantom.callback((pageNum, numPages) =>
+          `<h1>Header <span style='float:right'>${pageNum} / ${numPages}</span></h1>`),
       },
       footer: {
         height: '1cm',
-        contents: phantom.callback(
-          (pageNum, numPages) =>
-            `<h1>Footer <span style='float:right'>${pageNum} / ${numPages}</span></h1>`,
-        ),
+        contents: phantom.callback((pageNum, numPages) =>
+          `<h1>Footer <span style='float:right'>${pageNum} / ${numPages}</span></h1>`),
       },
     });
 
@@ -133,11 +127,7 @@ describe('Page', () => {
     await page.open(`http://localhost:${port}/test`);
     // inject_example.js: window.foo = 1;
     await page.injectJs(`${__dirname}/inject_example.js`);
-
-    const response = await page.evaluate(
-      () => foo, // eslint-disable-line no-undef
-    );
-
+    const response = await page.evaluate(() => foo); // eslint-disable-line no-undef
     expect(response).toEqual(1);
   });
 
@@ -145,9 +135,7 @@ describe('Page', () => {
     const page = await phantom.createPage();
     await page.open(`http://localhost:${port}/test`);
     await page.includeJs(`http://localhost:${port}/script.js`);
-    const response = await page.evaluate(
-      () => fooBar, // eslint-disable-line no-undef
-    );
+    const response = await page.evaluate(() => fooBar); // eslint-disable-line no-undef
     expect(response).toEqual(2);
   });
 
@@ -274,7 +262,7 @@ describe('Page', () => {
 
     await page.setContent(html, `http://localhost:${port}/`);
 
-    const response = await page.evaluate(() => [document.title, location.href]);
+    const response = await page.evaluate(() => [document.title, window.location.href]);
 
     expect(response).toEqual(['setContent Title', `http://localhost:${port}/`]);
   });
@@ -302,11 +290,9 @@ describe('Page', () => {
     await page.setContent(html, `http://localhost:${port}/`);
     await page.switchToFrame(0);
 
-    const inIframe = await page.evaluate(
-      () =>
-        // are we in the iframe?
-        window.frameElement && window.frameElement.id === 'testframe',
-    );
+    const inIframe = await page.evaluate(() =>
+      // are we in the iframe?
+      window.frameElement && window.frameElement.id === 'testframe');
 
     // confirm we are in an iframe
     expect(inIframe).toBe(true);
@@ -323,11 +309,9 @@ describe('Page', () => {
     await page.switchToFrame(0);
     await page.switchToMainFrame();
 
-    const inMainFrame = await page.evaluate(
-      () =>
-        // are we in the main frame?
-        !window.frameElement,
-    );
+    const inMainFrame = await page.evaluate(() =>
+      // are we in the main frame?
+      !window.frameElement);
 
     // confirm we are in the main frame
     expect(inMainFrame).toBe(true);
@@ -352,9 +336,7 @@ describe('Page', () => {
     const page = await phantom.createPage();
     await page.open(`http://localhost:${port}/test`);
     await page.invokeAsyncMethod('includeJs', `http://localhost:${port}/script.js`);
-    const response = await page.evaluate(
-      () => fooBar, // eslint-disable-line no-undef
-    );
+    const response = await page.evaluate(() => fooBar); // eslint-disable-line no-undef
     expect(response).toEqual(2);
   });
 

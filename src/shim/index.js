@@ -86,9 +86,7 @@ function isEventSupported(type, eventName) {
  */
 function getOutsideListener(eventName, targetId) {
   return (...args) => {
-    system.stdout.writeLine(
-      `<event>${JSON.stringify({ target: targetId, type: eventName, args })}`,
-    );
+    system.stdout.writeLine(`<event>${JSON.stringify({ target: targetId, type: eventName, args })}`);
   };
 }
 
@@ -152,7 +150,8 @@ const commands = {
           callback.apply(objectSpace[command.target], args.concat(otherArgs));
       } else {
         // If the second parameter is not a function then just assign
-        objectSpace[command.target][command.params[0]] = command.params[1];
+        const { target, params: [name, value] } = command;
+        objectSpace[target][name] = value;
       }
     } else {
       command.response = objectSpace[command.target][command.params[0]];
@@ -162,7 +161,8 @@ const commands = {
   },
   setting: (command) => {
     if (command.params.length === 2) {
-      objectSpace[command.target].settings[command.params[0]] = command.params[1];
+      const { target, params: [name, value] } = command;
+      objectSpace[target].settings[name] = value;
     } else {
       command.response = objectSpace[command.target].settings[command.params[0]];
     }
@@ -172,7 +172,8 @@ const commands = {
 
   windowProperty: (command) => {
     if (command.params.length === 2) {
-      window[command.params[0]] = command.params[1];
+      const { params: [name, value] } = command;
+      window[name] = value;
     } else {
       command.response = window[command.params[0]];
     }
@@ -211,12 +212,10 @@ const commands = {
 
   invokeAsyncMethod(command) {
     const target = objectSpace[command.target];
-    target[command.params[0]](
-      ...command.params.slice(1).concat((result) => {
-        command.response = result;
-        completeCommand(command);
-      }),
-    );
+    target[command.params[0]](...command.params.slice(1).concat((result) => {
+      command.response = result;
+      completeCommand(command);
+    }));
   },
 
   invokeMethod(command) {
@@ -228,7 +227,8 @@ const commands = {
 
   defineMethod(command) {
     const target = objectSpace[command.target];
-    target[command.params[0]] = command.params[1];
+    const { params: [name, value] } = command;
+    target[name] = value;
     completeCommand(command);
   },
 };

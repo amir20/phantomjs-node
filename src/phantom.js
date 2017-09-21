@@ -49,23 +49,15 @@ export default class Phantom {
      * @param [logger] object containing functions used for logging
      * @param [logLevel] log level to apply on the logger (if unset or default)
      */
-  constructor(
-    args?: string[] = [],
-    {
-      phantomPath = phantomjs.path,
-      logLevel = defaultLogLevel,
-      logger = createLogger({ logLevel }),
-    }: Config = {},
-  ) {
+  // eslint-disable-next-line
+  constructor(args?: string[] = [], { phantomPath = phantomjs.path, logLevel = defaultLogLevel, logger = createLogger({ logLevel }) }: Config = {}) {
     if (!Array.isArray(args)) {
       throw new Error('Unexpected type of parameters. Expecting args to be array.');
     }
 
     if (typeof phantomPath !== 'string') {
-      throw new Error(
-        'PhantomJS binary was not found. ' +
-          'This generally means something went wrong when installing phantomjs-prebuilt. Exiting.',
-      );
+      throw new Error('PhantomJS binary was not found. ' +
+          'This generally means something went wrong when installing phantomjs-prebuilt. Exiting.');
     }
 
     if (!logger.info && !logger.debug && !logger.error && !logger.warn) {
@@ -104,7 +96,7 @@ export default class Phantom {
         const command = this.commands.get(parsedJson.id);
 
         if (command != null) {
-          const deferred = command.deferred;
+          const { deferred } = command;
 
           if (deferred != null) {
             if (parsedJson.error === undefined) {
@@ -140,10 +132,8 @@ export default class Phantom {
       this.rejectAllCommands(`Phantom process stopped with exit code ${code}`);
     });
     this.process.on('error', (error) => {
-      this.logger.error(
-        `Could not spawn [${phantomPath}] executable. ` +
-          'Please make sure phantomjs is installed correctly.',
-      );
+      this.logger.error(`Could not spawn [${phantomPath}] executable. ` +
+          'Please make sure phantomjs is installed correctly.');
       this.logger.error(error);
       this.kill(`Process got an error: ${error}`);
       process.exit(1);
@@ -174,7 +164,7 @@ export default class Phantom {
      * @returns {Promise.<Page>}
      */
   createPage(): Promise<Page> {
-    const logger = this.logger;
+    const { logger } = this;
     return this.execute('phantom', 'createPage').then((response: Response) => {
       let page = new Page(this, response.pageId);
       if (typeof Proxy !== 'function') {
@@ -182,10 +172,8 @@ export default class Phantom {
       }
       page = new Proxy(page, {
         set(target, prop) {
-          logger.warn(
-            `Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) ` +
-              'instead. See the README file for more examples of page#property.',
-          );
+          logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) ` +
+              'instead. See the README file for more examples of page#property.');
           return false;
         },
       });
@@ -205,11 +193,14 @@ export default class Phantom {
      * Used for creating a callback in phantomjs for content header and footer
      * @param obj
      */
-  //eslint-disable-next-line
-  callback(
-    obj: Function,
-  ): { transform: true, target: Function, method: 'callback', parent: 'phantom' } {
-    return { transform: true, target: obj, method: 'callback', parent: 'phantom' };
+  // eslint-disable-next-line class-methods-use-this
+  callback(obj: Function): { transform: true, target: Function, method: 'callback', parent: 'phantom' } {
+    return {
+      transform: true,
+      target: obj,
+      method: 'callback',
+      parent: 'phantom',
+    };
   }
 
   /**
@@ -221,14 +212,13 @@ export default class Phantom {
     this.commands.set(command.id, command);
 
     const json = JSON.stringify(command, (key, val) => {
-      if (key[0] === '$') { // if key starts with $ then ignore because it's private
+      if (key[0] === '$') {
+        // if key starts with $ then ignore because it's private
         return undefined;
       } else if (typeof val === 'function') {
         if (!Object.prototype.hasOwnProperty.call(val, 'prototype')) {
-          this.logger.warn(
-            'Arrow functions such as () => {} are not supported in PhantomJS. ' +
-              'Please use function(){} or compile to ES5.',
-          );
+          this.logger.warn('Arrow functions such as () => {} are not supported in PhantomJS. ' +
+              'Please use function(){} or compile to ES5.');
           throw new Error('Arrow functions such as () => {} are not supported in PhantomJS.');
         }
         return val.toString();
@@ -317,10 +307,8 @@ export default class Phantom {
   exit(): Promise<Response> {
     clearInterval(this.heartBeatId);
     if (this.commands.size > 0) {
-      this.logger.warn(
-        'exit() was called before waiting for commands to finish. ' +
-          'Make sure you are not calling exit() prematurely.',
-      );
+      this.logger.warn('exit() was called before waiting for commands to finish. ' +
+          'Make sure you are not calling exit() prematurely.');
     }
     return this.execute('phantom', 'invokeMethod', ['exit']);
   }
@@ -349,7 +337,8 @@ export default class Phantom {
     clearInterval(this.heartBeatId);
 
     this.commands.forEach((command) => {
-      if (command.deferred != null) {
+      const { params: [name] } = command;
+      if (name !== 'exit' && command.deferred) {
         command.deferred.reject(new Error(msg));
       }
     });
