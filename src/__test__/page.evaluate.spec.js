@@ -12,7 +12,7 @@ describe('Page', () => {
     });
 
     server.listen(0, () => {
-      port = server.address().port;
+      port = server.address().port; // eslint-disable-line
       done();
     });
   });

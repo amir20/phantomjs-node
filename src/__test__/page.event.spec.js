@@ -13,7 +13,7 @@ describe('Page', () => {
       response.end(`hi, ${request.url}`);
     });
     server.listen(0, () => {
-      port = server.address().port;
+      port = server.address().port; // eslint-disable-line
       done();
     });
   });
