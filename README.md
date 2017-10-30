@@ -236,7 +236,7 @@ page.on('onResourceRequested', function (requestData, networkRequest) {
     networkRequest.abort(); // This will fail, because the params are a serialized version of what was provided
 });
 
-page.load('http://google.com');
+page.open('http://google.com');
 ```
 As you see, using on you have access to the closure variables and all the node goodness using this function ans in contrast of setting and event with property, you can set as many events as you want.
 
@@ -250,7 +250,7 @@ page.on('onResourceRequested', true, function (requestData, networkRequest) {
     networkRequest.abort(); // This would work, because you are accessing to the non serialized networkRequest.
 });
 
-page.load('http://google.com');
+page.open('http://google.com');
 ```
 The same as in property, you can pass additional params to the function in the same way, and even use the object created by `#createOutObject()`.
 
