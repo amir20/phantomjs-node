@@ -17,6 +17,5 @@ deploy:
     repo: amir20/phantomjs-node
 before_install:
 - npm install -g codecov
-- npm install gulp
 after_success:
 - codecov
