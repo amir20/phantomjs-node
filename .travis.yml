@@ -1,25 +1,21 @@
 sudo: false
 language: node_js
-
 node_js:
-  - stable
-  - "9"
-  - "8"
-  - "7"
-
+- stable
+- '9'
+- '8'
+- '7'
 cache:
   yarn: true
-
 deploy:
   provider: npm
   email: findamir@gmail.com
   api_key:
-    secure: L7fEIv/FiVl+cHY3qOdQihEIyYYR+NeyRCgqCOliigmznTrys7x7sAhSl9/+OgtI1LNteU7KM9hblM1r+butPnrJyq96vAMdG2eEbpgCq19MT0iYz3dBI1Az/4MZEl0KONRNGxm6p23lyMAD/ml/Iy1wfCRWbVphlEsaOTsi0tk=
+    secure: g34n9TFa2hwxN8AN+8JP2jVz99YDeHtL5yOsMoAhq1o6QTAZGG4yKUYAkK4fGxyDUX1Rxe+4qOuvH7cbgNG/yjpPDscKWmhLL81qjpCP36u98VBK+MIeFgfKH3YQRKSiK9rhlF90j2LR96T1FqVLlu30Kzo5pHFFkxamVajt2uU=
   on:
     tags: true
-
+    repo: amir20/phantomjs-node
 before_install:
-  - npm install -g codecov
-
+- npm install -g codecov
 after_success:
-  - codecov
+- codecov
