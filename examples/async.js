@@ -1,9 +1,9 @@
 const phantom = require('phantom');
 
-(async function() {
+(async function () {
   const instance = await phantom.create();
   const page = await instance.createPage();
-  await page.on('onResourceRequested', function(requestData) {
+  await page.on('onResourceRequested', function (requestData) {
     console.info('Requesting', requestData.url);
   });
 

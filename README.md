@@ -189,22 +189,17 @@ page.property('viewportSize', {width: 800, height: 600}).then(function() {
   ```
 When setting values, using `then()` is optional. But beware that the next method to phantom will block until it is ready to accept a new message.
 
-You can set events using `#property()` because they are property members of `page`.
+~~You can set events using `#property()` because they are property members of `page`.~~
 
 ```js
 page.property('onResourceRequested', function(requestData, networkRequest) {
     console.log(requestData.url);
 });
 ```
-It is important to understand that the function above executes in the PhantomJS process. PhantomJS does not share any memory or variables with node. So using closures in javascript to share any variables outside of the function is not possible. Variables can be passed to `#property` instead. So for example, let's say you wanted to pass `process.env.DEBUG` to `onResourceRequested` method above. You could do this by:
+~~It is important to understand that the function above executes in the PhantomJS process. PhantomJS does not share any memory or variables with node. So using closures in javascript to share any variables outside of the function is not possible. Variables can be passed to `#property` instead. So for example, let's say you wanted to pass `process.env.DEBUG` to `onResourceRequested` method above. You could do this by:~~
 
-```js
-page.property('onResourceRequested', function(requestData, networkRequest, debug) {
-    if(debug){
-      // do something with it
-    }
-}, process.env.DEBUG);
-```
+**Using `page#property` to set events will be deprecated in next release. Please use `page#on()` instead.**
+
 Even if it is possible to set the events using this way, we recommend you use `#on()` for events (see below).
 
 
