@@ -69,6 +69,6 @@
     "lint": "eslint . && flow check",
     "test": "npm run lint && jest",
     "pretest": "gulp build:test",
-    "prepublishOnly": "gulp build"
+    "prepublishOnly": "gulp clean && gulp build"
   }
 }
