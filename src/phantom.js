@@ -14,6 +14,7 @@ import OutObject from './out_object';
 type Response = { pageId: string };
 
 const defaultLogLevel = process.env.DEBUG === 'true' ? 'debug' : 'info';
+const defaultPathToShim = path.normalize(`${__dirname}/shim/index.js`);
 const NOOP = 'NOOP';
 
 /**
@@ -50,7 +51,7 @@ export default class Phantom {
      * @param [logLevel] log level to apply on the logger (if unset or default)
      */
   // eslint-disable-next-line
-  constructor(args?: string[] = [], { phantomPath = phantomjs.path, logLevel = defaultLogLevel, logger = createLogger({ logLevel }) }: Config = {}) {
+  constructor(args?: string[] = [], { phantomPath = phantomjs.path, shimPath = defaultPathToShim, logLevel = defaultLogLevel, logger = createLogger({ logLevel }) }: Config = {}) {
     if (!Array.isArray(args)) {
       throw new Error('Unexpected type of parameters. Expecting args to be array.');
     }
@@ -58,6 +59,11 @@ export default class Phantom {
     if (typeof phantomPath !== 'string') {
       throw new Error('PhantomJS binary was not found. ' +
           'This generally means something went wrong when installing phantomjs-prebuilt. Exiting.');
+    }
+
+    if (typeof shimPath !== 'string') {
+      throw new Error('Path to shim file was not found. ' +
+          'Are you sure you entered the path correctly? Exiting.');
     }
 
     if (!logger.info && !logger.debug && !logger.error && !logger.warn) {
@@ -71,10 +77,12 @@ export default class Phantom {
       warn: logger.warn ? (...msg) => logger.warn(...msg) : () => undefined,
     };
 
-    const pathToShim = path.normalize(`${__dirname}/shim/index.js`);
-    this.logger.debug(`Starting ${phantomPath} ${args.concat([pathToShim]).join(' ')}`);
+    // @TODO Why does this need to be here?
+    const pathToShim = path.normalize(`${__dirname}/shim/index.js`);  // eslint-disable-line
 
-    this.process = spawn(phantomPath, args.concat([pathToShim]), { env: process.env });
+    this.logger.debug(`Starting ${phantomPath} ${args.concat([shimPath]).join(' ')}`);
+
+    this.process = spawn(phantomPath, args.concat([shimPath]), { env: process.env });
     this.process.stdin.setDefaultEncoding('utf-8');
 
     this.commands = new Map();
