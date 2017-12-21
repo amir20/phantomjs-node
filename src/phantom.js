@@ -43,15 +43,23 @@ export default class Phantom {
   process: child_process$ChildProcess; // eslint-disable-line camelcase
 
   /**
-     * Creates a new instance of Phantom
-     *
-     * @param args command args to pass to phantom process
-     * @param [phantomPath] path to phantomjs executable
-     * @param [logger] object containing functions used for logging
-     * @param [logLevel] log level to apply on the logger (if unset or default)
-     */
+   * Creates a new instance of Phantom
+   *
+   * @param args command args to pass to phantom process
+   * @param [phantomPath] path to phantomjs executable
+   * @param [logger] object containing functions used for logging
+   * @param [logLevel] log level to apply on the logger (if unset or default)
+   */
   // eslint-disable-next-line
-  constructor(args?: string[] = [], { phantomPath = phantomjs.path, shimPath = defaultPathToShim, logLevel = defaultLogLevel, logger = createLogger({ logLevel }) }: Config = {}) {
+  constructor(
+    args?: string[] = [],
+    {
+      phantomPath = phantomjs.path,
+      shimPath = defaultPathToShim,
+      logLevel = defaultLogLevel,
+      logger = createLogger({ logLevel }),
+    }: Config = {},
+  ) {
     if (!Array.isArray(args)) {
       throw new Error('Unexpected type of parameters. Expecting args to be array.');
     }
@@ -70,15 +78,15 @@ export default class Phantom {
       throw new Error('logger must be a valid object.');
     }
 
-    this.logger = {
-      info: logger.info ? (...msg) => logger.info(...msg) : () => undefined,
-      debug: logger.debug ? (...msg) => logger.debug(...msg) : () => undefined,
-      error: logger.error ? (...msg) => logger.error(...msg) : () => undefined,
-      warn: logger.warn ? (...msg) => logger.warn(...msg) : () => undefined,
-    };
+    // eslint-disable-next-line no-unused-vars
+    const noop = (...msg) => undefined;
 
-    // @TODO Why does this need to be here?
-    const pathToShim = path.normalize(`${__dirname}/shim/index.js`);  // eslint-disable-line
+    this.logger = {
+      info: logger.info ? (...msg) => logger.info(...msg) : noop,
+      debug: logger.debug ? (...msg) => logger.debug(...msg) : noop,
+      error: logger.error ? (...msg) => logger.error(...msg) : noop,
+      warn: logger.warn ? (...msg) => logger.warn(...msg) : noop,
+    };
 
     this.logger.debug(`Starting ${phantomPath} ${args.concat([shimPath]).join(' ')}`);
 
@@ -168,9 +176,9 @@ export default class Phantom {
   }
 
   /**
-     * Returns a new instance of Promise which resolves to a {@link Page}.
-     * @returns {Promise.<Page>}
-     */
+   * Returns a new instance of Promise which resolves to a {@link Page}.
+   * @returns {Promise.<Page>}
+   */
   createPage(): Promise<Page> {
     const { logger } = this;
     return this.execute('phantom', 'createPage').then((response: Response) => {
@@ -190,17 +198,17 @@ export default class Phantom {
   }
 
   /**
-     * Creates a special object that can be used for returning data back from PhantomJS
-     * @returns {OutObject}
-     */
+   * Creates a special object that can be used for returning data back from PhantomJS
+   * @returns {OutObject}
+   */
   createOutObject(): OutObject {
     return new OutObject(this);
   }
 
   /**
-     * Used for creating a callback in phantomjs for content header and footer
-     * @param obj
-     */
+   * Used for creating a callback in phantomjs for content header and footer
+   * @param obj
+   */
   // eslint-disable-next-line class-methods-use-this
   callback(obj: Function): { transform: true, target: Function, method: 'callback', parent: 'phantom' } {
     return {
@@ -212,10 +220,10 @@ export default class Phantom {
   }
 
   /**
-     * Executes a command object
-     * @param command the command to run
-     * @returns {Promise}
-     */
+   * Executes a command object
+   * @param command the command to run
+   * @returns {Promise}
+   */
   executeCommand(command: Command): Promise<Response> {
     this.commands.set(command.id, command);
 
@@ -246,26 +254,26 @@ export default class Phantom {
   }
 
   /**
-     * Executes a command
-     *
-     * @param target target object to execute against
-     * @param name the name of the method execute
-     * @param args an array of args to pass to the method
-     * @returns {Promise}
-     */
+   * Executes a command
+   *
+   * @param target target object to execute against
+   * @param name the name of the method execute
+   * @param args an array of args to pass to the method
+   * @returns {Promise}
+   */
   execute(target: string, name: string, args: mixed[] = []): Promise<Response> {
     return this.executeCommand(new Command(target, name, args));
   }
 
   /**
-     * Adds an event listener to a target object (currently only works on pages)
-     *
-     * @param event the event type
-     * @param target target object to execute against
-     * @param runOnPhantom would the callback run in phantomjs or not
-     * @param callback the event callback
-     * @param args an array of args to pass to the callback
-     */
+   * Adds an event listener to a target object (currently only works on pages)
+   *
+   * @param event the event type
+   * @param target target object to execute against
+   * @param runOnPhantom would the callback run in phantomjs or not
+   * @param callback the event callback
+   * @param args an array of args to pass to the callback
+   */
   on(event: string, target: string, runOnPhantom: boolean, callback: Function, args: mixed[] = []) {
     const eventDescriptor: { type: string, args?: mixed[], event?: Function } = { type: event };
 
@@ -283,11 +291,11 @@ export default class Phantom {
   }
 
   /**
-     * Removes an event from a target object
-     *
-     * @param event
-     * @param target
-     */
+   * Removes an event from a target object
+   *
+   * @param event
+   * @param target
+   */
   off(event: string, target: string): Promise<mixed> {
     const emitter = this.getEmitterForTarget(target);
     emitter.removeAllListeners(event);
@@ -310,8 +318,8 @@ export default class Phantom {
   }
 
   /**
-     * Cleans up and end the phantom process
-     */
+   * Cleans up and end the phantom process
+   */
   exit(): Promise<Response> {
     clearInterval(this.heartBeatId);
     if (this.commands.size > 0) {
@@ -322,8 +330,8 @@ export default class Phantom {
   }
 
   /**
-     * Clean up and force kill this process
-     */
+   * Clean up and force kill this process
+   */
   kill(errmsg: string = 'Phantom process was killed'): void {
     this.rejectAllCommands(errmsg);
     this.process.kill('SIGKILL');
@@ -338,8 +346,8 @@ export default class Phantom {
   }
 
   /**
-     * rejects all commands in this.commands
-     */
+   * rejects all commands in this.commands
+   */
   rejectAllCommands(msg: string = 'Phantom exited prematurely'): void {
     // prevent heartbeat from preventing this from terminating
     clearInterval(this.heartBeatId);
