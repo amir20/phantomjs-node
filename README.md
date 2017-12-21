@@ -85,6 +85,7 @@ phantom.create(['--ignore-ssl-errors=yes', '--load-images=no']).then(...)
 You can also explicitly set :
 
 - The phantomjs path to use
+- The path to the shim/index.js to use
 - A logger object
 - A log level if no logger was specified
 
@@ -93,6 +94,7 @@ by passing them in config object:
 var phantom = require('phantom');
 phantom.create([], {
     phantomPath: '/path/to/phantomjs',
+    shimPath: '/path/to/shim/index.js',
     logger: yourCustomLogger,
     logLevel: 'debug',
 }).then(...)
