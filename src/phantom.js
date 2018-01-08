@@ -39,7 +39,7 @@ export default class Phantom {
   isNoOpInProgress: boolean;
   commands: Map<number, Command>;
   events: Map<string, EventEmitter>;
-  heartBeatId: number;
+  heartBeatId: IntervalID;
   process: child_process$ChildProcess; // eslint-disable-line camelcase
 
   /**
