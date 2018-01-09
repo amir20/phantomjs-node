@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
-    "babel-eslint": "^8.1.2",
+    "babel-eslint": "^8.2.1",
     "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
     "babel-plugin-transform-es2015-template-literals": "^6.22.0",
     "babel-plugin-transform-flow-strip-types": "^6.14.0",
@@ -47,12 +47,12 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.0",
     "gulp-cli": "^2.0.0",
-    "gulp-copy": "^1.0.1",
+    "gulp-copy": "^1.1.0",
     "gulp-newer": "^1.4.0",
     "gulp-watch": "^5.0.0",
-    "jest": "^22.0.4",
-    "jest-cli": "^22.0.4",
-    "prettier-eslint": "^8.7.0"
+    "jest": "^22.0.5",
+    "jest-cli": "^22.0.5",
+    "prettier-eslint": "^8.7.1"
   },
   "license": "ISC",
   "jest": {
