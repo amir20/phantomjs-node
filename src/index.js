@@ -16,5 +16,3 @@ function create(args?: string[], config?: Config): Promise<Phantom> {
 }
 
 export default { create };
-
-module.exports.create = create;
