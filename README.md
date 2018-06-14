@@ -56,7 +56,7 @@ $ npm install phantom@2 --save
 ```
 
 ## Documents
-- [in website](http://amirraminfar.com/phantomjs-node/docs/)
+- [in website](http://amirraminfar.com/phantomjs-node/#/)
 - [in github](./docs/)
 
 ## Pooling
