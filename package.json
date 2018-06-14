@@ -69,7 +69,7 @@
   },
   "scripts": {
     "lint": "eslint . && flow check",
-    "test": "jest",
+    "test": "npm run lint && jest",
     "pretest": "gulp build:test",
     "prepublishOnly": "gulp clean && gulp build"
   }
