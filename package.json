@@ -27,11 +27,12 @@
   "dependencies": {
     "phantomjs-prebuilt": "^2.1.16",
     "split": "^1.0.1",
-    "winston": "^2.4.2"
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
     "babel-plugin-transform-es2015-template-literals": "^6.22.0",
     "babel-plugin-transform-flow-strip-types": "^6.14.0",
@@ -41,17 +42,17 @@
     "del": "^3.0.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-flowtype": "^2.46.3",
-    "eslint-plugin-import": "^2.11.0",
-    "flow-bin": "^0.71.0",
+    "eslint-plugin-flowtype": "^2.49.3",
+    "eslint-plugin-import": "^2.12.0",
+    "flow-bin": "^0.74.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
     "gulp-cli": "^2.0.1",
     "gulp-copy": "^1.1.0",
     "gulp-newer": "^1.4.0",
     "gulp-watch": "^5.0.0",
-    "jest": "^22.4.3",
-    "jest-cli": "^22.4.3",
+    "jest": "^23.1.0",
+    "jest-cli": "^23.1.0",
     "prettier-eslint": "^8.8.1"
   },
   "license": "ISC",
