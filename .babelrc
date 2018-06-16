@@ -1,5 +1,5 @@
 {
   "presets": ["flow"],
-  "plugins": ["transform-es2015-modules-commonjs"],
+  "plugins": ["add-module-exports","transform-es2015-modules-commonjs"],
   "retainLines": true
 }
