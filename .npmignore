@@ -1,6 +1,7 @@
 node_modules
 .idea
-src/
+src
+docs
 lib/__test__
 .*
 *.md
