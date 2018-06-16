@@ -248,7 +248,7 @@ describe('Page', () => {
   it('#windowProperty() returns a window value', async () => {
     const page = await phantom.createPage();
 
-    await page.property('onResourceReceived', (response) => {
+    await page.on('onResourceReceived', true, (response) => {
       lastResponse = response; // eslint-disable-line
     });
     await page.open(`http://localhost:${port}/test`);
