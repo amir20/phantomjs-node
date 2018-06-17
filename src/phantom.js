@@ -21,11 +21,12 @@ const NOOP = 'NOOP';
  * Creates a logger using winston
  */
 function createLogger({ logLevel = defaultLogLevel } = {}) {
+  const { format } = winston;
   return winston.createLogger({
     transports: [
       new winston.transports.Console({
         level: logLevel,
-        colorize: true,
+        format: format.combine(winston.format.colorize(), format.splat(), format.simple()),
       }),
     ],
   });

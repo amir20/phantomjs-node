@@ -2,10 +2,10 @@ node_modules
 .idea
 src
 docs
-lib/__test__
+__test__
+__mock__
 .*
 *.md
 examples
-gulpfile.*
 coverage
 decls

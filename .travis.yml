@@ -2,14 +2,13 @@ sudo: false
 language: node_js
 node_js:
 - stable
+- '10'
 - '9'
 - '8'
 - '7'
 cache:
   directories:
     - "node_modules"
-before_deploy:
-  - npm link gulp
 deploy:
   skip_cleanup: true
   provider: npm
@@ -19,8 +18,6 @@ deploy:
   on:
     tags: true
     repo: amir20/phantomjs-node
-before_script:
-  - npm install -g gulp-cli
 before_install:
 - npm install -g codecov
 after_success:

@@ -20,45 +20,45 @@
     "phantomjs",
     "driver"
   ],
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=8"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "phantomjs-prebuilt": "^2.1.16",
     "split": "^1.0.1",
     "winston": "^3.0.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
-    "babel-plugin-transform-es2015-template-literals": "^6.22.0",
-    "babel-plugin-transform-flow-strip-types": "^6.14.0",
     "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-flow": "^6.23.0",
-    "del": "^3.0.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-flowtype": "^2.49.3",
     "eslint-plugin-import": "^2.12.0",
     "flow-bin": "^0.74.0",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^7.0.1",
-    "gulp-cli": "^2.0.1",
-    "gulp-copy": "^1.1.0",
-    "gulp-newer": "^1.4.0",
-    "gulp-watch": "^5.0.0",
+    "flow-copy-source": "^2.0.0",
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
-    "prettier-eslint": "^8.8.1"
+    "npm-watch": "^0.3.0",
+    "prettier-eslint": "^8.8.1",
+    "rimraf": "^2.6.2"
   },
   "license": "ISC",
   "jest": {
     "roots": [
-      "<rootDir>/lib"
+      "<rootDir>/dist"
+    ],
+    "testMatch": [
+      "**/?(*.)+(spec|test).js"
     ],
     "collectCoverage": true,
     "coveragePathIgnorePatterns": [
@@ -67,10 +67,18 @@
     ],
     "testEnvironment": "node"
   },
+  "watch": {
+    "build": "src"
+  },
   "scripts": {
     "lint": "eslint . && flow check",
-    "test": "npm run lint && jest",
-    "pretest": "gulp build:test",
-    "prepublishOnly": "gulp clean && gulp build"
+    "pretest": "npm run lint && npm run build",
+    "test": "jest",
+    "clean": "rimraf dist",
+    "flowbuild": "flow-copy-source src dist",
+    "prebuild": "npm run clean && npm run flowbuild",
+    "build": "babel src -d dist",
+    "prepublishOnly": "npm run build",
+    "watch": "npm-watch"
   }
 }
