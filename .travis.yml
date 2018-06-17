@@ -2,6 +2,8 @@ sudo: false
 language: node_js
 node_js:
 - stable
+- lts
+- '10'
 - '9'
 - '8'
 - '7'
