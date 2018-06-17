@@ -1,21 +1,10 @@
-import http from 'http';
 import 'babel-polyfill';
 import Phantom from '../phantom';
 import OutObject from '../out_object';
 
 describe('Command', () => {
-  let server;
   let phantom;
-  let port;
-  beforeAll((done) => {
-    server = http.createServer((request, response) => response.end(`hi, ${request.url}`));
-    server.listen(0, () => {
-      port = server.address().port; // eslint-disable-line
-      done();
-    });
-  });
 
-  afterAll(() => server.close());
   beforeEach(() => {
     phantom = new Phantom();
   });

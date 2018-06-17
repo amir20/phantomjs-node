@@ -174,7 +174,7 @@ describe('Page', () => {
       path: '/foo',
       httponly: true,
       secure: false,
-      expires: new Date().getTime() + 1000 * 60 * 60,
+      expires: new Date().getTime() + (1000 * 60 * 60),
     });
 
     await page.clearCookies();
