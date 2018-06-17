@@ -59,6 +59,7 @@
     "roots": [
       "<rootDir>/dist"
     ],
+    "testMatch": ["**/?(*.)+(spec|test).js"],
     "collectCoverage": true,
     "coveragePathIgnorePatterns": [
       "node_modules/",
@@ -73,6 +74,6 @@
     "clean": "rimraf dist",
     "flowbuild": "flow-copy-source src dist",
     "build": "babel src -d dist",
-    "prepublishOnly": "npm run lint && npm run build"
+    "prepublishOnly": "npm run lint && npm run flowbuild && npm run build"
   }
 }
