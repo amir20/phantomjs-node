@@ -25,7 +25,7 @@ function createLogger({ logLevel = defaultLogLevel } = {}) {
     transports: [
       new winston.transports.Console({
         level: logLevel,
-        format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+        format: winston.format.combine(winston.format.colorize(), winston.format.splat(), winston.format.simple()),
       }),
     ],
   });
