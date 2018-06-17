@@ -14,14 +14,14 @@ describe('Phantom', () => {
   afterEach(async () => instance.exit());
 
   it('#createPage() returns a Promise', () => {
-    expect(instance.createPage()).toBeInstanceOf(Promise);
+    const page = instance.createPage();
+    expect(page).toBeInstanceOf(Promise);
+    return page;
   });
 
-  it('#createPage() resolves to a Page', (done) => {
-    instance.createPage().then((page) => {
-      expect(page).toBeInstanceOf(Page);
-      done();
-    });
+  it('#createPage() resolves to a Page', async () => {
+    const page = await instance.createPage();
+    expect(page).toBeInstanceOf(Page);
   });
 
   it('#create([], {}) execute with no parameters', () => {
@@ -128,7 +128,7 @@ describe('Phantom', () => {
     }
   });
 
-  it('.cookies() should return an empty cookies array', async () => {
+  it('#cookies() should return an empty cookies array', async () => {
     const cookies = await instance.cookies();
     expect(cookies).toEqual([]);
   });

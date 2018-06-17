@@ -2,7 +2,7 @@ node_modules
 .idea
 src
 docs
-lib/__test__
+dist/__test__
 .*
 *.md
 examples

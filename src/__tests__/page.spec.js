@@ -45,35 +45,26 @@ describe('Page', () => {
     expect(content).toEqual('hi, /test');
   });
 
-  it("#property('onResourceRequested', function(){}) sets property", async () => {
+  it("#property('onResourceRequested', function(){}, params...) to throw exception", async () => {
     const page = await phantom.createPage();
-    await page.property(
-      'onResourceRequested',
-      (requestData, networkRequest, url) => {
-        networkRequest.changeUrl(url);
-      },
-      `http://localhost:${port}/foo-bar-xyz`,
-    );
-    await page.open(`http://localhost:${port}/whatever`);
-    const content = await page.property('plainText');
-    expect(content).toEqual('hi, /foo-bar-xyz'); // should have been changed to /foo-bar-xyz
+    expect(() => {
+      page.property(
+        'onResourceRequested',
+        function(requestData, networkRequest, foo, a, b) { // eslint-disable-line
+          RESULT = [foo, a, b]; // eslint-disable-line
+        },
+        'foobar',
+        1,
+        -100,
+      );
+    }).toThrow();
   });
 
-  it("#property('onResourceRequested', function(){}, params...) passes parameters", async () => {
+  it("#property('onResourceRequested', function(){}) to throw exception", async () => {
     const page = await phantom.createPage();
-    page.property(
-      'onResourceRequested',
-      (requestData, networkRequest, foo, a, b) => {
-        RESULT = [foo, a, b]; // eslint-disable-line
-      },
-      'foobar',
-      1,
-      -100,
-    );
-    await page.open(`http://localhost:${port}/whatever`);
-
-    let RESULT = await phantom.windowProperty('RESULT');
-    expect(RESULT).toEqual(['foobar', 1, -100]);
+    expect(() => {
+      page.property('onResourceRequested', function(){}); // eslint-disable-line
+    }).toThrow();
   });
 
   it("#property('key', value) sets property", async () => {
@@ -83,7 +74,7 @@ describe('Page', () => {
     expect(value).toEqual({ width: 800, height: 600 });
   });
 
-  it("#property('paperSize', value) sets value properly with phantom.paperSize", async () => {
+  xit("#property('paperSize', value) sets value properly with phantom.paperSize", async () => {
     const page = await phantom.createPage();
     page.property('paperSize', {
       width: '8.5in',
@@ -127,7 +118,7 @@ describe('Page', () => {
     await page.open(`http://localhost:${port}/test`);
     // inject_example.js: window.foo = 1;
     await page.injectJs(`${__dirname}/inject_example.js`);
-    const response = await page.evaluate(() => foo); // eslint-disable-line no-undef
+    const response = await page.evaluate(function(){return foo}); // eslint-disable-line
     expect(response).toEqual(1);
   });
 
@@ -135,7 +126,7 @@ describe('Page', () => {
     const page = await phantom.createPage();
     await page.open(`http://localhost:${port}/test`);
     await page.includeJs(`http://localhost:${port}/script.js`);
-    const response = await page.evaluate(() => fooBar); // eslint-disable-line no-undef
+    const response = await page.evaluate(function(){return fooBar}); // eslint-disable-line
     expect(response).toEqual(2);
   });
 
@@ -183,7 +174,7 @@ describe('Page', () => {
       path: '/foo',
       httponly: true,
       secure: false,
-      expires: new Date().getTime() + (1000 * 60 * 60),
+      expires: new Date().getTime() + 1000 * 60 * 60,
     });
 
     await page.clearCookies();
@@ -248,7 +239,7 @@ describe('Page', () => {
   it('#windowProperty() returns a window value', async () => {
     const page = await phantom.createPage();
 
-    await page.on('onResourceReceived', true, (response) => {
+    await page.on('onResourceReceived', true, function(response) { // eslint-disable-line
       lastResponse = response; // eslint-disable-line
     });
     await page.open(`http://localhost:${port}/test`);
@@ -262,7 +253,8 @@ describe('Page', () => {
 
     await page.setContent(html, `http://localhost:${port}/`);
 
-    const response = await page.evaluate(() => [document.title, window.location.href]);
+    // eslint-disable-next-line
+    const response = await page.evaluate(function() {return [document.title, window.location.href]});
 
     expect(response).toEqual(['setContent Title', `http://localhost:${port}/`]);
   });
@@ -276,7 +268,7 @@ describe('Page', () => {
     await page.setContent(html, `http://localhost:${port}/`);
     await page.sendEvent('click', 1, 2);
 
-    const response = await page.evaluate(() => window.docClicked);
+    const response = await page.evaluate(function() {return window.docClicked}); // eslint-disable-line
 
     expect(response).toBe(true);
   });
@@ -290,11 +282,8 @@ describe('Page', () => {
     await page.setContent(html, `http://localhost:${port}/`);
     await page.switchToFrame(0);
 
-    const inIframe = await page.evaluate(() =>
-      // are we in the iframe?
-      window.frameElement && window.frameElement.id === 'testframe');
-
-    // confirm we are in an iframe
+    // eslint-disable-next-line
+    const inIframe = await page.evaluate(function() {return window.frameElement && window.frameElement.id === 'testframe'});
     expect(inIframe).toBe(true);
   });
 
@@ -309,11 +298,9 @@ describe('Page', () => {
     await page.switchToFrame(0);
     await page.switchToMainFrame();
 
-    const inMainFrame = await page.evaluate(() =>
-      // are we in the main frame?
-      !window.frameElement);
+    // eslint-disable-next-line
+    const inMainFrame = await page.evaluate(function(){return !window.frameElement});
 
-    // confirm we are in the main frame
     expect(inMainFrame).toBe(true);
   });
 
@@ -336,7 +323,7 @@ describe('Page', () => {
     const page = await phantom.createPage();
     await page.open(`http://localhost:${port}/test`);
     await page.invokeAsyncMethod('includeJs', `http://localhost:${port}/script.js`);
-    const response = await page.evaluate(() => fooBar); // eslint-disable-line no-undef
+    const response = await page.evaluate(function() {return fooBar}); // eslint-disable-line
     expect(response).toEqual(2);
   });
 
@@ -426,7 +413,9 @@ describe('Page', () => {
     const page = await phantom.createPage();
     await page.open(`http://localhost:${port}/upload.html`);
     await page.uploadFile('#upload', `${process.env.PWD}/package.json`);
-    const response = await page.evaluate(() => document.querySelector('#upload').files[0].name);
+
+    // eslint-disable-next-line
+    const response = await page.evaluate(function() {return document.querySelector('#upload').files[0].name});
     expect(response).toEqual('package.json');
   });
 });

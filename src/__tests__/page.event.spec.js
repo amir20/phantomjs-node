@@ -89,7 +89,8 @@ describe('Page', () => {
     const page = await phantom.createPage();
     let ranHere = false;
 
-    await page.on('onLoadFinished', true, () => {
+    // eslint-disable-next-line
+    await page.on('onLoadFinished', true, function() {
       ranHere = true;
       ranInPhantomRuntime = true;
     });
@@ -108,7 +109,7 @@ describe('Page', () => {
     await page.on(
       'onResourceReceived',
       true,
-      (status, param) => {
+      function(status, param) { // eslint-disable-line
         parameterProvided = param;
       },
       'param',
@@ -124,7 +125,8 @@ describe('Page', () => {
   it('#on() event supposed to run in phantom runtime wont run if not triggered', async () => {
     const page = await phantom.createPage();
 
-    await page.on('onResourceReceived', true, () => {
+    // eslint-disable-next-line
+    await page.on('onResourceReceived', true, function() {
       ranInPhantomRuntime = true;
     });
 
@@ -135,21 +137,22 @@ describe('Page', () => {
 
   it('#on() can register at the same event to run locally or in phantom runtime', async () => {
     const page = await phantom.createPage();
-    let runnedHere = false;
+    let ranHere = false;
 
-    await page.on('onResourceReceived', true, () => {
+    // eslint-disable-next-line
+    await page.on('onResourceReceived', true, function() {
       runnedInPhantomRuntime = true;
     });
 
     await page.on('onResourceReceived', () => {
-      runnedHere = true;
+      ranHere = true;
     });
 
     await page.open(`http://localhost:${port}/test`);
 
     let runnedInPhantomRuntime = await phantom.windowProperty('runnedInPhantomRuntime');
 
-    expect(runnedHere).toBe(true);
+    expect(ranHere).toBe(true);
     expect(runnedInPhantomRuntime).toBe(true);
   });
 
@@ -171,7 +174,8 @@ describe('Page', () => {
   it('#off() can disable an event whose listener is going to run on the phantom process', async () => {
     const page = await phantom.createPage();
 
-    await page.on('onResourceReceived', true, () => {
+    // eslint-disable-next-line
+    await page.on('onResourceReceived', true, function() {
       runnedInPhantomRuntime = true;
     });
 

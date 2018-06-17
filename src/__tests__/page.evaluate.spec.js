@@ -23,28 +23,28 @@ describe('Page', () => {
   });
   afterEach(() => phantom.exit());
 
-  it('#evaluate(function(){return document.title}) executes correctly', async () => {
+  fit('#evaluate(function(){return document.title}) executes correctly', async () => {
     const page = await phantom.createPage();
     await page.open(`http://localhost:${port}/test.html`);
-    const response = await page.evaluate(() => document.title);
+    const response = await page.evaluate(function() { return document.title }); // eslint-disable-line
     expect(response).toEqual('Page Title');
   });
 
   it('#evaluate(function(){...}) executes correctly', async () => {
     const page = await phantom.createPage();
-    const response = await page.evaluate(() => 'test');
+    const response = await page.evaluate(function() { return 'test' }); // eslint-disable-line
     expect(response).toEqual('test');
   });
 
   it('#evaluate(function(arg){...}, argument) executes correctly with a non-null argument', async () => {
     const page = await phantom.createPage();
-    const response = await page.evaluate(arg => `Value: ${arg}`, 'test');
+    const response = await page.evaluate(function(arg) { return 'Value: ' + arg}, 'test'); // eslint-disable-line
     expect(response).toEqual('Value: test');
   });
 
   it('#evaluate(function(arg){...}, argument) executes correctly with a null argument', async () => {
     const page = await phantom.createPage();
-    const response = await page.evaluate(arg => `Value is null: ${arg === null}`, null);
+    const response = await page.evaluate(function(arg) { return 'Value is null:' + arg === null}, 'test'); // eslint-disable-line
     expect(response).toEqual('Value is null: true');
   });
 
