@@ -24,9 +24,6 @@
   "engines": {
     "node": ">=8"
   },
-  "files": [
-    "dist"
-  ],
   "dependencies": {
     "phantomjs-prebuilt": "^2.1.16",
     "split": "^1.0.1",
