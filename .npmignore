@@ -2,8 +2,8 @@ node_modules
 .idea
 src
 docs
-__tests__
-__mocks__
+dist/__tests__
+dist/__mocks__
 .*
 *.md
 examples
