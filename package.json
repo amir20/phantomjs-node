@@ -43,8 +43,8 @@
     "eslint-plugin-import": "^2.13.0",
     "flow-bin": "^0.81.0",
     "flow-copy-source": "^2.0.2",
-    "jest": "^23.4.1",
-    "jest-cli": "^23.4.1",
+    "jest": "^23.6.0",
+    "jest-cli": "^23.6.0",
     "npm-watch": "^0.4.0",
     "prettier-eslint": "^8.8.2",
     "rimraf": "^2.6.2"
