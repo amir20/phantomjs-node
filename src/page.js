@@ -7,6 +7,7 @@ import Phantom from './phantom';
  */
 export default class Page {
   $phantom: Phantom;
+
   target: string;
 
   constructor(phantom: Phantom, pageId: string) {

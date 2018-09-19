@@ -14,8 +14,8 @@ describe('Page', () => {
       } else if (request.url === '/test.html') {
         response.end('<html><head><title>Page Title</title></head><body>Test</body></html>');
       } else if (request.url === '/upload.html') {
-        response.end('<html><head><title>Page Title</title></head><body>' +
-            '<input type="file" id="upload" /></body></html>');
+        response.end('<html><head><title>Page Title</title></head><body>'
+            + '<input type="file" id="upload" /></body></html>');
       } else {
         response.end(`hi, ${request.url}`);
       }
@@ -81,13 +81,11 @@ describe('Page', () => {
       height: '11in',
       header: {
         height: '1cm',
-        contents: phantom.callback((pageNum, numPages) =>
-          `<h1>Header <span style='float:right'>${pageNum} / ${numPages}</span></h1>`),
+        contents: phantom.callback((pageNum, numPages) => `<h1>Header <span style='float:right'>${pageNum} / ${numPages}</span></h1>`),
       },
       footer: {
         height: '1cm',
-        contents: phantom.callback((pageNum, numPages) =>
-          `<h1>Footer <span style='float:right'>${pageNum} / ${numPages}</span></h1>`),
+        contents: phantom.callback((pageNum, numPages) => `<h1>Footer <span style='float:right'>${pageNum} / ${numPages}</span></h1>`),
       },
     });
 
@@ -261,9 +259,8 @@ describe('Page', () => {
 
   it('#sendEvent() sends an event', async () => {
     const page = await phantom.createPage();
-    const html =
-      '<html  onclick="docClicked = true;"><head><title>setContent Title</title>' +
-      '</head><body></body></html>';
+    const html = '<html  onclick="docClicked = true;"><head><title>setContent Title</title>'
+      + '</head><body></body></html>';
 
     await page.setContent(html, `http://localhost:${port}/`);
     await page.sendEvent('click', 1, 2);
@@ -275,9 +272,8 @@ describe('Page', () => {
 
   it('#switchToFrame(framePosition) will switch to frame of framePosition', async () => {
     const page = await phantom.createPage();
-    const html =
-      '<html><head><title>Iframe Test</title></head><body>' +
-      `<iframe id="testframe" src="http://localhost:${port}/test.html"></iframe></body></html>`;
+    const html = '<html><head><title>Iframe Test</title></head><body>'
+      + `<iframe id="testframe" src="http://localhost:${port}/test.html"></iframe></body></html>`;
 
     await page.setContent(html, `http://localhost:${port}/`);
     await page.switchToFrame(0);
@@ -289,9 +285,8 @@ describe('Page', () => {
 
   it('#switchToMainFrame() will switch back to the main frame', async () => {
     const page = await phantom.createPage();
-    const html =
-      '<html><head><title>Iframe Test</title></head><body>' +
-      `<iframe id="testframe" src="http://localhost:${port}/test.html"></iframe></body></html>`;
+    const html = '<html><head><title>Iframe Test</title></head><body>'
+      + `<iframe id="testframe" src="http://localhost:${port}/test.html"></iframe></body></html>`;
 
     await page.setContent(html, `http://localhost:${port}/`);
     // need to switch to child frame here to test switchToMainFrame() works

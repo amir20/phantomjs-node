@@ -37,10 +37,15 @@ function createLogger({ logLevel = defaultLogLevel } = {}) {
  */
 export default class Phantom {
   logger: Logger;
+
   isNoOpInProgress: boolean;
+
   commands: Map<number, Command>;
+
   events: Map<string, EventEmitter>;
+
   heartBeatId: IntervalID;
+
   process: child_process$ChildProcess; // eslint-disable-line camelcase
 
   /**
@@ -66,13 +71,13 @@ export default class Phantom {
     }
 
     if (typeof phantomPath !== 'string') {
-      throw new Error('PhantomJS binary was not found. ' +
-          'This generally means something went wrong when installing phantomjs-prebuilt. Exiting.');
+      throw new Error('PhantomJS binary was not found. '
+          + 'This generally means something went wrong when installing phantomjs-prebuilt. Exiting.');
     }
 
     if (typeof shimPath !== 'string') {
-      throw new Error('Path to shim file was not found. ' +
-          'Are you sure you entered the path correctly? Exiting.');
+      throw new Error('Path to shim file was not found. '
+          + 'Are you sure you entered the path correctly? Exiting.');
     }
 
     if (!logger.info && !logger.debug && !logger.error && !logger.warn) {
@@ -149,8 +154,8 @@ export default class Phantom {
       this.rejectAllCommands(`Phantom process stopped with exit code ${code}`);
     });
     this.process.on('error', (error) => {
-      this.logger.error(`Could not spawn [${phantomPath}] executable. ` +
-          'Please make sure phantomjs is installed correctly.');
+      this.logger.error(`Could not spawn [${phantomPath}] executable. `
+          + 'Please make sure phantomjs is installed correctly.');
       this.logger.error(error);
       this.kill(`Process got an error: ${error}`);
       process.exit(1);
@@ -189,8 +194,8 @@ export default class Phantom {
       }
       page = new Proxy(page, {
         set(target, prop) {
-          logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) ` +
-              'instead. See the README file for more examples of page#property.');
+          logger.warn(`Using page.${prop} = ...; is not supported. Use page.property('${prop}', ...) `
+              + 'instead. See the README file for more examples of page#property.');
           return false;
         },
       });
@@ -232,10 +237,10 @@ export default class Phantom {
       if (key[0] === '$') {
         // if key starts with $ then ignore because it's private
         return undefined;
-      } else if (typeof val === 'function') {
+      } if (typeof val === 'function') {
         if (!Object.prototype.hasOwnProperty.call(val, 'prototype')) {
-          this.logger.warn('Arrow functions such as () => {} are not supported in PhantomJS. ' +
-              'Please use function(){} or compile to ES5.');
+          this.logger.warn('Arrow functions such as () => {} are not supported in PhantomJS. '
+              + 'Please use function(){} or compile to ES5.');
           throw new Error('Arrow functions such as () => {} are not supported in PhantomJS.');
         }
         return val.toString();
@@ -324,8 +329,8 @@ export default class Phantom {
   exit(): Promise<Response> {
     clearInterval(this.heartBeatId);
     if (this.commands.size > 0) {
-      this.logger.warn('exit() was called before waiting for commands to finish. ' +
-          'Make sure you are not calling exit() prematurely.');
+      this.logger.warn('exit() was called before waiting for commands to finish. '
+          + 'Make sure you are not calling exit() prematurely.');
     }
     return this.execute('phantom', 'invokeMethod', ['exit']);
   }

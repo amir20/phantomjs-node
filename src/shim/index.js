@@ -26,7 +26,7 @@ function transform(object) {
       const child = object[key];
       if (child === null || child === undefined) {
         return;
-      } else if (child.transform === true) {
+      } if (child.transform === true) {
         object[key] = objectSpace[child.parent][child.method](child.target);
       } else if (typeof child === 'object') {
         transform(child);
@@ -146,8 +146,8 @@ const commands = {
         const callback = command.params[1];
         const otherArgs = command.params.slice(2);
         syncOutObjects(otherArgs);
-        objectSpace[command.target][command.params[0]] = (...args) =>
-          callback.apply(objectSpace[command.target], args.concat(otherArgs));
+        // eslint-disable-next-line
+        objectSpace[command.target][command.params[0]] = (...args) => callback.apply(objectSpace[command.target], args.concat(otherArgs));
       } else {
         // If the second parameter is not a function then just assign
         const { target, params: [name, value] } = command;
@@ -257,10 +257,10 @@ function read() {
     }
     const command = JSON.parse(line, (key, value) => {
       if (
-        value &&
-        typeof value === 'string' &&
-        value.substr(0, 8) === 'function' &&
-        value.indexOf('[native code]') === -1
+        value
+        && typeof value === 'string'
+        && value.substr(0, 8) === 'function'
+        && value.indexOf('[native code]') === -1
       ) {
         const startBody = value.indexOf('{') + 1;
         const endBody = value.lastIndexOf('}');
