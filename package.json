@@ -39,7 +39,7 @@
     "babel-preset-flow": "^6.23.0",
     "eslint": "^5.6.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-flowtype": "^2.50.1",
+    "eslint-plugin-flowtype": "^3.0.0",
     "eslint-plugin-import": "^2.14.0",
     "flow-bin": "^0.83.0",
     "flow-copy-source": "^2.0.2",
