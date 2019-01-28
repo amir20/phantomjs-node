@@ -27,7 +27,7 @@
   "dependencies": {
     "phantomjs-prebuilt": "^2.1.16",
     "split": "^1.0.1",
-    "winston": "^3.1.0"
+    "winston": "^3.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -37,10 +37,10 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-flow": "^6.23.0",
-    "eslint": "^5.12.0",
+    "eslint": "^5.12.1",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-flowtype": "^3.0.0",
-    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-flowtype": "^3.2.1",
+    "eslint-plugin-import": "^2.15.0",
     "flow-bin": "^0.89.0",
     "flow-copy-source": "^2.0.2",
     "jest": "^23.6.0",
