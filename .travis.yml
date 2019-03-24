@@ -9,13 +9,12 @@ node_js:
 - '7'
 cache:
   directories:
-    - "node_modules"
+  - node_modules
 deploy:
-  skip_cleanup: true
   provider: npm
   email: findamir@gmail.com
   api_key:
-    secure: g34n9TFa2hwxN8AN+8JP2jVz99YDeHtL5yOsMoAhq1o6QTAZGG4yKUYAkK4fGxyDUX1Rxe+4qOuvH7cbgNG/yjpPDscKWmhLL81qjpCP36u98VBK+MIeFgfKH3YQRKSiK9rhlF90j2LR96T1FqVLlu30Kzo5pHFFkxamVajt2uU=
+    secure: Bd1fbn3wY/zmCHWcrXU5Mo1oPDj3rprSCvU+uctDVFwb4EbCdJZv0lUU72+1u4XCQR+BUx/0x7hzFiu+qim9Y2YMsgCanUcaPvaYMW/zkLE5hDMhcV1fbFBpZQxt+UmhTuZpyGddQqZWXMsiTW696NiRpfa8hbMygcNVWQG5VzA=
   on:
     tags: true
     repo: amir20/phantomjs-node
