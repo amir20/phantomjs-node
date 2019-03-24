@@ -11,6 +11,7 @@ cache:
   directories:
   - node_modules
 deploy:
+  skip_cleanup: true
   provider: npm
   email: findamir@gmail.com
   api_key:
