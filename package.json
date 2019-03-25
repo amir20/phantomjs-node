@@ -29,6 +29,9 @@
     "split": "^1.0.1",
     "winston": "^3.2.1"
   },
+  "bin": {
+    "phantom": "./bin/phantom.js"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
