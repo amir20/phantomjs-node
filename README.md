@@ -34,6 +34,15 @@ Using Node v7.9.0+ you can run the above example with `node file.js`
 
 See [examples](examples) folder for more ways to use this module.
 
+## Use it with npx
+You can quickly test any website with phantomjs-node without needing to install the package.
+
+```
+$ npx phantom@latest https://stackoverflow.com/
+```
+
+The above command is very useful to test if your website works on older browsers. I frequently use it to ensure [polyfills](https://github.com/Modernizr/Modernizr/wiki/HTML5-Cross-browser-Polyfills) have been installed correctly. 
+
 ## Installation
 
 ### Node v6.x and later
