@@ -5,7 +5,6 @@ phantom - Fast NodeJS API for PhantomJS
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Linux Build][travis-image]][travis-url]
-[![Code Coverage][codecov-image]][codecov-url]
 [![Dependencies][dependencies-image]][dependencies-url]
 [![Node Version][node-image]][node-url]
 
