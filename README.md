@@ -101,15 +101,15 @@ $ npm test
 
   [ISC](LICENSE.md)
 
-[npm-image]: https://img.shields.io/npm/v/phantom.svg?style=style=for-the-badge
+[npm-image]: https://img.shields.io/npm/v/phantom.svg?style=for-the-badge
 [npm-url]: https://npmjs.org/package/phantom
-[downloads-image]: https://img.shields.io/npm/dm/phantom.svg?style=style=for-the-badge
+[downloads-image]: https://img.shields.io/npm/dm/phantom.svg?style=for-the-badge
 [downloads-url]: https://npmjs.org/package/phantom
-[travis-image]: https://img.shields.io/travis/amir20/phantomjs-node.svg?style=style=for-the-badge
+[travis-image]: https://img.shields.io/travis/amir20/phantomjs-node.svg?style=for-the-badge
 [travis-url]: https://travis-ci.org/amir20/phantomjs-node
-[dependencies-image]: https://dependencyci.com/github/amir20/phantomjs-node/badge?style=style=for-the-badge
+[dependencies-image]: https://dependencyci.com/github/amir20/phantomjs-node/badge?style=for-the-badge
 [dependencies-url]: https://dependencyci.com/github/amir20/phantomjs-node
-[node-image]: https://img.shields.io/node/v/phantom.svg?style=style=for-the-badge
+[node-image]: https://img.shields.io/node/v/phantom.svg?style=for-the-badge
 [node-url]: https://nodejs.org/en/download/
-[codecov-image]: https://codecov.io/gh/amir20/phantomjs-node/branch/master/graph/badge.svg?style=flat-square
+[codecov-image]: https://codecov.io/gh/amir20/phantomjs-node/branch/master/graph/badge.svg?style=for-the-badge
 [codecov-url]: https://codecov.io/gh/amir20/phantomjs-node
