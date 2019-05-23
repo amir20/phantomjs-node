@@ -6,7 +6,6 @@ node_js:
 - '10'
 - '9'
 - '8'
-- '7'
 cache:
   directories:
   - node_modules
