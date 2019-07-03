@@ -27,7 +27,8 @@
   "dependencies": {
     "phantomjs-prebuilt": "^2.1.16",
     "split": "^1.0.1",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "snyk": "^1.189.0"
   },
   "bin": {
     "phantom": "./bin/phantom.js"
@@ -79,6 +80,9 @@
     "prebuild": "npm run clean && npm run flowbuild",
     "build": "babel src -d dist",
     "prepublishOnly": "npm run build",
-    "watch": "npm-watch"
-  }
+    "watch": "npm-watch",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
+  },
+  "snyk": true
 }
