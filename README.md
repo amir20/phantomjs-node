@@ -41,6 +41,9 @@ $ npx phantom@latest https://stackoverflow.com/
 
 The above command is very useful to test if your website works on older browsers. I frequently use it to ensure [polyfills](https://github.com/Modernizr/Modernizr/wiki/HTML5-Cross-browser-Polyfills) have been installed correctly. 
 
+## Deprecation warnings of PhantomJs
+In March 2018, the owner of PhantomJS [announced](https://phantomjs.org/) suspension of development. There hasn't been any updates since. Since phantomjs-node is only a wrapper around phantomjs, then you should use it at your own risk because the underlying dependency is no longer supported. I plan to maintain this project until usage has dropped significantly.  
+
 ## Installation
 
 ### Node v6.x and later
