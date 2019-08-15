@@ -50,7 +50,7 @@
     "jest-cli": "^23.6.0",
     "npm-watch": "^0.6.0",
     "prettier-eslint": "^9.0.0",
-    "rimraf": "^2.6.3"
+    "rimraf": "^3.0.0"
   },
   "license": "ISC",
   "jest": {
