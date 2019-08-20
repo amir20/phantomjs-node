@@ -11,7 +11,7 @@ import Phantom from './phantom';
  * @param [config.logLevel] log level to apply on the logger (if unset or default)
  * @returns {Promise}
  */
-function create(args?: string[], config?: Config): Promise<Phantom> {
+function create(args?: string[] = ['--local-url-access=false'], config?: Config): Promise<Phantom> {
   return new Promise(resolve => resolve(new Phantom(args, config)));
 }
 
