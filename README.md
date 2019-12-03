@@ -1,3 +1,6 @@
+# Notice
+Development on this project has been suspended due to lack of support for PhantomJs. 
+
 phantom - Fast NodeJS API for PhantomJS
 ========
 [![NPM](https://nodei.co/npm/phantom.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/phantom/)
